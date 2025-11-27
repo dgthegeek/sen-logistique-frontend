@@ -1,1 +1,310 @@
-/* You can add global styles to this file, and also import other style files */
+/* Importer Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variables CSS - Design System sen-logistique */
+@layer base {
+  :root {
+    /* Couleurs principales - Bleu professionnel & Orange */
+    --background: 0 0% 100%;           /* #ffffff */
+    --foreground: 222.2 84% 4.9%;      /* #0f172a */
+    
+    --card: 210 40% 98%;               /* #f8fafc */
+    --card-foreground: 222.2 84% 4.9%; /* #0f172a */
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    
+    --primary: 211 100% 40%;           /* #0066cc - Bleu principal */
+    --primary-foreground: 0 0% 100%;   /* #ffffff */
+    
+    --secondary: 25 100% 63%;          /* #ff8c42 - Orange */
+    --secondary-foreground: 0 0% 100%; /* #ffffff */
+    
+    --muted: 214 32% 91%;              /* #e2e8f0 */
+    --muted-foreground: 215 16% 47%;   /* #475569 */
+    
+    --accent: 45 97% 54%;              /* #fbbf24 - Jaune accent */
+    --accent-foreground: 222.2 84% 4.9%;
+    
+    --destructive: 0 84% 60%;          /* #ef4444 - Rouge */
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 214 32% 91%;             /* #e2e8f0 */
+    --input: 214 32% 95%;              /* #f1f5f9 */
+    --ring: 211 100% 40%;              /* #0066cc */
+    
+    --radius: 0.5rem;
+    
+    /* Charts */
+    --chart-1: 211 100% 50%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 25 100% 63%;
+    --chart-4: 45 97% 54%;
+    --chart-5: 0 84% 60%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;      /* #0f172a */
+    --foreground: 214 32% 95%;         /* #f1f5f9 */
+    
+    --card: 217 33% 17%;               /* #1e293b */
+    --card-foreground: 214 32% 95%;
+    
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 214 32% 95%;
+    
+    --primary: 217 91% 60%;            /* #3b82f6 */
+    --primary-foreground: 222.2 84% 4.9%;
+    
+    --secondary: 25 95% 63%;           /* #fb923c */
+    --secondary-foreground: 222.2 84% 4.9%;
+    
+    --muted: 215 28% 17%;              /* #334155 */
+    --muted-foreground: 214 20% 69%;   /* #cbd5e1 */
+    
+    --accent: 45 93% 63%;              /* #fcd34d */
+    --accent-foreground: 222.2 84% 4.9%;
+    
+    --destructive: 0 84% 70%;          /* #f87171 */
+    --destructive-foreground: 222.2 84% 4.9%;
+    
+    --border: 215 28% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Typographie */
+  h1 {
+    @apply text-4xl font-bold tracking-tight;
+  }
+  
+  h2 {
+    @apply text-3xl font-bold tracking-tight;
+  }
+  
+  h3 {
+    @apply text-2xl font-bold;
+  }
+  
+  h4 {
+    @apply text-xl font-semibold;
+  }
+  
+  h5 {
+    @apply text-lg font-semibold;
+  }
+  
+  h6 {
+    @apply text-base font-semibold;
+  }
+}
+
+@layer components {
+  /* Boutons */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium
+           hover:bg-primary/90 transition-colors shadow-sm
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-medium
+           hover:bg-secondary/90 transition-colors shadow-sm
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-primary text-primary px-6 py-3 rounded-lg font-medium
+           hover:bg-primary hover:text-primary-foreground transition-colors
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .btn-ghost {
+    @apply text-foreground px-6 py-3 rounded-lg font-medium
+           hover:bg-accent hover:text-accent-foreground transition-colors
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .btn-danger {
+    @apply bg-destructive text-destructive-foreground px-6 py-3 rounded-lg font-medium
+           hover:bg-destructive/90 transition-colors shadow-sm
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  /* Cards */
+  .card {
+    @apply bg-card text-card-foreground rounded-lg border shadow-sm p-6;
+  }
+  
+  .card-header {
+    @apply pb-4 border-b;
+  }
+  
+  .card-title {
+    @apply text-xl font-semibold;
+  }
+  
+  .card-description {
+    @apply text-sm text-muted-foreground mt-1;
+  }
+  
+  .card-content {
+    @apply py-4;
+  }
+  
+  .card-footer {
+    @apply pt-4 border-t flex items-center justify-end gap-2;
+  }
+  
+  /* Stat Cards */
+  .stat-card {
+    @apply bg-card rounded-lg border p-6 shadow-sm hover:shadow-md transition-shadow;
+  }
+  
+  .stat-card-icon {
+    @apply w-12 h-12 rounded-full flex items-center justify-center text-2xl mb-3;
+  }
+  
+  .stat-card-value {
+    @apply text-3xl font-bold;
+  }
+  
+  .stat-card-label {
+    @apply text-sm text-muted-foreground mt-1;
+  }
+  
+  /* Badges Statut */
+  .badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium;
+  }
+  
+  .badge-pending {
+    @apply bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400;
+  }
+  
+  .badge-picked {
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400;
+  }
+  
+  .badge-transit {
+    @apply bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400;
+  }
+  
+  .badge-delivered {
+    @apply bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400;
+  }
+  
+  .badge-failed {
+    @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400;
+  }
+  
+  .badge-canceled {
+    @apply bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400;
+  }
+  
+  /* Formulaires */
+  .form-label {
+    @apply text-sm font-medium text-foreground mb-2 block;
+  }
+  
+  .form-input {
+    @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2
+           text-sm ring-offset-background placeholder:text-muted-foreground
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  .form-textarea {
+    @apply flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2
+           text-sm ring-offset-background placeholder:text-muted-foreground
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  .form-select {
+    @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2
+           text-sm ring-offset-background
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  .form-error {
+    @apply text-sm text-destructive mt-1;
+  }
+  
+  .form-helper {
+    @apply text-sm text-muted-foreground mt-1;
+  }
+  
+  /* Tables */
+  .table {
+    @apply w-full border-collapse;
+  }
+  
+  .table-header {
+    @apply bg-muted/50;
+  }
+  
+  .table-header-cell {
+    @apply px-6 py-4 text-left text-sm font-semibold text-foreground border-b;
+  }
+  
+  .table-row {
+    @apply border-b transition-colors hover:bg-muted/50;
+  }
+  
+  .table-cell {
+    @apply px-6 py-4 text-sm;
+  }
+}
+
+@layer utilities {
+  /* Utilitaires personnalisés */
+  .animate-in {
+    animation: enter 0.2s ease-out;
+  }
+  
+  .animate-out {
+    animation: exit 0.2s ease-in;
+  }
+  
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes exit {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+}
