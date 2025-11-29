@@ -1,0 +1,277 @@
+<div class="min-h-screen bg-background">
+    <!-- Header -->
+    <app-header></app-header>
+
+    <!-- Main Layout -->
+    <div class="flex">
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="max-w-5xl mx-auto">
+                <!-- Back Button -->
+                <button routerLink="/vendeur/livraisons" class="btn-ghost mb-6 text-sm">
+                    ← Retour à mes livraisons
+                </button>
+
+                <!-- Loading State -->
+                <div *ngIf="loading" class="card">
+                    <div class="flex items-center justify-center py-12">
+                        <div class="text-center">
+                            <div
+                                class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2">
+                            </div>
+                            <p class="text-muted-foreground">Chargement...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div *ngIf="errorMessage && !loading" class="card">
+                    <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+                        {{ errorMessage }}
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div *ngIf="livraison && !loading" class="space-y-6">
+                    <!-- Header Card -->
+                    <div class="card">
+                        <div class="flex items-start justify-between mb-6">
+                            <div>
+                                <div class="text-sm text-muted-foreground mb-1">Numéro de suivi</div>
+                                <h1 class="text-3xl font-bold font-mono text-primary mb-2">
+                                    {{ livraison.numeroTracking }}
+                                </h1>
+                                <div class="text-sm text-muted-foreground">
+                                    Créé le {{ formatDate(livraison.dateCreation) }}
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span [class]="getStatusBadgeClass(livraison.statut)" class="text-base">
+                                    {{ getStatusIcon(livraison.statut) }} {{ getStatusLabel(livraison.statut) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Timeline (pour statuts normaux) -->
+                        <div *ngIf="!['ECHEC_ABSENT', 'ECHEC_REFUSE', 'ANNULEE'].includes(livraison.statut)"
+                            class="mb-6">
+                            <div class="flex items-center justify-between relative">
+                                <!-- Progress Line -->
+                                <div class="absolute top-4 left-0 right-0 h-0.5 bg-muted -z-10">
+                                    <div class="h-full bg-primary transition-all duration-500"
+                                        [style.width.%]="getProgressPercentage()">
+                                    </div>
+                                </div>
+
+                                <!-- Steps -->
+                                <div *ngFor="let step of getTimelineSteps()" class="flex flex-col items-center flex-1">
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center mb-2 transition-all"
+                                        [class.bg-primary]="step.completed"
+                                        [class.text-primary-foreground]="step.completed"
+                                        [class.bg-muted]="!step.completed"
+                                        [class.text-muted-foreground]="!step.completed" [class.ring-4]="step.active"
+                                        [class]="step.active ? 'ring-primary/20' : ''">
+                                        <span *ngIf="step.completed">✓</span>
+                                        <span *ngIf="!step.completed">•</span>
+                                    </div>
+                                    <div class="text-xs font-medium text-center" [class.text-primary]="step.active">
+                                        {{ step.label }}
+                                    </div>
+                                    <div class="text-xs text-muted-foreground text-center mt-1">
+                                        {{ formatDateShort(step.date) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="flex flex-wrap gap-3">
+                            <button (click)="callClient()" class="btn-primary flex items-center gap-2">
+                                📞 Appeler le client
+                            </button>
+                            <button (click)="openMaps()" class="btn-secondary flex items-center gap-2">
+                                🗺️ Ouvrir Maps
+                            </button>
+                            <button *ngIf="livraison.qrCodeUrl" (click)="downloadQRCode()"
+                                class="btn-outline flex items-center gap-2">
+                                📄 Télécharger QR Code
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Main Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Informations Client -->
+                        <div class="card">
+                            <h2 class="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                                👤 Informations client
+                            </h2>
+
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="text-sm text-muted-foreground">Nom complet</div>
+                                    <div class="font-medium text-foreground">{{ livraison.nomClient }}</div>
+                                </div>
+
+                                <div>
+                                    <div class="text-sm text-muted-foreground">Téléphone</div>
+                                    <div class="font-medium text-foreground">{{ livraison.telephoneClient }}</div>
+                                </div>
+
+                                <div class="border-t pt-3">
+                                    <div class="text-sm text-muted-foreground mb-1">Adresse de livraison</div>
+                                    <div class="font-medium text-foreground">{{ livraison.adresseComplete }}</div>
+                                    <div class="text-sm text-muted-foreground mt-1">
+                                        {{ livraison.quartier }}, {{ livraison.commune }}
+                                    </div>
+                                </div>
+
+                                <div *ngIf="livraison.pointRepere">
+                                    <div class="text-sm text-muted-foreground">Point de repère</div>
+                                    <div class="text-foreground">{{ livraison.pointRepere }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Détails Colis -->
+                        <div class="card">
+                            <h2 class="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                                📦 Détails du colis
+                            </h2>
+
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="text-sm text-muted-foreground">Description</div>
+                                    <div class="font-medium text-foreground">{{ livraison.descriptionProduit }}</div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <div class="text-sm text-muted-foreground">Type</div>
+                                        <div class="font-medium text-foreground">
+                                            {{ livraison.urgence === 'EXPRESS' ? 'Express ⚡' : 'Normal' }}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="text-sm text-muted-foreground">Fragile</div>
+                                        <div class="font-medium text-foreground">
+                                            {{ livraison.fragile ? 'Oui ⚠️' : 'Non' }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="livraison.poids">
+                                    <div class="text-sm text-muted-foreground">Poids estimé</div>
+                                    <div class="font-medium text-foreground">{{ livraison.poids }} kg</div>
+                                </div>
+
+                                <div *ngIf="livraison.notesPourLivreur" class="border-t pt-3">
+                                    <div class="text-sm text-muted-foreground mb-1">Instructions pour le livreur</div>
+                                    <div class="text-foreground bg-muted/50 p-3 rounded-lg text-sm">
+                                        {{ livraison.notesPourLivreur }}
+                                    </div>
+                                </div>
+
+                                <div *ngIf="livraison.commentaireLivreur" class="border-t pt-3">
+                                    <div class="text-sm text-muted-foreground mb-1">Commentaire du livreur</div>
+                                    <div
+                                        class="text-foreground bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm">
+                                        {{ livraison.commentaireLivreur }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Détails Financiers -->
+                    <div class="card bg-primary/5 border-primary/20">
+                        <h2 class="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                            💰 Détails financiers
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <div class="text-sm text-muted-foreground mb-1">Montant à collecter (COD)</div>
+                                <div class="text-2xl font-bold text-foreground">
+                                    {{ livraison.montantCOD | fcfa }}
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="text-sm text-muted-foreground mb-1">Frais de livraison</div>
+                                <div class="text-2xl font-bold text-destructive">
+                                    - {{ livraison.fraisLivraison | fcfa }}
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="text-sm text-muted-foreground mb-1">Vous recevrez</div>
+                                <div class="text-3xl font-bold text-green-600">
+                                    {{ livraison.montantARecevoir | fcfa }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="livraison.zone" class="mt-4 pt-4 border-t border-primary/20">
+                            <div class="text-sm text-muted-foreground">
+                                Zone: {{ livraison.zone.nom }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dates importantes -->
+                    <div class="card">
+                        <h2 class="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                            📅 Historique
+                        </h2>
+
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-4">
+                                <div class="w-2 h-2 bg-primary rounded-full mt-2"></div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-foreground">Livraison créée</div>
+                                    <div class="text-sm text-muted-foreground">{{ formatDate(livraison.dateCreation) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="livraison.dateRamassage" class="flex items-start gap-4">
+                                <div class="w-2 h-2 bg-primary rounded-full mt-2"></div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-foreground">Colis ramassé</div>
+                                    <div class="text-sm text-muted-foreground">{{ formatDate(livraison.dateRamassage) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="livraison.dateLivraison" class="flex items-start gap-4">
+                                <div class="w-2 h-2 bg-green-600 rounded-full mt-2"></div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-foreground">Colis livré</div>
+                                    <div class="text-sm text-muted-foreground">{{ formatDate(livraison.dateLivraison) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QR Code Preview -->
+                    <div *ngIf="livraison.qrCodeUrl" class="card text-center">
+                        <h2 class="text-xl font-bold text-foreground mb-4">
+                            QR Code de suivi
+                        </h2>
+                        <img [src]="livraison.qrCodeUrl" [alt]="'QR Code ' + livraison.numeroTracking"
+                            class="mx-auto max-w-xs w-full border rounded-lg shadow-sm" />
+                        <p class="text-sm text-muted-foreground mt-4">
+                            Ce QR code permet au livreur de confirmer la livraison
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

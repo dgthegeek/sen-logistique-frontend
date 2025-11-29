@@ -3,30 +3,28 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { RegisterRequest } from '../models/auth.model';
-
-interface AuthResponse {
-  token: string;
-  user: {
-    id: number;
-    nom: string;
-    prenom: string;
-    role: 'VENDEUR' | 'ADMIN';
-  };
-}
+import { AuthResponse, LoginRequest, RegisterRequest } from '../models/auth.model';
+import { User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<any>(null);
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
     private http: HttpClient,
     private router: Router
   ) {
-    const user = localStorage.getItem('currentUser');
-    if (user) {
-      this.currentUserSubject.next(JSON.parse(user));
+    // Charger l'utilisateur depuis localStorage au démarrage
+    const userJson = localStorage.getItem('currentUser');
+    if (userJson) {
+      try {
+        const user = JSON.parse(userJson);
+        this.currentUserSubject.next(user);
+      } catch (e) {
+        console.error('Erreur parsing user:', e);
+        localStorage.removeItem('currentUser');
+      }
     }
   }
 
@@ -35,6 +33,16 @@ export class AuthService {
       telephone,
       password
     }).pipe(
+      tap(response => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('currentUser', JSON.stringify(response.user));
+        this.currentUserSubject.next(response.user);
+      })
+    );
+  }
+
+  register(data: RegisterRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, data).pipe(
       tap(response => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('currentUser', JSON.stringify(response.user));
@@ -55,24 +63,24 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    const hasToken = !!token;
+    return hasToken;
   }
 
   isVendeur(): boolean {
-    return this.currentUserSubject.value?.role === 'VENDEUR';
+    const user = this.currentUserSubject.value;
+    const isVendeur = user?.role === 'VENDEUR';
+    return isVendeur;
   }
 
   isAdmin(): boolean {
-    return this.currentUserSubject.value?.role === 'ADMIN';
+    const user = this.currentUserSubject.value;
+    const isAdmin = user?.role === 'ADMIN';
+    return isAdmin;
   }
 
-  register(data: RegisterRequest): Observable<AuthResponse> {
-  return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, data).pipe(
-    tap(response => {
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('currentUser', JSON.stringify(response.user));
-      this.currentUserSubject.next(response.user);
-    })
-  );
-}
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
 }

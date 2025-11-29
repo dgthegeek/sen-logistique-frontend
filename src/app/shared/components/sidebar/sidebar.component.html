@@ -1,0 +1,15 @@
+<aside class="bg-card border-r h-screen w-64 hidden md:block sticky top-16">
+  <nav class="p-4 space-y-2">
+
+    <a
+      *ngFor="let item of menuItems"
+      [routerLink]="item.route"
+      routerLinkActive="bg-primary text-primary-foreground"
+      class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted transition-colors text-sm font-medium"
+    >
+      <span class="text-xl">{{ item.icon }}</span>
+      <span>{{ item.label }}</span>
+    </a>
+
+  </nav>
+</aside>

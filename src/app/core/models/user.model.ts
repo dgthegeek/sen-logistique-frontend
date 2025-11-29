@@ -3,8 +3,8 @@ export interface User {
   nom: string;
   prenom: string;
   telephone: string;
-  email?: string;
+  email?: string;  // Optionnel
   role: 'VENDEUR' | 'ADMIN';
-  nomBoutique?: string;
-  categorieActivite?: string;
+  nomBoutique?: string;  // Optionnel
+  categorieActivite?: string;  
 }

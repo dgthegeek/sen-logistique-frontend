@@ -1,0 +1,477 @@
+<div class="min-h-screen bg-background">
+    <!-- Header -->
+    <app-header></app-header>
+
+    <!-- Main Layout -->
+    <div class="flex">
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="max-w-4xl mx-auto">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-foreground mb-2">
+                        Nouvelle livraison
+                    </h1>
+                    <p class="text-muted-foreground">
+                        Créez une nouvelle demande de livraison
+                    </p>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="card mb-8">
+                    <div class="flex justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors"
+                                [class.bg-primary]="currentStep >= 1" [class.text-primary-foreground]="currentStep >= 1"
+                                [class.bg-muted]="currentStep < 1" [class.text-muted-foreground]="currentStep < 1">
+                                1
+                            </div>
+                            <span class="text-sm font-medium" [class.text-primary]="currentStep >= 1"
+                                [class.text-muted-foreground]="currentStep < 1">
+                                Informations client
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors"
+                                [class.bg-primary]="currentStep >= 2" [class.text-primary-foreground]="currentStep >= 2"
+                                [class.bg-muted]="currentStep < 2" [class.text-muted-foreground]="currentStep < 2">
+                                2
+                            </div>
+                            <span class="text-sm font-medium" [class.text-primary]="currentStep >= 2"
+                                [class.text-muted-foreground]="currentStep < 2">
+                                Détails colis
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors"
+                                [class.bg-primary]="currentStep >= 3" [class.text-primary-foreground]="currentStep >= 3"
+                                [class.bg-muted]="currentStep < 3" [class.text-muted-foreground]="currentStep < 3">
+                                3
+                            </div>
+                            <span class="text-sm font-medium" [class.text-primary]="currentStep >= 3"
+                                [class.text-muted-foreground]="currentStep < 3">
+                                Récapitulatif
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-muted rounded-full h-2">
+                        <div class="bg-primary h-2 rounded-full transition-all duration-300"
+                            [style.width.%]="(currentStep / 3) * 100"></div>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div *ngIf="errorMessage" class="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+                    {{ errorMessage }}
+                </div>
+
+                <!-- Form -->
+                <form [formGroup]="livraisonForm" (ngSubmit)="onSubmit()">
+                    <!-- ÉTAPE 1: Informations Client -->
+                    <div *ngIf="currentStep === 1" class="card">
+                        <h2 class="text-xl font-bold text-foreground mb-6">
+                            📋 Informations du client
+                        </h2>
+
+                        <div class="space-y-4">
+                            <!-- Nom client -->
+                            <div>
+                                <label class="form-label">Nom complet du client *</label>
+                                <input formControlName="nomClient" type="text" class="form-input"
+                                    [class.border-destructive]="livraisonForm.get('nomClient')?.invalid && livraisonForm.get('nomClient')?.touched"
+                                    placeholder="Fatou Diop" />
+                                <p *ngIf="livraisonForm.get('nomClient')?.invalid && livraisonForm.get('nomClient')?.touched"
+                                    class="form-error">
+                                    Le nom du client est requis
+                                </p>
+                            </div>
+
+                            <!-- Téléphone client -->
+                            <div>
+                                <label class="form-label">Téléphone du client *</label>
+                                <input formControlName="telephoneClient" type="tel" class="form-input"
+                                    [class.border-destructive]="livraisonForm.get('telephoneClient')?.invalid && livraisonForm.get('telephoneClient')?.touched"
+                                    placeholder="77 123 45 67" />
+                                <p *ngIf="livraisonForm.get('telephoneClient')?.invalid && livraisonForm.get('telephoneClient')?.touched"
+                                    class="form-error">
+                                    Numéro invalide (ex: 77 123 45 67)
+                                </p>
+                            </div>
+
+                            <!-- Commune -->
+                            <div>
+                                <label class="form-label">Commune *</label>
+                                <select formControlName="commune" class="form-select"
+                                    [class.border-destructive]="livraisonForm.get('commune')?.invalid && livraisonForm.get('commune')?.touched">
+                                    <option value="">Sélectionner une commune</option>
+                                    <option *ngFor="let commune of communes" [value]="commune">{{ commune }}</option>
+                                </select>
+                                <p *ngIf="livraisonForm.get('commune')?.invalid && livraisonForm.get('commune')?.touched"
+                                    class="form-error">
+                                    La commune est requise
+                                </p>
+                            </div>
+
+                            <!-- Quartier -->
+                            <div>
+                                <label class="form-label">Quartier *</label>
+                                <select formControlName="quartier" class="form-select"
+                                    [class.border-destructive]="livraisonForm.get('quartier')?.invalid && livraisonForm.get('quartier')?.touched"
+                                    [disabled]="!livraisonForm.get('commune')?.value">
+                                    <option value="">Sélectionner un quartier</option>
+                                    <option *ngFor="let quartier of filteredQuartiers" [value]="quartier.nom">
+                                        {{ quartier.nom }}
+                                    </option>
+                                </select>
+                                <p *ngIf="livraisonForm.get('quartier')?.invalid && livraisonForm.get('quartier')?.touched"
+                                    class="form-error">
+                                    Le quartier est requis
+                                </p>
+                            </div>
+
+                            <!-- Adresse complète -->
+                            <div>
+                                <label class="form-label">Adresse complète *</label>
+                                <textarea formControlName="adresseComplete" class="form-textarea"
+                                    [class.border-destructive]="livraisonForm.get('adresseComplete')?.invalid && livraisonForm.get('adresseComplete')?.touched"
+                                    rows="3" placeholder="Villa 123, Rue SC-45..."></textarea>
+                                <p *ngIf="livraisonForm.get('adresseComplete')?.invalid && livraisonForm.get('adresseComplete')?.touched"
+                                    class="form-error">
+                                    L'adresse complète est requise
+                                </p>
+                            </div>
+
+                            <!-- Point de repère -->
+                            <div>
+                                <label class="form-label">Point de repère (optionnel)</label>
+                                <input formControlName="pointRepere" type="text" class="form-input"
+                                    placeholder="Près de la station Total..." />
+                                <p class="form-helper">
+                                    Pour faciliter la localisation
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ÉTAPE 2: Détails Colis -->
+                    <div *ngIf="currentStep === 2" class="card">
+                        <h2 class="text-xl font-bold text-foreground mb-6">
+                            📦 Détails du colis
+                        </h2>
+
+                        <div class="space-y-4">
+                            <!-- Description produit -->
+                            <div>
+                                <label class="form-label">Description du produit *</label>
+                                <input formControlName="descriptionProduit" type="text" class="form-input"
+                                    [class.border-destructive]="livraisonForm.get('descriptionProduit')?.invalid && livraisonForm.get('descriptionProduit')?.touched"
+                                    placeholder="Vêtements, Cosmétiques, Électronique..." />
+                                <p *ngIf="livraisonForm.get('descriptionProduit')?.invalid && livraisonForm.get('descriptionProduit')?.touched"
+                                    class="form-error">
+                                    La description est requise
+                                </p>
+                            </div>
+
+                            <!-- Fragile -->
+                            <div class="flex items-center gap-3">
+                                <input formControlName="fragile" type="checkbox" id="fragile"
+                                    class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
+                                <label for="fragile" class="text-sm font-medium text-foreground cursor-pointer">
+                                    Colis fragile (manipulation délicate requise)
+                                </label>
+                            </div>
+
+                            <!-- Poids estimé -->
+                            <div>
+                                <label class="form-label">Poids estimé (kg) - optionnel</label>
+                                <input formControlName="poidsEstime" type="number" class="form-input" placeholder="2.5"
+                                    min="0" step="0.1" />
+                                <p class="form-helper">
+                                    Estimation approximative du poids
+                                </p>
+                            </div>
+
+                            <!-- Montant COD -->
+                            <div>
+                                <label class="form-label">Montant à collecter (COD) *</label>
+                                <div class="relative">
+                                    <input formControlName="montantCOD" type="number" class="form-input pr-16"
+                                        [class.border-destructive]="livraisonForm.get('montantCOD')?.invalid && livraisonForm.get('montantCOD')?.touched"
+                                        placeholder="35000" min="0" />
+                                    <span
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                                        FCFA
+                                    </span>
+                                </div>
+                                <p *ngIf="livraisonForm.get('montantCOD')?.invalid && livraisonForm.get('montantCOD')?.touched"
+                                    class="form-error">
+                                    Le montant est requis
+                                </p>
+                                <p class="form-helper">
+                                    Montant que le client doit payer à la livraison
+                                </p>
+                            </div>
+
+                            <!-- Urgence -->
+                            <div>
+                                <label class="form-label">Type de livraison *</label>
+                                <div class="space-y-3">
+                                    <label
+                                        class="flex items-start gap-3 p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                                        <input formControlName="urgence" type="radio" value="NORMAL"
+                                            class="mt-1 w-4 h-4 text-primary border-gray-300 focus:ring-primary" />
+                                        <div class="flex-1">
+                                            <div class="font-medium text-foreground">Livraison normale</div>
+                                            <div class="text-sm text-muted-foreground">Délai: 24-48h • Tarif standard
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <label
+                                        class="flex items-start gap-3 p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                                        <input formControlName="urgence" type="radio" value="EXPRESS"
+                                            class="mt-1 w-4 h-4 text-primary border-gray-300 focus:ring-primary" />
+                                        <div class="flex-1">
+                                            <div class="font-medium text-foreground">Livraison express ⚡</div>
+                                            <div class="text-sm text-muted-foreground">Délai: Même jour • Tarif majoré
+                                                +50%</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Créneau souhaité (optionnel) -->
+                            <div>
+                                <label class="form-label">Créneau de livraison souhaité (optionnel)</label>
+                                <select formControlName="creneauSouhaite" class="form-select">
+                                    <option value="">Pas de préférence</option>
+                                    <option value="MATIN">Matin (8h-12h)</option>
+                                    <option value="APRES_MIDI">Après-midi (12h-18h)</option>
+                                    <option value="SOIR">Soir (18h-21h)</option>
+                                </select>
+                                <p class="form-helper">
+                                    Indique quand le client préfère recevoir sa livraison
+                                </p>
+                            </div>
+
+                            <!-- Notes livreur -->
+                            <div>
+                                <label class="form-label">Instructions pour le livreur (optionnel)</label>
+                                <textarea formControlName="notesLivreur" class="form-textarea" rows="3"
+                                    placeholder="Appeler 15 min avant l'arrivée, livrer après 15h..."></textarea>
+                                <p class="form-helper">
+                                    Indications spéciales pour la livraison
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ÉTAPE 3: Récapitulatif -->
+                    <div *ngIf="currentStep === 3" class="space-y-6">
+                        <!-- Récapitulatif Infos -->
+                        <div class="card">
+                            <h2 class="text-xl font-bold text-foreground mb-6">
+                                ✅ Récapitulatif
+                            </h2>
+
+                            <div class="space-y-6">
+                                <!-- Informations client -->
+                                <div>
+                                    <h3 class="font-semibold text-foreground mb-3">Client</h3>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex">
+                                            <span class="text-muted-foreground w-32">Nom:</span>
+                                            <span class="text-foreground font-medium">{{ livraisonForm.value.nomClient
+                                                }}</span>
+                                        </div>
+                                        <div class="flex">
+                                            <span class="text-muted-foreground w-32">Téléphone:</span>
+                                            <span class="text-foreground font-medium">{{
+                                                livraisonForm.value.telephoneClient }}</span>
+                                        </div>
+                                        <div class="flex">
+                                            <span class="text-muted-foreground w-32">Adresse:</span>
+                                            <span class="text-foreground">
+                                                {{ livraisonForm.value.adresseComplete }}, {{
+                                                livraisonForm.value.quartier }}, {{ livraisonForm.value.commune }}
+                                            </span>
+                                        </div>
+                                        <div *ngIf="livraisonForm.value.pointRepere" class="flex">
+                                            <span class="text-muted-foreground w-32">Repère:</span>
+                                            <span class="text-foreground">{{ livraisonForm.value.pointRepere }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border-t"></div>
+
+                                <!-- Détails colis -->
+                                <div>
+                                    <h3 class="font-semibold text-foreground mb-3">Colis</h3>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex">
+                                            <span class="text-muted-foreground w-32">Description:</span>
+                                            <span class="text-foreground">{{ livraisonForm.value.descriptionProduit
+                                                }}</span>
+                                        </div>
+                                        <div class="flex">
+                                            <span class="text-muted-foreground w-32">Type:</span>
+                                            <span class="text-foreground">
+                                                {{ livraisonForm.value.urgence === 'EXPRESS' ? 'Express ⚡' : 'Normal' }}
+                                            </span>
+                                        </div>
+                                        <div class="flex">
+                                            <span class="text-muted-foreground w-32">Fragile:</span>
+                                            <span class="text-foreground">{{ livraisonForm.value.fragile ? 'Oui' : 'Non'
+                                                }}</span>
+                                        </div>
+                                        <div *ngIf="livraisonForm.value.poidsEstime" class="flex">
+                                            <span class="text-muted-foreground w-32">Poids:</span>
+                                            <span class="text-foreground">{{ livraisonForm.value.poidsEstime }}
+                                                kg</span>
+                                        </div>
+                                        <div class="flex">
+                                            <span class="text-muted-foreground w-32">Montant COD:</span>
+                                            <span class="text-foreground font-semibold text-primary">
+                                                {{ formatCurrency(livraisonForm.value.montantCOD) }}
+                                            </span>
+                                        </div>
+                                        <div *ngIf="livraisonForm.value.notesLivreur" class="flex">
+                                            <span class="text-muted-foreground w-32">Notes:</span>
+                                            <span class="text-foreground">{{ livraisonForm.value.notesLivreur }}</span>
+                                        </div>
+                                        <div *ngIf="livraisonForm.value.creneauSouhaite" class="flex">
+                                            <span class="text-muted-foreground w-32">Créneau:</span>
+                                            <span class="text-foreground">
+                                                {{
+                                                livraisonForm.value.creneauSouhaite === 'MATIN' ? 'Matin (8h-12h)' :
+                                                livraisonForm.value.creneauSouhaite === 'APRES_MIDI' ? 'Après-midi
+                                                (12h-18h)' :
+                                                livraisonForm.value.creneauSouhaite === 'SOIR' ? 'Soir (18h-21h)' : ''
+                                                }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calcul Tarif -->
+                        <div class="card bg-primary/5 border-primary/20">
+                            <h3 class="font-semibold text-foreground mb-4">💰 Détails financiers</h3>
+
+                            <div *ngIf="calculatingTarif" class="text-center py-8">
+                                <div
+                                    class="inline-block w-6 h-6 border-3 border-primary border-t-transparent rounded-full animate-spin mb-2">
+                                </div>
+                                <p class="text-sm text-muted-foreground">Calcul du tarif...</p>
+                            </div>
+
+                            <div *ngIf="tarif && !calculatingTarif" class="space-y-3">
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-muted-foreground">Montant à collecter (COD):</span>
+                                    <span class="font-medium">{{ formatCurrency(livraisonForm.value.montantCOD)
+                                        }}</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-muted-foreground">Frais de livraison:</span>
+                                    <span class="font-medium text-destructive">- {{ formatCurrency(tarif.fraisLivraison)
+                                        }}</span>
+                                </div>
+                                <div class="border-t border-primary/20"></div>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-semibold text-foreground">Vous recevrez:</span>
+                                    <span class="text-2xl font-bold text-green-600">{{
+                                        formatCurrency(tarif.montantARecevoir) }}</span>
+                                </div>
+                                <p class="text-xs text-muted-foreground mt-2">
+                                    Zone: {{ tarif.zone }} • Délai estimé: {{ tarif.delaiEstime }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-between mt-8">
+                        <button type="button" class="btn-outline" (click)="previousStep()" *ngIf="currentStep > 1">
+                            ← Précédent
+                        </button>
+
+                        <button type="button" class="btn-primary ml-auto" (click)="nextStep()" *ngIf="currentStep < 3">
+                            Suivant →
+                        </button>
+
+                        <button type="submit" class="btn-primary ml-auto text-lg px-8" *ngIf="currentStep === 3"
+                            [disabled]="loading || livraisonForm.invalid">
+                            <span *ngIf="!loading">✅ Confirmer la livraison</span>
+                            <span *ngIf="loading">Création en cours...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div *ngIf="createdLivraison" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+    (click)="closeSuccessModal()">
+    <div class="card max-w-lg w-full" (click)="$event.stopPropagation()">
+        <div class="text-center">
+            <!-- Success Icon -->
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-4xl">✅</span>
+            </div>
+
+            <h2 class="text-2xl font-bold text-foreground mb-2">
+                Livraison créée avec succès !
+            </h2>
+
+            <p class="text-muted-foreground mb-6">
+                Votre demande de livraison a été enregistrée
+            </p>
+
+            <!-- Tracking Number -->
+            <div class="bg-primary/10 border border-primary/20 rounded-lg p-6 mb-6">
+                <p class="text-sm text-muted-foreground mb-2">Numéro de suivi</p>
+                <p class="text-3xl font-bold text-primary mb-4">
+                    {{ createdLivraison.numeroTracking }}
+                </p>
+                <p class="text-sm text-destructive font-medium">
+                    ⚠️ Écrivez ce numéro sur votre colis
+                </p>
+            </div>
+
+            <!-- Details -->
+            <div class="text-left space-y-2 mb-6 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-muted-foreground">Frais de livraison:</span>
+                    <span class="font-medium">{{ formatCurrency(createdLivraison.fraisLivraison) }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-muted-foreground">Vous recevrez:</span>
+                    <span class="font-semibold text-green-600">{{ formatCurrency(createdLivraison.montantARecevoir)
+                        }}</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+                <button class="btn-primary w-full" (click)="closeSuccessModal()">
+                    Voir mes livraisons
+                </button>
+                <button class="btn-outline w-full" routerLink="/vendeur/creer-livraison"
+                    (click)="createdLivraison = null; currentStep = 1; livraisonForm.reset({ urgence: 'NORMAL', fragile: false, montantCOD: 0 })">
+                    Créer une autre livraison
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

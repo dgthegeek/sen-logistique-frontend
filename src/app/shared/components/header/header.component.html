@@ -1,0 +1,32 @@
+<header class="bg-card border-b sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <h1 class="text-xl font-bold text-primary">sen-logistique</h1>
+      </div>
+
+      <!-- User Menu -->
+      <div class="flex items-center gap-4">
+        <!-- User Info -->
+        <div class="hidden md:block text-right">
+          <p class="text-sm font-medium text-foreground">
+            {{ currentUser?.prenom }} {{ currentUser?.nom }}
+          </p>
+          <p class="text-xs text-muted-foreground">
+            {{ currentUser?.role }}
+          </p>
+        </div>
+
+        <!-- Logout Button -->
+        <button
+          (click)="logout()"
+          class="btn-ghost py-2 px-4 text-sm"
+          title="Déconnexion"
+        >
+          Déconnexion
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
