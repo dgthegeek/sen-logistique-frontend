@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { RegisterRequest } from '../models/auth.model';
 
 interface AuthResponse {
   token: string;
@@ -64,4 +65,14 @@ export class AuthService {
   isAdmin(): boolean {
     return this.currentUserSubject.value?.role === 'ADMIN';
   }
+
+  register(data: RegisterRequest): Observable<AuthResponse> {
+  return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, data).pipe(
+    tap(response => {
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('currentUser', JSON.stringify(response.user));
+      this.currentUserSubject.next(response.user);
+    })
+  );
+}
 }

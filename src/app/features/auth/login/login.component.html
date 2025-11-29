@@ -1,0 +1,69 @@
+<div class="min-h-screen bg-background flex items-center justify-center p-4">
+  <div class="card max-w-md w-full">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-foreground mb-2">sen-logistique</h1>
+      <p class="text-muted-foreground">Connectez-vous à votre compte</p>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Téléphone -->
+      <div class="mb-4">
+        <label for="telephone" class="form-label">
+          Numéro de téléphone *
+        </label>
+        <input
+          id="telephone"
+          type="tel"
+          formControlName="telephone"
+          class="form-input"
+          [class.border-destructive]="telephone?.invalid && telephone?.touched"
+          placeholder="77 123 45 67"
+        />
+        <p *ngIf="telephone?.invalid && telephone?.touched" class="form-error">
+          Numéro de téléphone invalide (ex: 77 123 45 67)
+        </p>
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="mb-6">
+        <label for="password" class="form-label">
+          Mot de passe *
+        </label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="form-input"
+          [class.border-destructive]="password?.invalid && password?.touched"
+          placeholder="••••••••"
+        />
+        <p *ngIf="password?.invalid && password?.touched" class="form-error">
+          Le mot de passe doit contenir au moins 6 caractères
+        </p>
+      </div>
+
+      <!-- Bouton Submit -->
+      <button
+        type="submit"
+        class="btn-primary w-full mb-4"
+        [disabled]="loading || loginForm.invalid"
+      >
+        <span *ngIf="!loading">Se connecter</span>
+        <span *ngIf="loading">Connexion...</span>
+      </button>
+
+      <!-- Lien inscription -->
+      <p class="text-center text-sm text-muted-foreground">
+        Pas encore de compte ?
+        <a routerLink="/register" class="text-primary hover:underline font-medium">
+          Créer un compte
+        </a>
+      </p>
+    </form>
+  </div>
+</div>
