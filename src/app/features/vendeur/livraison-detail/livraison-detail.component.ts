@@ -5,7 +5,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
-import { Livraison, StatutLivraison } from '../../../core/models/livraison.model';
+import { LivraisonDetail, StatutLivraison } from '../../../core/models/livraison.model';
 
 @Component({
   selector: 'app-livraison-detail',
@@ -15,7 +15,7 @@ import { Livraison, StatutLivraison } from '../../../core/models/livraison.model
   styleUrls: ['./livraison-detail.component.css']
 })
 export class LivraisonDetailComponent implements OnInit {
-  livraison: Livraison | null = null;
+  livraison: LivraisonDetail | null = null;
   loading = true;
   errorMessage = '';
 
@@ -23,7 +23,7 @@ export class LivraisonDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private apiService: ApiService
-  ) {}
+  ) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -41,14 +41,14 @@ export class LivraisonDetailComponent implements OnInit {
       },
       error: (error) => {
         console.error('Erreur chargement livraison:', error);
-        this.errorMessage = 'Impossible de charger les détails de la livraison';
+        this.errorMessage = error.error?.message || 'Impossible de charger les détails de la livraison';
         this.loading = false;
       }
     });
   }
 
   getStatusBadgeClass(statut: StatutLivraison): string {
-    const statusMap: {[key in StatutLivraison]: string} = {
+    const statusMap: { [key in StatutLivraison]: string } = {
       'EN_ATTENTE_RAMASSAGE': 'badge-pending',
       'RAMASSE': 'badge-picked',
       'EN_ROUTE': 'badge-transit',
@@ -61,7 +61,7 @@ export class LivraisonDetailComponent implements OnInit {
   }
 
   getStatusLabel(statut: StatutLivraison): string {
-    const labels: {[key in StatutLivraison]: string} = {
+    const labels: { [key in StatutLivraison]: string } = {
       'EN_ATTENTE_RAMASSAGE': 'En attente de ramassage',
       'RAMASSE': 'Ramassé',
       'EN_ROUTE': 'En route vers le client',
@@ -74,7 +74,7 @@ export class LivraisonDetailComponent implements OnInit {
   }
 
   getStatusIcon(statut: StatutLivraison): string {
-    const icons: {[key in StatutLivraison]: string} = {
+    const icons: { [key in StatutLivraison]: string } = {
       'EN_ATTENTE_RAMASSAGE': '⏳',
       'RAMASSE': '📦',
       'EN_ROUTE': '🚚',
@@ -86,7 +86,7 @@ export class LivraisonDetailComponent implements OnInit {
     return icons[statut];
   }
 
-  formatDate(date: string | undefined): string {
+  formatDate(date: string | null): string {
     if (!date) return 'N/A';
     return new Date(date).toLocaleDateString('fr-FR', {
       weekday: 'long',
@@ -98,7 +98,7 @@ export class LivraisonDetailComponent implements OnInit {
     });
   }
 
-  formatDateShort(date: string | undefined): string {
+  formatDateShort(date: string | null): string {
     if (!date) return 'N/A';
     return new Date(date).toLocaleDateString('fr-FR', {
       day: '2-digit',
@@ -116,8 +116,17 @@ export class LivraisonDetailComponent implements OnInit {
   }
 
   callClient() {
-    if (this.livraison?.telephoneClient) {
-      window.location.href = `tel:${this.livraison.telephoneClient}`;
+    if (this.livraison?.client.telephone) {
+      window.location.href = `tel:${this.livraison.client.telephone}`;
+    }
+  }
+
+  openMaps() {
+    if (this.livraison) {
+      const address = encodeURIComponent(
+        `${this.livraison.client.adresse}, ${this.livraison.zone}, Sénégal`
+      );
+      window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank');
     }
   }
 
@@ -127,18 +136,9 @@ export class LivraisonDetailComponent implements OnInit {
     return (completedSteps / steps.length) * 100;
   }
 
-  openMaps() {
-    if (this.livraison) {
-      const address = encodeURIComponent(
-        `${this.livraison.adresseComplete}, ${this.livraison.quartier}, ${this.livraison.commune}, Sénégal`
-      );
-      window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank');
-    }
-  }
-
   getTimelineSteps() {
     if (!this.livraison) return [];
-    
+
     const steps = [
       {
         label: 'Livraison créée',
@@ -154,7 +154,7 @@ export class LivraisonDetailComponent implements OnInit {
       },
       {
         label: 'En route',
-        date: undefined,
+        date: null,
         completed: ['EN_ROUTE', 'LIVREE'].includes(this.livraison.statut),
         active: this.livraison.statut === 'EN_ROUTE'
       },
@@ -165,7 +165,7 @@ export class LivraisonDetailComponent implements OnInit {
         active: this.livraison.statut === 'LIVREE'
       }
     ];
-    
+
     return steps;
   }
 }

@@ -12,7 +12,7 @@ export interface Quartier {
 }
 
 export interface CalculTarifRequest {
-  zoneId: number; 
+  zoneId: number;
   communeDepart: string;
   quartierDepart: string;
   communeDestination: string;
@@ -40,85 +40,24 @@ export interface CreateLivraisonRequest {
   // Infos colis
   descriptionProduit: string;
   fragile: boolean;
-  poidsEstime?: number;
+  poids?: number;
   montantCOD: number;
+  zoneId: number;
   urgence: 'NORMAL' | 'EXPRESS';
-  notesLivreur?: string;
+  creneauSouhaite?: 'MATIN' | 'APRES_MIDI' | 'SOIR';
+  notesPourLivreur?: string;
 }
 
 export interface CreateLivraisonResponse {
   id: number;
   numeroTracking: string;
   qrCodeUrl: string;
-  statut: string;
-  fraisLivraison: number;
-  montantARecevoir: number;
-  dateCreation: Date;
-}
-
-export interface CreateLivraisonRequest {
-  // Infos client
-  nomClient: string;
-  telephoneClient: string;
-  commune: string;
-  quartier: string;
-  adresseComplete: string;
-  pointRepere?: string;
-  
-  // Infos colis
-  descriptionProduit: string;
-  fragile: boolean;
-  poids?: number;  
-  montantCOD: number;
-  zoneId: number; 
-  urgence: 'NORMAL' | 'EXPRESS';
-  creneauSouhaite?: 'MATIN' | 'APRES_MIDI' | 'SOIR';  // Optionnel
-  notesPourLivreur?: string;  
-}
-
-export interface Livraison {
-  id: number;
-  numeroTracking: string;
-  vendeurId: number;
-  
-  // Client
-  nomClient: string;
-  telephoneClient: string;
-  commune: string;
-  quartier: string;
-  adresseComplete: string;
-  pointRepere?: string;
-  
-  // Colis
-  descriptionProduit: string;
-  fragile: boolean;
-  poids?: number;
-  montantCOD: number;
-  
-  // Livraison
   statut: StatutLivraison;
-  urgence: 'NORMAL' | 'EXPRESS';
-  fraisLivraison: number;
-  montantARecevoir: number;
-  
-  // Dates
   dateCreation: string;
-  dateRamassage?: string;
-  dateLivraison?: string;
-  
-  // QR Code
-  qrCodeUrl?: string;
-  
-  // Notes
-  notesPourLivreur?: string;
-  commentaireLivreur?: string;
-  
-  // Zone
-  zoneId: number;
-  zone?: {
-    id: number;
-    nom: string;
-  };
+  fraisLivraison: number;
+  montantCOD: number;
+  montantARecevoir: number;
+  message: string;
 }
 
 export type StatutLivraison = 
@@ -130,12 +69,63 @@ export type StatutLivraison =
   | 'ECHEC_REFUSE'
   | 'ANNULEE';
 
+// Pour la liste (GET /vendeur/livraisons)
+export interface LivraisonResume {
+  id: number;
+  numeroTracking: string;
+  qrCodeUrl: string;
+  statut: StatutLivraison;
+  dateCreation: string;
+  fraisLivraison: number;
+  montantCOD: number;
+  montantARecevoir: number;
+  message: string;
+}
+
+// Pour le détail (GET /vendeur/livraisons/{id})
+export interface LivraisonDetail {
+  id: number;
+  numeroTracking: string;
+  qrCodeUrl: string;
+  statut: StatutLivraison;
+  dateCreation: string;
+  dateRamassage: string | null;
+  dateLivraison: string | null;
+  vendeur: {
+    id: number;
+    nom: string;
+    prenom: string;
+    telephone: string;
+    nomBoutique: string;
+  };
+  client: {
+    nom: string;
+    telephone: string;
+    adresse: string;
+    pointRepere: string | null;
+  };
+  produit: {
+    description: string;
+    fragile: boolean;
+    poids: number | null;
+  };
+  financier: {
+    montantCOD: number;
+    fraisLivraison: number;
+    cashCollecte: number | null;
+  };
+  zone: string;
+  urgence: 'NORMAL' | 'EXPRESS';
+  commentaireLivraison: string | null;
+}
+
+// Response paginée
 export interface LivraisonsResponse {
-  content: Livraison[];
+  content: LivraisonResume[];
+  page: number;
+  size: number;
   totalElements: number;
   totalPages: number;
-  number: number;
-  size: number;
 }
 
 export interface LivraisonFilters {

@@ -1,0 +1,283 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h1 class="text-3xl font-bold text-foreground mb-2">
+              Livraisons
+            </h1>
+            <p class="text-muted-foreground">
+              {{ totalElements }} livraison{{ totalElements > 1 ? 's' : '' }}
+            </p>
+          </div>
+
+          <button (click)="openScannerModal()" class="btn-primary">
+            📱 Scanner QR Code
+          </button>
+        </div>
+
+        <!-- Filtres -->
+        <div class="card mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Statut</label>
+              <select [(ngModel)]="selectedStatut" (change)="onFilterChange()" class="form-select">
+                <option *ngFor="let s of statuts" [value]="s.value">{{ s.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="loading" class="card">
+          <div class="flex items-center justify-center py-12">
+            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div *ngIf="errorMessage && !loading" class="card">
+          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+            {{ errorMessage }}
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div *ngIf="!loading && !errorMessage" class="card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="table">
+              <thead class="table-header">
+                <tr>
+                  <th class="table-header-cell">Tracking</th>
+                  <th class="table-header-cell">Vendeur</th>
+                  <th class="table-header-cell">Client</th>
+                  <th class="table-header-cell">Destination</th>
+                  <th class="table-header-cell">COD</th>
+                  <th class="table-header-cell">Statut</th>
+                  <th class="table-header-cell">Date</th>
+                  <th class="table-header-cell">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let livraison of livraisons" class="table-row">
+                  <td class="table-cell font-mono font-semibold text-primary">
+                    {{ livraison.numeroTracking }}
+                  </td>
+                  <td class="table-cell">
+                    <div class="font-medium">{{ livraison.vendeur.prenom }} {{ livraison.vendeur.nom }}</div>
+                    <div class="text-sm text-muted-foreground">{{ livraison.vendeur.telephone }}</div>
+                  </td>
+                  <td class="table-cell">
+                    <div class="font-medium">{{ livraison.client.nom }}</div>
+                    <div class="text-sm text-muted-foreground">{{ livraison.client.telephone }}</div>
+                  </td>
+                  <td class="table-cell">
+                    <div>{{ livraison.client.quartier }}</div>
+                    <div class="text-sm text-muted-foreground">{{ livraison.client.commune }}</div>
+                  </td>
+                  <td class="table-cell font-semibold">
+                    {{ livraison.financier.montantCOD | fcfa }}
+                  </td>
+                  <td class="table-cell">
+                    <span [class]="getStatusBadgeClass(livraison.statut)">
+                      {{ livraison.statut }}
+                    </span>
+                  </td>
+                  <td class="table-cell text-sm text-muted-foreground">
+                    {{ formatDate(livraison.dateCreation) }}
+                  </td>
+                  <td class="table-cell">
+                    <div class="flex gap-2">
+                      <button
+                        (click)="callClient(livraison.client.telephone)"
+                        class="text-sm text-primary hover:underline"
+                      >
+                        📞
+                      </button>
+                      <button
+                        (click)="openMaps(livraison.client.adresse, livraison.client.commune)"
+                        class="text-sm text-primary hover:underline"
+                      >
+                        🗺️
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="livraisons.length === 0" class="text-center py-12">
+            <p class="text-muted-foreground">Aucune livraison trouvée</p>
+          </div>
+
+          <!-- Pagination -->
+          <div *ngIf="livraisons.length > 0 && totalPages > 1" class="border-t p-4">
+            <div class="flex items-center justify-between">
+              <div class="text-sm text-muted-foreground">
+                Page {{ currentPage + 1 }} sur {{ totalPages }}
+              </div>
+              <div class="flex gap-2">
+                <button
+                  (click)="previousPage()"
+                  [disabled]="currentPage === 0"
+                  class="btn-outline text-sm disabled:opacity-50"
+                >
+                  ← Précédent
+                </button>
+                <button
+                  (click)="nextPage()"
+                  [disabled]="currentPage >= totalPages - 1"
+                  class="btn-outline text-sm disabled:opacity-50"
+                >
+                  Suivant →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Scanner Modal -->
+<div
+  *ngIf="showScannerModal"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+  (click)="closeScannerModal()"
+>
+  <div class="card max-w-md w-full" (click)="$event.stopPropagation()">
+    <h2 class="text-2xl font-bold mb-6">Scanner QR Code</h2>
+    
+    <div class="mb-6">
+      <label class="form-label">Numéro de tracking</label>
+      <input
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="scanQRCode()"
+        type="text"
+        class="form-input"
+        placeholder="Ex: DKR-00001"
+        autofocus
+      />
+    </div>
+
+    <div class="flex gap-3">
+      <button (click)="closeScannerModal()" class="btn-outline flex-1">
+        Annuler
+      </button>
+      <button (click)="scanQRCode()" class="btn-primary flex-1">
+        Rechercher
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div
+  *ngIf="showConfirmModal && selectedLivraison"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+  (click)="closeConfirmModal()"
+>
+  <div class="card max-w-2xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <h2 class="text-2xl font-bold mb-6">Confirmer la livraison</h2>
+
+    <!-- Info Livraison -->
+    <div class="bg-muted/30 rounded-lg p-4 mb-6">
+      <div class="font-mono text-2xl font-bold text-primary mb-4">
+        {{ selectedLivraison.numeroTracking }}
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <div class="text-muted-foreground">Vendeur</div>
+          <div class="font-medium">{{ selectedLivraison.vendeur.prenom }} {{ selectedLivraison.vendeur.nom }}</div>
+        </div>
+        <div>
+          <div class="text-muted-foreground">Client</div>
+          <div class="font-medium">{{ selectedLivraison.client.nom }}</div>
+        </div>
+        <div>
+          <div class="text-muted-foreground">Téléphone</div>
+          <div class="font-medium">{{ selectedLivraison.client.telephone }}</div>
+        </div>
+        <div>
+          <div class="text-muted-foreground">Montant COD</div>
+          <div class="font-bold text-lg">{{ selectedLivraison.financier.montantCOD | fcfa }}</div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-sm">
+        <div class="text-muted-foreground">Adresse</div>
+        <div>{{ selectedLivraison.client.adresse }}</div>
+        <div class="text-muted-foreground">{{ selectedLivraison.client.quartier }}, {{ selectedLivraison.client.commune }}</div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="space-y-4 mb-6">
+      <div>
+        <label class="form-label">Cash collecté *</label>
+        <div class="relative">
+          <input
+            [(ngModel)]="cashCollecte"
+            type="number"
+            class="form-input pr-16"
+            min="0"
+          />
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+            FCFA
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input
+          [(ngModel)]="colisRemis"
+          type="checkbox"
+          id="colisRemis"
+          class="w-4 h-4"
+        />
+        <label for="colisRemis" class="text-sm font-medium cursor-pointer">
+          Colis remis au client
+        </label>
+      </div>
+
+      <div>
+        <label class="form-label">Commentaire (optionnel)</label>
+        <textarea
+          [(ngModel)]="commentaire"
+          class="form-textarea"
+          rows="3"
+          placeholder="Ex: Client très satisfait, livraison rapide"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-3">
+      <button
+        (click)="closeConfirmModal()"
+        class="btn-outline flex-1"
+        [disabled]="submittingConfirmation"
+      >
+        Annuler
+      </button>
+      <button
+        (click)="confirmerLivraison()"
+        class="btn-primary flex-1"
+        [disabled]="submittingConfirmation"
+      >
+        <span *ngIf="!submittingConfirmation">✅ Confirmer livraison</span>
+        <span *ngIf="submittingConfirmation">Confirmation...</span>
+      </button>
+    </div>
+  </div>
+</div>

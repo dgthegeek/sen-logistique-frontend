@@ -1,0 +1,387 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+          <h1 class="text-3xl font-bold text-foreground mb-2">
+            Finances Admin
+          </h1>
+          <p class="text-muted-foreground">
+            Gérez les paiements aux vendeurs
+          </p>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="loading" class="card">
+          <div class="flex items-center justify-center py-12">
+            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div *ngIf="errorMessage && !loading" class="card">
+          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+            {{ errorMessage }}
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div *ngIf="dashboard && paiementsPending && !loading" class="space-y-6">
+          <!-- Stats Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Cash collecté -->
+            <div class="stat-card bg-green-50 border-green-200">
+              <div class="stat-card-icon bg-green-100 text-green-600">
+                💵
+              </div>
+              <div class="stat-card-value text-green-600">
+                {{ dashboard.cashCollecte | fcfa }}
+              </div>
+              <div class="stat-card-label">
+                Cash collecté
+              </div>
+            </div>
+
+            <!-- À payer vendeurs -->
+            <div class="stat-card bg-orange-50 border-orange-200">
+              <div class="stat-card-icon bg-orange-100 text-orange-600">
+                💸
+              </div>
+              <div class="stat-card-value text-orange-600">
+                {{ dashboard.aPayerVendeurs | fcfa }}
+              </div>
+              <div class="stat-card-label">
+                À payer aux vendeurs
+              </div>
+            </div>
+
+            <!-- Commissions -->
+            <div class="stat-card bg-primary/5 border-primary/20">
+              <div class="stat-card-icon bg-primary/10 text-primary">
+                📈
+              </div>
+              <div class="stat-card-value text-primary">
+                {{ dashboard.commissions | fcfa }}
+              </div>
+              <div class="stat-card-label">
+                Commissions plateforme
+              </div>
+            </div>
+
+            <!-- Livraisons -->
+            <div class="stat-card">
+              <div class="stat-card-icon bg-blue-100 text-blue-600">
+                📦
+              </div>
+              <div class="stat-card-value">
+                {{ dashboard.statistiques.nombreLivraisons }}
+              </div>
+              <div class="stat-card-label">
+                Livraisons
+              </div>
+            </div>
+          </div>
+
+          <!-- Demandes de paiement en attente -->
+          <div class="card">
+            <h2 class="text-xl font-bold text-foreground mb-6">
+              Demandes de paiement en attente
+              <span class="text-sm font-normal text-muted-foreground ml-2">
+                ({{ paiementsPending.demandes.length }})
+              </span>
+            </h2>
+
+            <div *ngIf="paiementsPending.demandes.length > 0" class="space-y-3">
+              <div
+                *ngFor="let demande of paiementsPending.demandes"
+                class="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+              >
+                <div class="flex items-center gap-4 flex-1">
+                  <div class="text-2xl">💰</div>
+                  <div class="flex-1">
+                    <div class="font-semibold text-foreground">
+                      {{ demande.vendeur.prenom }} {{ demande.vendeur.nom }}
+                    </div>
+                    <div class="text-sm text-muted-foreground">
+                      {{ demande.vendeur.nomBoutique }} • {{ demande.vendeur.telephone }}
+                    </div>
+                    <div class="text-sm text-muted-foreground mt-1">
+                      {{ demande.nombreLivraisons }} livraison{{ demande.nombreLivraisons > 1 ? 's' : '' }} • Demandé le {{ formatDate(demande.dateDemande) }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-primary mb-1">
+                      {{ demande.montant | fcfa }}
+                    </div>
+                  </div>
+
+                  <div class="flex gap-2">
+                    <button
+                      (click)="callVendeur(demande.vendeur.telephone)"
+                      class="btn-outline text-sm"
+                    >
+                      📞
+                    </button>
+                    <button
+                      (click)="openPayerModal(demande)"
+                      class="btn-primary text-sm"
+                    >
+                      💸 Payer
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Total -->
+              <div class="flex items-center justify-between pt-4 border-t">
+                <div class="font-semibold text-foreground text-lg">Total à payer</div>
+                <div class="text-3xl font-bold text-primary">
+                  {{ paiementsPending.totalAPayer | fcfa }}
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="paiementsPending.demandes.length === 0" class="text-center py-12">
+              <div class="text-6xl mb-4">✅</div>
+              <h3 class="text-xl font-semibold text-foreground mb-2">
+                Aucune demande en attente
+              </h3>
+              <p class="text-muted-foreground">
+                Les nouvelles demandes apparaîtront ici
+              </p>
+            </div>
+          </div>
+
+          <!-- Historique Transactions -->
+          <div class="card">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-xl font-bold text-foreground">
+                Historique des transactions
+              </h2>
+              <span class="text-sm text-muted-foreground">
+                {{ totalElements }} transaction{{ totalElements > 1 ? 's' : '' }}
+              </span>
+            </div>
+
+            <!-- Filtres -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div>
+                <label class="form-label">Date début</label>
+                <input
+                  [(ngModel)]="dateDebut"
+                  (change)="onFilterChange()"
+                  type="date"
+                  class="form-input"
+                />
+              </div>
+              <div>
+                <label class="form-label">Date fin</label>
+                <input
+                  [(ngModel)]="dateFin"
+                  (change)="onFilterChange()"
+                  type="date"
+                  class="form-input"
+                />
+              </div>
+              <div class="flex items-end">
+                <button
+                  (click)="dateDebut = ''; dateFin = ''; selectedVendeurId = null; onFilterChange()"
+                  class="btn-outline w-full"
+                >
+                  Réinitialiser filtres
+                </button>
+              </div>
+            </div>
+
+            <!-- Loading Transactions -->
+            <div *ngIf="loadingTransactions" class="text-center py-8">
+              <div class="inline-block w-6 h-6 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
+            </div>
+
+            <!-- Table -->
+            <div *ngIf="!loadingTransactions && transactions.length > 0" class="overflow-x-auto">
+              <table class="table">
+                <thead class="table-header">
+                  <tr>
+                    <th class="table-header-cell">Date</th>
+                    <th class="table-header-cell">Vendeur</th>
+                    <th class="table-header-cell">Type</th>
+                    <th class="table-header-cell">Référence</th>
+                    <th class="table-header-cell">Montant</th>
+                    <th class="table-header-cell">Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let transaction of transactions" class="table-row">
+                    <td class="table-cell text-sm">
+                      {{ formatDateShort(transaction.date) }}
+                    </td>
+                    <td class="table-cell font-medium">
+                      {{ transaction.vendeur }}
+                    </td>
+                    <td class="table-cell">
+                      <span [class]="getTypeBadgeClass(transaction.type)">
+                        {{ transaction.type }}
+                      </span>
+                    </td>
+                    <td class="table-cell font-mono text-sm">
+                      {{ transaction.reference }}
+                    </td>
+                    <td class="table-cell font-semibold text-green-600">
+                      {{ transaction.montant | fcfa }}
+                    </td>
+                    <td class="table-cell">
+                      <span [class]="getStatutBadgeClass(transaction.statut)">
+                        {{ transaction.statut }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="!loadingTransactions && transactions.length === 0" class="text-center py-12">
+              <div class="text-6xl mb-4">💳</div>
+              <h3 class="text-xl font-semibold text-foreground mb-2">
+                Aucune transaction
+              </h3>
+              <p class="text-muted-foreground">
+                L'historique des transactions apparaîtra ici
+              </p>
+            </div>
+
+            <!-- Pagination -->
+            <div *ngIf="transactions.length > 0 && totalPages > 1" class="border-t pt-4 mt-4">
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-muted-foreground">
+                  Page {{ currentPage + 1 }} sur {{ totalPages }}
+                </div>
+
+                <div class="flex gap-2">
+                  <button
+                    (click)="previousPage()"
+                    [disabled]="currentPage === 0"
+                    class="btn-outline text-sm disabled:opacity-50"
+                  >
+                    ← Précédent
+                  </button>
+                  <button
+                    (click)="nextPage()"
+                    [disabled]="currentPage >= totalPages - 1"
+                    class="btn-outline text-sm disabled:opacity-50"
+                  >
+                    Suivant →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal Payer Vendeur -->
+<div
+  *ngIf="showPayerModal && selectedDemande"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+  (click)="closePayerModal()"
+>
+  <div class="card max-w-lg w-full" (click)="$event.stopPropagation()">
+    <h2 class="text-2xl font-bold text-foreground mb-6">
+      💸 Payer un vendeur
+    </h2>
+
+    <!-- Info Vendeur -->
+    <div class="bg-muted/30 rounded-lg p-4 mb-6">
+      <div class="grid grid-cols-2 gap-4 text-sm mb-4">
+        <div>
+          <div class="text-muted-foreground">Vendeur</div>
+          <div class="font-semibold">{{ selectedDemande.vendeur.prenom }} {{ selectedDemande.vendeur.nom }}</div>
+        </div>
+        <div>
+          <div class="text-muted-foreground">Boutique</div>
+          <div class="font-medium">{{ selectedDemande.vendeur.nomBoutique }}</div>
+        </div>
+        <div>
+          <div class="text-muted-foreground">Téléphone</div>
+          <div class="font-medium">{{ selectedDemande.vendeur.telephone }}</div>
+        </div>
+        <div>
+          <div class="text-muted-foreground">Livraisons</div>
+          <div class="font-medium">{{ selectedDemande.nombreLivraisons }}</div>
+        </div>
+      </div>
+
+      <div class="border-t pt-4">
+        <div class="text-sm text-muted-foreground mb-1">Solde à payer</div>
+        <div class="text-3xl font-bold text-primary">
+          {{ selectedDemande.montant | fcfa }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="space-y-4 mb-6">
+      <!-- Montant -->
+      <div>
+        <label class="form-label">Montant à payer *</label>
+        <div class="relative">
+          <input
+            [(ngModel)]="montantAPayer"
+            type="number"
+            class="form-input pr-16"
+            min="0"
+            [max]="selectedDemande.montant"
+          />
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+            FCFA
+          </span>
+        </div>
+        <p class="form-helper">
+          Maximum: {{ selectedDemande.montant | fcfa }}
+        </p>
+      </div>
+
+      <!-- Commentaire -->
+      <div>
+        <label class="form-label">Commentaire (optionnel)</label>
+        <textarea
+          [(ngModel)]="commentairePaiement"
+          class="form-textarea"
+          rows="3"
+          placeholder="Ex: Paiement Wave - Semaine 48"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-3">
+      <button
+        (click)="closePayerModal()"
+        class="btn-outline flex-1"
+        [disabled]="submittingPaiement"
+      >
+        Annuler
+      </button>
+      <button
+        (click)="payerVendeur()"
+        class="btn-primary flex-1"
+        [disabled]="submittingPaiement || montantAPayer <= 0"
+      >
+        <span *ngIf="!submittingPaiement">💸 Payer {{ montantAPayer | fcfa }}</span>
+        <span *ngIf="submittingPaiement">Traitement...</span>
+      </button>
+    </div>
+  </div>
+</div>

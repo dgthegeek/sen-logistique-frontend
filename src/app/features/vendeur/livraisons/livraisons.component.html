@@ -1,13 +1,9 @@
 <div class="min-h-screen bg-background">
-  <!-- Header -->
   <app-header></app-header>
 
-  <!-- Main Layout -->
   <div class="flex">
-    <!-- Sidebar -->
     <app-sidebar></app-sidebar>
 
-    <!-- Main Content -->
     <main class="flex-1 p-6">
       <div class="max-w-7xl mx-auto">
         <!-- Header -->
@@ -20,10 +16,7 @@
               {{ totalElements }} livraison{{ totalElements > 1 ? 's' : '' }} au total
             </p>
           </div>
-          <button
-            routerLink="/vendeur/creer-livraison"
-            class="btn-primary"
-          >
+          <button routerLink="/vendeur/creer-livraison" class="btn-primary">
             ➕ Nouvelle livraison
           </button>
         </div>
@@ -31,7 +24,6 @@
         <!-- Filtres -->
         <div class="card mb-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Recherche -->
             <div>
               <label class="form-label">Rechercher</label>
               <div class="flex gap-2">
@@ -40,34 +32,22 @@
                   (keyup.enter)="onSearch()"
                   type="text"
                   class="form-input flex-1"
-                  placeholder="Numéro de tracking, nom client, téléphone..."
+                  placeholder="Numéro de tracking..."
                 />
-                <button
-                  (click)="onSearch()"
-                  class="btn-primary"
-                >
-                  🔍
-                </button>
+                <button (click)="onSearch()" class="btn-primary">🔍</button>
               </div>
             </div>
 
-            <!-- Filtre statut -->
             <div>
               <label class="form-label">Statut</label>
-              <select
-                [(ngModel)]="selectedStatut"
-                (change)="onFilterChange()"
-                class="form-select"
-              >
-                <option *ngFor="let s of statuts" [value]="s.value">
-                  {{ s.label }}
-                </option>
+              <select [(ngModel)]="selectedStatut" (change)="onFilterChange()" class="form-select">
+                <option *ngFor="let s of statuts" [value]="s.value">{{ s.label }}</option>
               </select>
             </div>
           </div>
         </div>
 
-        <!-- Loading State -->
+        <!-- Loading -->
         <div *ngIf="loading" class="card">
           <div class="flex items-center justify-center py-12">
             <div class="text-center">
@@ -77,24 +57,22 @@
           </div>
         </div>
 
-        <!-- Error State -->
+        <!-- Error -->
         <div *ngIf="errorMessage && !loading" class="card">
           <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
             {{ errorMessage }}
           </div>
         </div>
 
-        <!-- Table -->
+        <!-- Table Desktop -->
         <div *ngIf="!loading && !errorMessage" class="card overflow-hidden">
-          <!-- Desktop Table -->
           <div class="hidden md:block overflow-x-auto">
             <table class="table">
               <thead class="table-header">
                 <tr>
                   <th class="table-header-cell">Numéro</th>
-                  <th class="table-header-cell">Client</th>
-                  <th class="table-header-cell">Destination</th>
                   <th class="table-header-cell">Montant COD</th>
+                  <th class="table-header-cell">Frais</th>
                   <th class="table-header-cell">Vous recevrez</th>
                   <th class="table-header-cell">Statut</th>
                   <th class="table-header-cell">Date</th>
@@ -102,23 +80,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  *ngFor="let livraison of livraisons"
-                  class="table-row"
-                >
+                <tr *ngFor="let livraison of livraisons" class="table-row">
                   <td class="table-cell font-mono font-medium text-primary">
                     {{ livraison.numeroTracking }}
                   </td>
-                  <td class="table-cell">
-                    <div class="font-medium">{{ livraison.nomClient }}</div>
-                    <div class="text-xs text-muted-foreground">{{ livraison.telephoneClient }}</div>
-                  </td>
-                  <td class="table-cell">
-                    <div>{{ livraison.quartier }}</div>
-                    <div class="text-xs text-muted-foreground">{{ livraison.commune }}</div>
-                  </td>
                   <td class="table-cell font-medium">
                     {{ livraison.montantCOD | fcfa }}
+                  </td>
+                  <td class="table-cell text-destructive">
+                    {{ livraison.fraisLivraison | fcfa }}
                   </td>
                   <td class="table-cell font-semibold text-green-600">
                     {{ livraison.montantARecevoir | fcfa }}
@@ -152,13 +122,8 @@
               [routerLink]="['/vendeur/livraisons', livraison.id]"
             >
               <div class="flex items-start justify-between mb-3">
-                <div>
-                  <div class="font-mono font-medium text-primary text-sm">
-                    {{ livraison.numeroTracking }}
-                  </div>
-                  <div class="font-semibold text-foreground mt-1">
-                    {{ livraison.nomClient }}
-                  </div>
+                <div class="font-mono font-medium text-primary text-sm">
+                  {{ livraison.numeroTracking }}
                 </div>
                 <span [class]="getStatusBadgeClass(livraison.statut)">
                   {{ getStatusLabel(livraison.statut) }}
@@ -167,12 +132,12 @@
 
               <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
-                  <span class="text-muted-foreground">Destination:</span>
-                  <span class="text-foreground">{{ livraison.quartier }}, {{ livraison.commune }}</span>
-                </div>
-                <div class="flex justify-between">
                   <span class="text-muted-foreground">COD:</span>
                   <span class="font-medium">{{ livraison.montantCOD | fcfa }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted-foreground">Frais:</span>
+                  <span class="text-destructive">{{ livraison.fraisLivraison | fcfa }}</span>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-muted-foreground">Vous recevrez:</span>
@@ -180,7 +145,7 @@
                 </div>
                 <div class="flex justify-between">
                   <span class="text-muted-foreground">Date:</span>
-                  <span class="text-foreground text-xs">{{ formatDate(livraison.dateCreation) }}</span>
+                  <span class="text-xs">{{ formatDate(livraison.dateCreation) }}</span>
                 </div>
               </div>
             </div>
@@ -220,7 +185,6 @@
                   ← Précédent
                 </button>
 
-                <!-- Page numbers (desktop only) -->
                 <div class="hidden md:flex items-center gap-1">
                   <button
                     *ngFor="let page of pages"

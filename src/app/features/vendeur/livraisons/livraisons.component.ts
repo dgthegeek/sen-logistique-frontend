@@ -6,7 +6,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
-import { Livraison, LivraisonsResponse, StatutLivraison, LivraisonFilters } from '../../../core/models/livraison.model';
+import { LivraisonResume, LivraisonsResponse, StatutLivraison, LivraisonFilters } from '../../../core/models/livraison.model';
 
 @Component({
   selector: 'app-livraisons',
@@ -16,17 +16,15 @@ import { Livraison, LivraisonsResponse, StatutLivraison, LivraisonFilters } from
   styleUrls: ['./livraisons.component.css']
 })
 export class LivraisonsComponent implements OnInit {
-  livraisons: Livraison[] = [];
+  livraisons: LivraisonResume[] = [];
   loading = true;
   errorMessage = '';
   
-  // Pagination
   currentPage = 0;
   pageSize = 10;
   totalElements = 0;
   totalPages = 0;
   
-  // Filtres
   selectedStatut: StatutLivraison | '' = '';
   searchQuery = '';
   
@@ -66,7 +64,7 @@ export class LivraisonsComponent implements OnInit {
         this.livraisons = response.content;
         this.totalElements = response.totalElements;
         this.totalPages = response.totalPages;
-        this.currentPage = response.number;
+        this.currentPage = response.page;
         this.loading = false;
       },
       error: (error) => {
@@ -78,7 +76,7 @@ export class LivraisonsComponent implements OnInit {
   }
 
   onFilterChange() {
-    this.currentPage = 0; // Reset à la première page
+    this.currentPage = 0;
     this.loadLivraisons();
   }
 

@@ -340,7 +340,7 @@
                                         <div class="flex">
                                             <span class="text-muted-foreground w-32">Montant COD:</span>
                                             <span class="text-foreground font-semibold text-primary">
-                                                {{ formatCurrency(livraisonForm.value.montantCOD) }}
+                                                {{ livraisonForm.value.montantCOD }}
                                             </span>
                                         </div>
                                         <div *ngIf="livraisonForm.value.notesLivreur" class="flex">
@@ -377,19 +377,28 @@
                             <div *ngIf="tarif && !calculatingTarif" class="space-y-3">
                                 <div class="flex justify-between items-center text-sm">
                                     <span class="text-muted-foreground">Montant à collecter (COD):</span>
-                                    <span class="font-medium">{{ formatCurrency(livraisonForm.value.montantCOD)
-                                        }}</span>
+                                    <span class="font-medium">{{ livraisonForm.value.montantCOD }}</span>
                                 </div>
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="text-muted-foreground">Frais de livraison:</span>
-                                    <span class="font-medium text-destructive">- {{ formatCurrency(tarif.fraisLivraison)
-                                        }}</span>
+                                <div class="space-y-2 mb-6 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-muted-foreground">Montant COD:</span>
+                                        <span class="font-medium">{{ createdLivraison?.montantCOD | fcfa }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-muted-foreground">Frais de livraison:</span>
+                                        <span class="font-medium text-destructive">- {{ createdLivraison?.fraisLivraison
+                                            | fcfa }}</span>
+                                    </div>
+                                    <div class="flex justify-between border-t pt-2">
+                                        <span class="text-muted-foreground font-semibold">Vous recevrez:</span>
+                                        <span class="font-semibold text-green-600">{{ createdLivraison?.montantARecevoir
+                                            | fcfa }}</span>
+                                    </div>
                                 </div>
                                 <div class="border-t border-primary/20"></div>
                                 <div class="flex justify-between items-center">
                                     <span class="font-semibold text-foreground">Vous recevrez:</span>
-                                    <span class="text-2xl font-bold text-green-600">{{
-                                        formatCurrency(tarif.montantARecevoir) }}</span>
+                                    <span class="text-2xl font-bold text-green-600">{{tarif.montantARecevoir}}</span>
                                 </div>
                                 <p class="text-xs text-muted-foreground mt-2">
                                     Zone: {{ tarif.zone }} • Délai estimé: {{ tarif.delaiEstime }}
@@ -435,7 +444,7 @@
             </h2>
 
             <p class="text-muted-foreground mb-6">
-                Votre demande de livraison a été enregistrée
+                {{ createdLivraison.message }}
             </p>
 
             <!-- Tracking Number -->
@@ -452,13 +461,16 @@
             <!-- Details -->
             <div class="text-left space-y-2 mb-6 text-sm">
                 <div class="flex justify-between">
-                    <span class="text-muted-foreground">Frais de livraison:</span>
-                    <span class="font-medium">{{ formatCurrency(createdLivraison.fraisLivraison) }}</span>
+                    <span class="text-muted-foreground">Montant COD:</span>
+                    <span class="font-medium">{{ createdLivraison.montantCOD | fcfa }}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-muted-foreground">Vous recevrez:</span>
-                    <span class="font-semibold text-green-600">{{ formatCurrency(createdLivraison.montantARecevoir)
-                        }}</span>
+                    <span class="text-muted-foreground">Frais de livraison:</span>
+                    <span class="font-medium text-destructive">- {{ createdLivraison.fraisLivraison | fcfa }}</span>
+                </div>
+                <div class="flex justify-between border-t pt-2">
+                    <span class="text-muted-foreground font-semibold">Vous recevrez:</span>
+                    <span class="font-semibold text-green-600">{{ createdLivraison.montantARecevoir | fcfa }}</span>
                 </div>
             </div>
 
