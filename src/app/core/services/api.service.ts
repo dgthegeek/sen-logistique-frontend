@@ -103,6 +103,13 @@ export class ApiService {
     return this.http.post<{ message: string }>(`${this.baseUrl}/admin/ramassages/marquer-ramasse`, data);
   }
 
+
+  getRamassagesARamasser(): Observable<RamassagesToday> {
+    return this.http.get<RamassagesToday>(`${this.baseUrl}/admin/ramassages`);
+  }
+
+
+
   imprimerQRCodes(livraisonIds: number[]): Observable<Blob> {
     return this.http.post(`${this.baseUrl}/admin/ramassages/imprimer-qr`,
       { livraisonIds },

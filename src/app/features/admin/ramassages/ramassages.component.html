@@ -10,30 +10,22 @@
         <div class="flex items-center justify-between mb-8">
           <div>
             <h1 class="text-3xl font-bold text-foreground mb-2">
-              Ramassages du jour
+              Ramassages à effectuer
             </h1>
             <p class="text-muted-foreground" *ngIf="ramassages">
-              {{ ramassages.totalColis }} colis à ramasser
+              {{ ramassages.totalColis }} colis en attente de ramassage
             </p>
           </div>
 
           <div class="flex gap-3">
-            <button
-              (click)="imprimerQRCodes()"
-              [disabled]="selectedColis.size === 0 || generatingQR"
-              class="btn-outline"
-              [class.opacity-50]="selectedColis.size === 0 || generatingQR"
-            >
+            <button (click)="imprimerQRCodes()" [disabled]="selectedColis.size === 0 || generatingQR"
+              class="btn-outline" [class.opacity-50]="selectedColis.size === 0 || generatingQR">
               <span *ngIf="!generatingQR">📄 Imprimer QR ({{ selectedColis.size }})</span>
               <span *ngIf="generatingQR">Génération...</span>
             </button>
 
-            <button
-              (click)="marquerRamasse()"
-              [disabled]="selectedColis.size === 0 || processingRamassage"
-              class="btn-primary"
-              [class.opacity-50]="selectedColis.size === 0 || processingRamassage"
-            >
+            <button (click)="marquerRamasse()" [disabled]="selectedColis.size === 0 || processingRamassage"
+              class="btn-primary" [class.opacity-50]="selectedColis.size === 0 || processingRamassage">
               <span *ngIf="!processingRamassage">✅ Marquer ramassé ({{ selectedColis.size }})</span>
               <span *ngIf="processingRamassage">Traitement...</span>
             </button>
@@ -43,7 +35,8 @@
         <!-- Loading -->
         <div *ngIf="loading" class="card">
           <div class="flex items-center justify-center py-12">
-            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin">
+            </div>
           </div>
         </div>
 
@@ -72,8 +65,7 @@
             <!-- Zone Header -->
             <div
               class="flex items-center justify-between cursor-pointer hover:bg-muted/50 p-4 -m-4 mb-4 rounded-lg transition-colors"
-              (click)="toggleZone(zone.zone.id)"
-            >
+              (click)="toggleZone(zone.zone.id)">
               <div class="flex items-center gap-4">
                 <div class="text-2xl">
                   {{ isZoneExpanded(zone.zone.id) ? '📂' : '📁' }}
@@ -83,16 +75,14 @@
                     Zone {{ zone.zone.nom }}
                   </h2>
                   <p class="text-sm text-muted-foreground">
-                    {{ zone.nombreColis }} colis • {{ zone.vendeurs.length }} vendeur{{ zone.vendeurs.length > 1 ? 's' : '' }}
+                    {{ zone.nombreColis }} colis • {{ zone.vendeurs.length }} vendeur{{ zone.vendeurs.length > 1 ? 's' :
+                    '' }}
                   </p>
                 </div>
               </div>
 
               <div class="flex items-center gap-3">
-                <button
-                  (click)="selectAllColisZone(zone); $event.stopPropagation()"
-                  class="btn-outline text-sm"
-                >
+                <button (click)="selectAllColisZone(zone); $event.stopPropagation()" class="btn-outline text-sm">
                   Tout sélectionner
                 </button>
                 <span class="text-2xl">
@@ -104,15 +94,11 @@
             <!-- Zone Content (Vendeurs) -->
             <div *ngIf="isZoneExpanded(zone.zone.id)" class="space-y-4">
               <!-- Vendeur Card -->
-              <div
-                *ngFor="let vendeur of zone.vendeurs"
-                class="border rounded-lg overflow-hidden"
-              >
+              <div *ngFor="let vendeur of zone.vendeurs" class="border rounded-lg overflow-hidden">
                 <!-- Vendeur Header -->
                 <div
                   class="flex items-center justify-between p-4 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors"
-                  (click)="toggleVendeur(vendeur.vendeurId)"
-                >
+                  (click)="toggleVendeur(vendeur.vendeurId)">
                   <div class="flex items-center gap-4 flex-1">
                     <div class="text-xl">
                       {{ isVendeurExpanded(vendeur.vendeurId) ? '📦' : '📋' }}
@@ -130,26 +116,21 @@
                     </div>
 
                     <div class="flex gap-2">
-                      <button
-                        (click)="callVendeur(vendeur.telephone); $event.stopPropagation()"
-                        class="btn-outline text-sm"
-                      >
+                      <button (click)="callVendeur(vendeur.telephone); $event.stopPropagation()"
+                        class="btn-outline text-sm">
                         📞 {{ vendeur.telephone }}
                       </button>
                       <button
                         (click)="openMaps(vendeur.adresseComplete, vendeur.commune, vendeur.quartier); $event.stopPropagation()"
-                        class="btn-outline text-sm"
-                      >
+                        class="btn-outline text-sm">
                         🗺️ Maps
                       </button>
                     </div>
                   </div>
 
                   <div class="flex items-center gap-3 ml-4">
-                    <button
-                      (click)="selectAllColisVendeur(vendeur); $event.stopPropagation()"
-                      class="btn-outline text-sm"
-                    >
+                    <button (click)="selectAllColisVendeur(vendeur); $event.stopPropagation()"
+                      class="btn-outline text-sm">
                       Tout sélectionner
                     </button>
                     <span class="text-xl">
@@ -176,20 +157,12 @@
 
                 <!-- Colis List -->
                 <div *ngIf="isVendeurExpanded(vendeur.vendeurId)" class="p-4 space-y-2">
-                  <div
-                    *ngFor="let colis of vendeur.colis"
+                  <div *ngFor="let colis of vendeur.colis"
                     class="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
-                    (click)="toggleColis(colis.id)"
-                    [class]="isColisSelected(colis.id) ? 'bg-primary/10' : ''"
-                    [class.border-primary]="isColisSelected(colis.id)"
-                  >
-                    <input
-                      type="checkbox"
-                      [checked]="isColisSelected(colis.id)"
-                      (click)="$event.stopPropagation()"
-                      (change)="toggleColis(colis.id)"
-                      class="mt-1 w-4 h-4"
-                    />
+                    (click)="toggleColis(colis.id)" [class]="isColisSelected(colis.id) ? 'bg-primary/10' : ''"
+                    [class.border-primary]="isColisSelected(colis.id)">
+                    <input type="checkbox" [checked]="isColisSelected(colis.id)" (click)="$event.stopPropagation()"
+                      (change)="toggleColis(colis.id)" class="mt-1 w-4 h-4" />
 
                     <div class="flex-1">
                       <div class="flex items-start justify-between mb-2">

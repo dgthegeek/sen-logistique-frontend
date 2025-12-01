@@ -35,7 +35,7 @@ export class RamassagesComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
     
-    this.apiService.getRamassagesToday().subscribe({
+    this.apiService.getRamassagesARamasser().subscribe({
       next: (data) => {
         this.ramassages = data;
         this.loading = false;
