@@ -30,38 +30,21 @@ export class DashboardComponent implements OnInit {
   }
 
   // Quand le backend sera prêt
-  // loadDashboard() {
-  //   this.loading = true;
-  //   this.apiService.getVendeurDashboard().subscribe({
-  //     next: (data) => {
-  //       this.dashboard = data;
-  //       this.loading = false;
-  //     },
-  //     error: (error) => {
-  //       console.error('Erreur chargement dashboard:', error);
-  //       this.errorMessage = 'Impossible de charger le dashboard';
-  //       this.loading = false;
-  //     }
-  //   });
-  // }
-
   loadDashboard() {
-  this.loading = true;
+    this.loading = true;
+    this.apiService.getVendeurDashboard().subscribe({
+      next: (data) => {
+        this.dashboard = data;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Erreur chargement dashboard:', error);
+        this.errorMessage = 'Impossible de charger le dashboard';
+        this.loading = false;
+      }
+    });
+  }
   
-  // TEMPORAIRE: Utiliser mock data
-  this.mockDashboard.getMockDashboard().subscribe({
-    next: (data) => {
-      this.dashboard = data;
-      this.loading = false;
-    },
-    error: (error) => {
-      console.error('Erreur chargement dashboard:', error);
-      this.errorMessage = 'Impossible de charger le dashboard';
-      this.loading = false;
-    }
-  });
-}
-
   getStatusBadgeClass(statut: StatutLivraison): string {
     const statusMap: {[key in StatutLivraison]: string} = {
       'EN_ATTENTE_RAMASSAGE': 'badge-pending',

@@ -17,8 +17,15 @@ import { RamassagesComponent } from './features/admin/ramassages/ramassages.comp
 import { AdminLivraisonsComponent } from './features/admin/livraisons/livraisons.component';
 import { AdminFinancesComponent } from './features/admin/finances/finances.component';
 import { vendeurGuard } from './core/guards/role.guard';
+import { TrackingHomeComponent } from './pages/tracking-home/tracking-home.component';
+import { TrackingDetailComponent } from './pages/tracking-detail/tracking-detail.component';
 
 export const routes: Routes = [
+  // Public tracking pages
+  { path: 'tracking', component: TrackingHomeComponent },
+  { path: 'tracking/:numero', component: TrackingDetailComponent },
+  { path: '', redirectTo: '/tracking', pathMatch: 'full' },
+  
   // Auth
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },

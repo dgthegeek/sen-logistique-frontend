@@ -87,8 +87,6 @@ export class CreerLivraisonComponent implements OnInit {
         this.zones = zones;
         const allCommunes = zones.flatMap(z => z.communes);
         this.communes = [...new Set(allCommunes)].sort();
-        console.log('✅ Zones chargées:', zones);
-        console.log('✅ Communes disponibles:', this.communes);
       },
       error: (error) => {
         console.error('❌ Erreur chargement zones:', error);
@@ -112,7 +110,6 @@ export class CreerLivraisonComponent implements OnInit {
   getZoneIdByCommune(commune: string): number | null {
     const zone = this.zones.find(z => z.communes.includes(commune));
     if (zone) {
-      console.log(`✅ Zone trouvée pour ${commune}:`, zone.nom, 'ID:', zone.id);
       return zone.id;
     }
     console.warn(`⚠️ Aucune zone trouvée pour la commune: ${commune}`);
@@ -222,11 +219,8 @@ export class CreerLivraisonComponent implements OnInit {
       notesPourLivreur: formValue.notesPourLivreur || undefined
     };
 
-    console.log('📦 Création livraison:', request);
-
     this.apiService.creerLivraison(request).subscribe({
       next: (response) => {
-        console.log('✅ Livraison créée:', response);
         this.createdLivraison = response;
         this.loading = false;
       },

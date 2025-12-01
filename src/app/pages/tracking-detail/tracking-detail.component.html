@@ -1,0 +1,167 @@
+<div class="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
+    <!-- Header -->
+    <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a routerLink="/tracking" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <div class="text-3xl">📦</div>
+                    <div>
+                        <h1 class="text-xl font-bold text-primary">Sen-Logistique</h1>
+                        <p class="text-xs text-muted-foreground">Suivi de colis</p>
+                    </div>
+                </a>
+                <a routerLink="/tracking" class="btn-outline text-sm">
+                    ← Nouvelle recherche
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Loading -->
+        <div *ngIf="loading" class="card">
+            <div class="flex items-center justify-center py-12">
+                <div class="text-center">
+                    <div
+                        class="inline-block w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4">
+                    </div>
+                    <p class="text-muted-foreground">Recherche du colis...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error -->
+        <div *ngIf="errorMessage && !loading" class="card text-center py-12">
+            <div class="text-6xl mb-4">❌</div>
+            <h2 class="text-2xl font-bold text-foreground mb-2">
+                Colis introuvable
+            </h2>
+            <p class="text-muted-foreground mb-6">
+                {{ errorMessage }}
+            </p>
+            <button (click)="retrySearch()" class="btn-primary">
+                ← Effectuer une nouvelle recherche
+            </button>
+        </div>
+
+        <!-- Tracking Info -->
+        <div *ngIf="tracking && !loading" class="space-y-6">
+            <!-- Header Card -->
+            <div class="card">
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-4">{{ getStatusIcon(tracking.statut) }}</div>
+                    <h2 class="text-3xl font-bold text-foreground mb-2">
+                        {{ getStatusLabel(tracking.statut) }}
+                    </h2>
+                    <div class="flex items-center justify-center gap-2 text-muted-foreground mb-4">
+                        <span class="font-mono text-lg">{{ tracking.numeroTracking }}</span>
+                    </div>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-lg border-2"
+                        [ngClass]="getStatusColor(tracking.statut)">
+                        {{ getStatusIcon(tracking.statut) }} {{ getStatusLabel(tracking.statut) }}
+                    </div>
+                </div>
+
+                <!-- Info Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t">
+                    <div class="text-center p-4 bg-muted/30 rounded-lg">
+                        <div class="text-sm text-muted-foreground mb-1">Destination</div>
+                        <div class="text-xl font-semibold text-foreground">
+                            📍 {{ tracking.destination }}
+                        </div>
+                    </div>
+
+                    <div class="text-center p-4 bg-muted/30 rounded-lg">
+                        <div class="text-sm text-muted-foreground mb-1">Montant à payer</div>
+                        <div class="text-xl font-semibold text-primary">
+                            {{ tracking.montantAPayer | fcfa }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="card">
+                <h3 class="text-2xl font-bold text-foreground mb-6">
+                    📍 Suivi détaillé
+                </h3>
+
+                <div class="space-y-6">
+                    <div *ngFor="let step of tracking.timeline; let i = index; let last = last" class="relative">
+                        <!-- Timeline line -->
+                        <div *ngIf="!last" class="absolute left-6 top-12 w-0.5 h-full -ml-px"
+                            [class.bg-primary]="step.effectue" [class.bg-muted]="!step.effectue"></div>
+
+                        <!-- Step -->
+                        <div class="flex items-start gap-4">
+                            <!-- Icon -->
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 border-4 transition-all"
+                                [class.bg-primary]="step.effectue" [class.border-primary]="step.effectue"
+                                [class.bg-white]="!step.effectue" [class.border-muted]="!step.effectue"
+                                [class.ring-4]="isLastCompletedStep(step, i)"
+                                [class]="isLastCompletedStep(step, i) ? 'ring-4 ring-primary/20' : ''">
+                                <span class="text-xl" [class.text-white]="step.effectue"
+                                    [class.text-muted-foreground]="!step.effectue">
+                                    {{ step.effectue ? '✓' : '○' }}
+                                </span>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex-1 pb-8">
+                                <div class="font-semibold text-lg mb-1" [class.text-foreground]="step.effectue"
+                                    [class.text-muted-foreground]="!step.effectue">
+                                    {{ getEtapeLabel(step.etape) }}
+                                </div>
+                                <div class="text-sm" [ngClass]="{
+       'text-muted-foreground': step.effectue,
+       'text-muted-foreground/50': !step.effectue
+     }">
+                                    {{ step.date ? formatDate(step.date) : 'En attente' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card bg-blue-50 border-blue-200">
+                <div class="flex items-start gap-4">
+                    <div class="text-3xl">💡</div>
+                    <div>
+                        <h3 class="font-semibold text-foreground mb-2">
+                            Besoin d'aide ?
+                        </h3>
+                        <p class="text-sm text-muted-foreground mb-3">
+                            Si vous avez des questions sur votre livraison, contactez votre vendeur ou notre service
+                            client.
+                        </p>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="tel:+221XXXXXXXXX" class="btn-outline text-sm">
+                                📞 Appeler le service client
+                            </a>
+                            <a href="mailto:contact@senlogistique.sn" class="btn-outline text-sm">
+                                📧 Envoyer un email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Search -->
+            <div class="text-center">
+                <button routerLink="/tracking" class="btn-ghost">
+                    ← Suivre un autre colis
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm text-muted-foreground">
+            © 2025 Sen-Logistique. Tous droits réservés.
+        </div>
+    </footer>
+</div>
