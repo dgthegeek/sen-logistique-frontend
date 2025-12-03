@@ -6,14 +6,41 @@
 
     <main class="flex-1 p-6">
       <div class="max-w-7xl mx-auto">
-        <!-- Header -->
+        <!-- Header avec filtre période -->
         <div class="mb-8">
-          <h1 class="text-3xl font-bold text-foreground mb-2">
-            Finances Admin
-          </h1>
-          <p class="text-muted-foreground">
-            Gérez les paiements aux vendeurs
-          </p>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h1 class="text-3xl font-bold text-foreground mb-2">
+                Finances Admin
+              </h1>
+              <p class="text-muted-foreground">
+                Gérez les paiements aux vendeurs
+              </p>
+            </div>
+
+            <!-- Sélecteur de période -->
+            <div class="flex items-center gap-3">
+              <label class="text-sm font-medium text-muted-foreground">
+                Période:
+              </label>
+              <select
+                [(ngModel)]="selectedPeriode"
+                (change)="onPeriodeChange()"
+                class="form-select w-48"
+              >
+                <option *ngFor="let p of periodes" [value]="p.value">
+                  {{ p.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Indicateur période active -->
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-sm">
+            <span class="text-primary font-medium">
+              📊 Statistiques {{ getPeriodeLabel() }}
+            </span>
+          </div>
         </div>
 
         <!-- Loading -->
@@ -83,6 +110,39 @@
               </div>
               <div class="stat-card-label">
                 Livraisons
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats complémentaires -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Vendeurs actifs -->
+            <div class="card bg-indigo-50 border-indigo-200">
+              <div class="flex items-center gap-4">
+                <div class="text-4xl">👥</div>
+                <div>
+                  <div class="text-2xl font-bold text-indigo-600">
+                    {{ dashboard.statistiques.nombreVendeurs }}
+                  </div>
+                  <div class="text-sm text-muted-foreground">
+                    Vendeurs actifs {{ getPeriodeLabel() }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Taux de réussite -->
+            <div class="card bg-purple-50 border-purple-200">
+              <div class="flex items-center gap-4">
+                <div class="text-4xl">⭐</div>
+                <div>
+                  <div class="text-2xl font-bold text-purple-600">
+                    {{ dashboard.statistiques.tauxReussite.toFixed(1) }}%
+                  </div>
+                  <div class="text-sm text-muted-foreground">
+                    Taux de réussite des livraisons
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -291,7 +351,7 @@
   </div>
 </div>
 
-<!-- Modal Payer Vendeur -->
+<!-- Modal Payer Vendeur (reste identique) -->
 <div
   *ngIf="showPayerModal && selectedDemande"
   class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"

@@ -25,6 +25,15 @@ export class AdminFinancesComponent implements OnInit {
   loadingTransactions = false;
   errorMessage = '';
   
+  // Période dashboard
+  selectedPeriode: 'jour' | 'semaine' | 'mois' | 'tout' = 'jour';
+  periodes = [
+    { value: 'jour', label: 'Aujourd\'hui' },
+    { value: 'semaine', label: 'Cette semaine' },
+    { value: 'mois', label: 'Ce mois' },
+    { value: 'tout', label: 'Tout' }
+  ];
+  
   // Pagination transactions
   currentPage = 0;
   pageSize = 50;
@@ -54,7 +63,7 @@ export class AdminFinancesComponent implements OnInit {
     this.errorMessage = '';
     
     forkJoin({
-      dashboard: this.apiService.getAdminFinancesDashboard('jour'),
+      dashboard: this.apiService.getAdminFinancesDashboard(this.selectedPeriode),
       paiementsPending: this.apiService.getPaiementsPending()
     }).subscribe({
       next: (data) => {
@@ -69,6 +78,11 @@ export class AdminFinancesComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  onPeriodeChange() {
+    console.log('📅 Période changée:', this.selectedPeriode);
+    this.loadFinances();
   }
 
   loadTransactions() {
@@ -185,6 +199,16 @@ export class AdminFinancesComponent implements OnInit {
       'COMMISSION': 'badge-pending'
     };
     return `badge ${classes[type] || 'badge-pending'}`;
+  }
+
+  getPeriodeLabel(): string {
+    const labels: {[key: string]: string} = {
+      'jour': 'aujourd\'hui',
+      'semaine': 'cette semaine',
+      'mois': 'ce mois',
+      'tout': 'tout'
+    };
+    return labels[this.selectedPeriode] || '';
   }
 
   formatDate(date: string): string {
