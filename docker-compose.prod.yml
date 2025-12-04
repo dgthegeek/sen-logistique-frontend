@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: sen-logistique-frontend:latest
+    container_name: sen-logistique-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    networks:
+      - sen-logistique-network
+
+networks:
+  sen-logistique-network:
+    external: true
