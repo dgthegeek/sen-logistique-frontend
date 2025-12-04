@@ -26,7 +26,7 @@ FROM nginx:1.25-alpine
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copier les fichiers buildés depuis le stage précédent
-COPY --from=build /dist/sen-logistique-frontend /usr/share/nginx/html
+COPY --from=build /app/dist/sen-logistique-frontend /usr/share/nginx/html
 
 # Exposer le port
 EXPOSE 80
