@@ -1,15 +1,15 @@
 # ==========================================
-# STAGE 1 : Build de l'application Angular
+# STAGE 1: Build de l'application Angular
 # ==========================================
 FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Copier package.json et package-lock.json
+# Copier les fichiers de dépendances
 COPY package*.json ./
 
-# Installer les dépendances
-RUN npm ci --only=production
+# Installer TOUTES les dépendances (y compris devDependencies pour le build)
+RUN npm ci
 
 # Copier le code source
 COPY . .
@@ -18,18 +18,18 @@ COPY . .
 RUN npm run build -- --configuration production
 
 # ==========================================
-# STAGE 2 : Servir avec Nginx
+# STAGE 2: Serveur Nginx pour servir l'app
 # ==========================================
 FROM nginx:1.25-alpine
 
-# Copier la config Nginx personnalisée
+# Copier la configuration nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copier les fichiers buildés depuis le stage 1
+# Copier les fichiers buildés depuis le stage précédent
 COPY --from=build /dist/sen-logistique-frontend /usr/share/nginx/html
 
-# Exposer le port 80
+# Exposer le port
 EXPOSE 80
 
-# Démarrer Nginx
+# Démarrer nginx
 CMD ["nginx", "-g", "daemon off;"]
