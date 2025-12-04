@@ -5,7 +5,6 @@ import { ApiService } from '../../../core/services/api.service';
 import { VendeurDashboard, LivraisonResume, StatutLivraison } from '../../../core/models/dashboard.model';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
-import { MockDashboardService } from '../../../core/services/mock-dashboard.service';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
 
 @Component({
@@ -22,7 +21,6 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private mockDashboard: MockDashboardService 
   ) {}
 
   ngOnInit() {
