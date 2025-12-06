@@ -19,12 +19,14 @@ import { AdminFinancesComponent } from './features/admin/finances/finances.compo
 import { vendeurGuard } from './core/guards/role.guard';
 import { TrackingHomeComponent } from './pages/tracking-home/tracking-home.component';
 import { TrackingDetailComponent } from './pages/tracking-detail/tracking-detail.component';
+import { DeliveryConfirmComponent } from './pages/delivery-confirm/delivery-confirm.component';
 
 export const routes: Routes = [
   // Public tracking pages
   { path: 'tracking', component: TrackingHomeComponent },
   { path: 'tracking/:numero', component: TrackingDetailComponent },
   { path: '', redirectTo: '/tracking', pathMatch: 'full' },
+  { path: 'delivery/:numero', component: DeliveryConfirmComponent },
   
   // Auth
   { path: '', redirectTo: '/login', pathMatch: 'full' },

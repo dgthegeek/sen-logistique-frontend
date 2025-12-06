@@ -1,0 +1,256 @@
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-background to-green-100">
+  <!-- Header -->
+  <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="text-3xl">📦</div>
+          <div>
+            <h1 class="text-xl font-bold text-primary">Sen-Logistique</h1>
+            <p class="text-xs text-muted-foreground">Confirmation de livraison</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Loading -->
+    <div *ngIf="loading" class="card">
+      <div class="flex items-center justify-center py-12">
+        <div class="text-center">
+          <div class="inline-block w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p class="text-muted-foreground">Chargement des informations...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="errorMessage && !loading" class="card text-center py-12">
+      <div class="text-6xl mb-4">❌</div>
+      <h2 class="text-2xl font-bold text-foreground mb-2">
+        Impossible de charger la livraison
+      </h2>
+      <p class="text-muted-foreground mb-6">
+        {{ errorMessage }}
+      </p>
+      <a routerLink="/tracking" class="btn-primary">
+        ← Retour au suivi
+      </a>
+    </div>
+
+    <!-- Delivery Info -->
+    <div *ngIf="delivery && !loading" class="space-y-6">
+      <!-- Header Card -->
+      <div class="card text-center bg-gradient-to-br from-primary/5 to-primary/10">
+        <div class="text-6xl mb-4">📦</div>
+        <h2 class="text-3xl font-bold text-foreground mb-2">
+          Confirmation de livraison
+        </h2>
+        <div class="font-mono text-xl text-primary font-semibold">
+          {{ delivery.numeroTracking }}
+        </div>
+      </div>
+
+      <!-- Info Client -->
+      <div class="card">
+        <h3 class="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+          👤 Informations client
+        </h3>
+
+        <div class="space-y-3 mb-6">
+          <div>
+            <div class="text-sm text-muted-foreground">Nom du client</div>
+            <div class="text-lg font-semibold text-foreground">{{ delivery.client.nom }}</div>
+          </div>
+
+          <div>
+            <div class="text-sm text-muted-foreground">Téléphone</div>
+            <div class="font-medium text-foreground">{{ delivery.client.telephone }}</div>
+          </div>
+
+          <div>
+            <div class="text-sm text-muted-foreground">Adresse de livraison</div>
+            <div class="font-medium text-foreground">{{ delivery.client.adresse }}</div>
+            <div *ngIf="delivery.client.pointRepere" class="text-sm text-muted-foreground mt-1">
+              Point de repère: {{ delivery.client.pointRepere }}
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button (click)="callClient()" class="btn-primary flex-1">
+            📞 Appeler le client
+          </button>
+          <button (click)="openMaps()" class="btn-secondary flex-1">
+            🗺️ Ouvrir Maps
+          </button>
+        </div>
+      </div>
+
+      <!-- Info Colis -->
+      <div class="card">
+        <h3 class="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+          📦 Détails du colis
+        </h3>
+
+        <div class="space-y-3">
+          <div>
+            <div class="text-sm text-muted-foreground">Description</div>
+            <div class="font-medium text-foreground">{{ delivery.produit.description }}</div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span *ngIf="delivery.produit.fragile" class="badge badge-failed">
+              ⚠️ FRAGILE - Manipuler avec précaution
+            </span>
+            <span *ngIf="!delivery.produit.fragile" class="badge badge-delivered">
+              ✓ Pas fragile
+            </span>
+          </div>
+
+          <div>
+            <div class="text-sm text-muted-foreground">Vendeur</div>
+            <div class="font-medium text-foreground">{{ delivery.vendeur.nom }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulaire Confirmation -->
+      <form (ngSubmit)="confirmerLivraison()" class="card bg-green-50 border-green-200">
+        <h3 class="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
+          ✅ Confirmer la livraison
+        </h3>
+
+        <div class="space-y-6">
+          <!-- Montant collecté -->
+          <div>
+            <label class="form-label">
+              Montant collecté (COD) *
+            </label>
+            <div class="relative">
+              <input
+                [(ngModel)]="cashCollecte"
+                name="cashCollecte"
+                type="number"
+                class="form-input pr-16 text-xl font-bold"
+                min="0"
+                required
+              />
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-normal">
+                FCFA
+              </span>
+            </div>
+            <p class="form-helper">
+              Montant à collecter: {{ delivery.montantACollecter | fcfa }}
+            </p>
+          </div>
+
+          <!-- Colis remis -->
+          <div class="flex items-center gap-3 p-4 bg-white border rounded-lg">
+            <input
+              [(ngModel)]="colisRemis"
+              name="colisRemis"
+              type="checkbox"
+              id="colisRemis"
+              class="w-5 h-5"
+            />
+            <label for="colisRemis" class="font-medium cursor-pointer">
+              ✓ Le colis a été remis au client
+            </label>
+          </div>
+
+          <!-- Commentaire -->
+          <div>
+            <label class="form-label">
+              Commentaire (optionnel)
+            </label>
+            <textarea
+              [(ngModel)]="commentaire"
+              name="commentaire"
+              class="form-textarea"
+              rows="3"
+              placeholder="Ex: Client satisfait, livraison rapide"
+            ></textarea>
+          </div>
+
+          <!-- Warning si colis pas remis -->
+          <div *ngIf="!colisRemis" class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+            <div class="flex items-start gap-2">
+              <span class="text-xl">⚠️</span>
+              <div>
+                <div class="font-semibold">Attention</div>
+                <div class="text-sm">Le colis n'a pas été marqué comme remis. Voulez-vous continuer ?</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="btn-primary w-full py-4 text-lg"
+            [disabled]="submitting"
+          >
+            <span *ngIf="!submitting">✅ Confirmer la livraison</span>
+            <span *ngIf="submitting">Confirmation en cours...</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Help -->
+      <div class="card bg-blue-50 border-blue-200">
+        <div class="flex items-start gap-3">
+          <div class="text-2xl">💡</div>
+          <div>
+            <h3 class="font-semibold text-foreground mb-2">Instructions</h3>
+            <ul class="text-sm text-muted-foreground space-y-1">
+              <li>1. Vérifiez l'identité du client</li>
+              <li>2. Remettez le colis au client</li>
+              <li>3. Collectez le montant COD</li>
+              <li>4. Confirmez la livraison avec ce formulaire</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div
+  *ngIf="showSuccessModal"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+  (click)="closeSuccessModal()"
+>
+  <div class="card max-w-lg w-full" (click)="$event.stopPropagation()">
+    <div class="text-center py-6">
+      <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <span class="text-5xl">✅</span>
+      </div>
+
+      <h2 class="text-2xl font-bold text-foreground mb-2">
+        Livraison confirmée !
+      </h2>
+
+      <p class="text-muted-foreground mb-6">
+        {{ confirmationMessage }}
+      </p>
+
+      <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+        <div class="font-mono text-xl font-bold text-green-600">
+          {{ numeroTracking }}
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <button (click)="closeSuccessModal()" class="btn-primary w-full">
+          Voir le suivi
+        </button>
+        <a routerLink="/tracking" class="btn-outline w-full block text-center">
+          Nouvelle recherche
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

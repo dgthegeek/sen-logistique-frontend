@@ -12,6 +12,7 @@ import {
   TraiterPaiementResponse, TransactionsResponse
 } from '../models/admin.model';
 import { TrackingInfo } from '../models/tracking.model';
+import { ConfirmLivraisonRequest, ConfirmLivraisonResponse, DeliveryInfo } from '../models/delivery.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -69,7 +70,7 @@ export class ApiService {
   }
 
   demanderPaiement(demande: DemandePaiement): Observable<DemandePaiementResponse> {
-    return this.http.post<DemandePaiementResponse>(`${this.baseUrl}/vendeur/demande-paiement`, {});
+    return this.http.post<DemandePaiementResponse>(`${this.baseUrl}/vendeur/demande-paiement`, null);
   }
 
   // ========== ADMIN ==========
@@ -183,5 +184,15 @@ export class ApiService {
   // Tracking public (sans authentification)
   getTrackingInfo(numeroTracking: string): Observable<TrackingInfo> {
     return this.http.get<TrackingInfo>(`${this.baseUrl}/tracking/${numeroTracking}`);
+  }
+
+  // Récupérer infos livraison (après scan QR)
+  getDeliveryInfo(numeroTracking: string): Observable<DeliveryInfo> {
+    return this.http.get<DeliveryInfo>(`${this.baseUrl}/delivery/${numeroTracking}`);
+  }
+
+  // Confirmer livraison
+  confirmerLivraisonPublic(numeroTracking: string, data: ConfirmLivraisonRequest): Observable<ConfirmLivraisonResponse> {
+    return this.http.post<ConfirmLivraisonResponse>(`${this.baseUrl}/delivery/${numeroTracking}/livrer`, data);
   }
 }
