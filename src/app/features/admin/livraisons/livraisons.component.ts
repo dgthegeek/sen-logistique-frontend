@@ -6,7 +6,10 @@ import { ApiService } from '../../../core/services/api.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
-import { LivraisonAdmin, LivraisonsAdminResponse } from '../../../core/models/admin.model';
+import { DeliveryInfo } from '../../../core/models/delivery.model'; // ← NOUVEAU
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { LivraisonAdmin } from '../../../core/models/admin.model';
 
 @Component({
   selector: 'app-admin-livraisons',
@@ -30,7 +33,7 @@ export class AdminLivraisonsComponent implements OnInit {
   
   showScannerModal = false;
   showConfirmModal = false;
-  selectedLivraison: LivraisonAdmin | null = null;
+  selectedLivraison: DeliveryInfo | null = null; // ← CHANGÉ LE TYPE
   
   cashCollecte = 0;
   colisRemis = true;
@@ -46,7 +49,11 @@ export class AdminLivraisonsComponent implements OnInit {
     { value: 'ECHEC_REFUSE', label: 'Échec (Refusé)' }
   ];
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private toastService: ToastService,
+    private confirmationService: ConfirmationService
+  ) {}
 
   ngOnInit() {
     this.loadLivraisons();
@@ -104,25 +111,31 @@ export class AdminLivraisonsComponent implements OnInit {
     this.searchQuery = '';
   }
 
+  openScannerModalWithTracking(tracking: string) {
+    this.searchQuery = tracking;
+    this.scanQRCode();
+  }
+
   scanQRCode() {
     if (!this.searchQuery.trim()) {
-      alert('Veuillez entrer un numéro de tracking');
+      this.toastService.warning('Veuillez entrer un numéro de tracking');
       return;
     }
 
     this.loading = true;
     
     this.apiService.getLivraisonByNumero(this.searchQuery.trim()).subscribe({
-      next: (livraison) => {
+      next: (livraison: DeliveryInfo) => {
+        console.log('📦 Livraison récupérée:', livraison);
         this.selectedLivraison = livraison;
-        this.cashCollecte = livraison.financier.montantCOD;
+        this.cashCollecte = livraison.montantACollecter;
         this.closeScannerModal();
         this.showConfirmModal = true;
         this.loading = false;
       },
       error: (error) => {
         console.error('Erreur:', error);
-        alert(error.error?.message || 'Livraison non trouvée');
+        this.toastService.error(error.error?.message || 'Livraison non trouvée');
         this.loading = false;
       }
     });
@@ -140,10 +153,24 @@ export class AdminLivraisonsComponent implements OnInit {
     if (!this.selectedLivraison) return;
 
     if (!this.colisRemis) {
-      if (!confirm('Le colis n\'a pas été remis. Confirmer quand même ?')) {
-        return;
-      }
+      this.confirmationService.confirm({
+        title: 'Colis non remis',
+        message: 'Le colis n\'a pas été remis. Confirmer quand même ?',
+        confirmText: 'Confirmer',
+        cancelText: 'Annuler',
+        type: 'warning',
+        onConfirm: () => {
+          this.executeConfirmerLivraison();
+        }
+      });
+      return;
     }
+
+    this.executeConfirmerLivraison();
+  }
+
+  executeConfirmerLivraison() {
+    if (!this.selectedLivraison) return;
 
     this.submittingConfirmation = true;
 
@@ -153,14 +180,14 @@ export class AdminLivraisonsComponent implements OnInit {
       commentaire: this.commentaire || undefined
     }).subscribe({
       next: (response) => {
-        alert(response.message);
+        this.toastService.success(response.message);
         this.closeConfirmModal();
         this.loadLivraisons();
         this.submittingConfirmation = false;
       },
       error: (error) => {
         console.error('Erreur:', error);
-        alert(error.error?.message || 'Erreur lors de la confirmation');
+        this.toastService.error(error.error?.message || 'Erreur lors de la confirmation');
         this.submittingConfirmation = false;
       }
     });
@@ -177,6 +204,7 @@ export class AdminLivraisonsComponent implements OnInit {
 
   getStatusBadgeClass(statut: string): string {
     const classes: {[key: string]: string} = {
+      'EN_ATTENTE_RAMASSAGE': 'badge-pending',
       'RAMASSE': 'badge-picked',
       'EN_ROUTE': 'badge-transit',
       'LIVREE': 'badge-delivered',
@@ -184,6 +212,19 @@ export class AdminLivraisonsComponent implements OnInit {
       'ECHEC_REFUSE': 'badge-failed'
     };
     return `badge ${classes[statut] || 'badge-pending'}`;
+  }
+
+  getStatusLabel(statut: string): string {
+    const labels: {[key: string]: string} = {
+      'EN_ATTENTE_RAMASSAGE': 'En attente',
+      'RAMASSE': 'Ramassé',
+      'EN_ROUTE': 'En route',
+      'LIVREE': 'Livré',
+      'ECHEC_ABSENT': 'Échec (Absent)',
+      'ECHEC_REFUSE': 'Échec (Refusé)',
+      'ANNULEE': 'Annulé'
+    };
+    return labels[statut] || statut;
   }
 
   formatDate(date: string): string {

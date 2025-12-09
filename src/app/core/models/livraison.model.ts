@@ -22,10 +22,15 @@ export interface CalculTarifRequest {
 }
 
 export interface CalculTarifResponse {
-  fraisLivraison: number;
-  montantARecevoir: number;
+  montant: number;           // ← Frais de livraison
   zone: string;
-  delaiEstime: string;
+  urgence: 'NORMAL' | 'EXPRESS';
+  delaiEstime?: string;      // ← Optionnel
+  detailCalcul: {
+    tarifBase: number;
+    supplementPoids: number;
+    supplementUrgence: number;
+  };
 }
 
 export interface CreateLivraisonRequest {

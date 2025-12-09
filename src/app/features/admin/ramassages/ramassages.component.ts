@@ -5,6 +5,8 @@ import { ApiService } from '../../../core/services/api.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { RamassagesTodayResponse, RamassageZone, RamassageVendeur, RamassageColis } from '../../../core/models/admin.model';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
 
 @Component({
   selector: 'app-ramassages',
@@ -17,15 +19,19 @@ export class RamassagesComponent implements OnInit {
   ramassages: RamassagesTodayResponse | null = null;
   loading = true;
   errorMessage = '';
-  
-  expandedZones: Set<number> = new Set();
+
+  expandedZones: Set<string> = new Set(); // ← string au lieu de number
   expandedVendeurs: Set<number> = new Set();
   selectedColis: Set<number> = new Set();
-  
+
   processingRamassage = false;
   generatingQR = false;
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private toastService: ToastService,
+    private confirmationService: ConfirmationService,
+  ) { }
 
   ngOnInit() {
     this.loadRamassages();
@@ -34,11 +40,12 @@ export class RamassagesComponent implements OnInit {
   loadRamassages() {
     this.loading = true;
     this.errorMessage = '';
-    
+
     this.apiService.getRamassagesARamasser().subscribe({
       next: (data) => {
         this.ramassages = data;
         this.loading = false;
+        console.log("colis: ", data)
       },
       error: (error) => {
         console.error('Erreur chargement ramassages:', error);
@@ -48,14 +55,19 @@ export class RamassagesComponent implements OnInit {
     });
   }
 
-  toggleZone(zoneId: number) {
-    if (this.expandedZones.has(zoneId)) {
-      this.expandedZones.delete(zoneId);
+  toggleZone(zone: string) { // ← string
+    if (this.expandedZones.has(zone)) {
+      this.expandedZones.delete(zone);
     } else {
-      this.expandedZones.add(zoneId);
+      this.expandedZones.add(zone);
     }
   }
 
+  isZoneExpanded(zone: string): boolean { // ← string
+    return this.expandedZones.has(zone);
+  }
+
+  // Méthodes vendeurs
   toggleVendeur(vendeurId: number) {
     if (this.expandedVendeurs.has(vendeurId)) {
       this.expandedVendeurs.delete(vendeurId);
@@ -64,12 +76,14 @@ export class RamassagesComponent implements OnInit {
     }
   }
 
-  isZoneExpanded(zoneId: number): boolean {
-    return this.expandedZones.has(zoneId);
-  }
-
   isVendeurExpanded(vendeurId: number): boolean {
     return this.expandedVendeurs.has(vendeurId);
+  }
+
+  // Maps
+  openMaps(adresse: string) {
+    const fullAddress = encodeURIComponent(`${adresse}, Dakar, Sénégal`);
+    window.open(`https://www.google.com/maps/search/?api=1&query=${fullAddress}`, '_blank');
   }
 
   toggleColis(colisId: number) {
@@ -86,7 +100,7 @@ export class RamassagesComponent implements OnInit {
 
   selectAllColisVendeur(vendeur: RamassageVendeur) {
     const allSelected = vendeur.colis.every(c => this.selectedColis.has(c.id));
-    
+
     if (allSelected) {
       vendeur.colis.forEach(c => this.selectedColis.delete(c.id));
     } else {
@@ -99,9 +113,9 @@ export class RamassagesComponent implements OnInit {
     zone.vendeurs.forEach(v => {
       v.colis.forEach(c => allColis.push(c.id));
     });
-    
+
     const allSelected = allColis.every(id => this.selectedColis.has(id));
-    
+
     if (allSelected) {
       allColis.forEach(id => this.selectedColis.delete(id));
     } else {
@@ -111,28 +125,39 @@ export class RamassagesComponent implements OnInit {
 
   marquerRamasse() {
     if (this.selectedColis.size === 0) {
-      alert('Veuillez sélectionner au moins un colis');
+      this.toastService.warning('Veuillez sélectionner au moins un colis');
       return;
     }
 
-    if (!confirm(`Marquer ${this.selectedColis.size} colis comme ramassés ?`)) {
-      return;
-    }
+    // ✅ UTILISER ConfirmationService au lieu de confirm()
+    this.confirmationService.confirm({
+      title: 'Marquer comme ramassé',
+      message: `Confirmer le ramassage de ${this.selectedColis.size} colis ?`,
+      confirmText: 'Confirmer',
+      cancelText: 'Annuler',
+      type: 'success',
+      onConfirm: () => {
+        this.executeMarquerRamasse();
+      }
+    });
+  }
 
+  // Séparer la logique d'exécution
+  executeMarquerRamasse() {
     this.processingRamassage = true;
 
     this.apiService.marquerRamasse({
       livraisonIds: Array.from(this.selectedColis)
     }).subscribe({
       next: (response) => {
-        alert(response.message);
+        this.toastService.success(response.message);
         this.selectedColis.clear();
         this.loadRamassages();
         this.processingRamassage = false;
       },
       error: (error) => {
         console.error('Erreur:', error);
-        alert(error.error?.message || 'Erreur lors du marquage');
+        this.toastService.error(error.error?.message || 'Erreur lors du marquage');
         this.processingRamassage = false;
       }
     });
@@ -140,7 +165,7 @@ export class RamassagesComponent implements OnInit {
 
   imprimerQRCodes() {
     if (this.selectedColis.size === 0) {
-      alert('Veuillez sélectionner au moins un colis');
+      this.toastService.warning('Veuillez sélectionner au moins un colis');
       return;
     }
 
@@ -160,7 +185,7 @@ export class RamassagesComponent implements OnInit {
       },
       error: (error) => {
         console.error('Erreur:', error);
-        alert('Erreur lors de la génération des QR codes');
+        this.toastService.error('Erreur lors de la génération des QR codes');
         this.generatingQR = false;
       }
     });
@@ -170,8 +195,5 @@ export class RamassagesComponent implements OnInit {
     window.location.href = `tel:${telephone}`;
   }
 
-  openMaps(adresse: string, commune: string, quartier: string) {
-    const fullAddress = encodeURIComponent(`${adresse}, ${quartier}, ${commune}, Sénégal`);
-    window.open(`https://www.google.com/maps/search/?api=1&query=${fullAddress}`, '_blank');
-  }
+
 }

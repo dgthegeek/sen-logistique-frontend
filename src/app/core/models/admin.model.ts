@@ -20,15 +20,6 @@ export interface ActiviteRecente {
   statut: string;
 }
 
-export interface RamassageZone {
-  zone: {
-    id: number;
-    nom: string;
-  };
-  nombreColis: number;
-  vendeurs: RamassageVendeur[];
-}
-
 export interface RamassageVendeur {
   vendeurId: number;
   nom: string;
@@ -43,23 +34,6 @@ export interface RamassageVendeur {
   colis: RamassageColis[];
 }
 
-export interface RamassageColis {
-  id: number;
-  numeroTracking: string;
-  descriptionProduit: string;
-  fragile: boolean;
-  urgence: 'NORMAL' | 'EXPRESS';
-  client: {
-    nom: string;
-    telephone: string;
-    adresse: string;
-  };
-}
-
-export interface RamassagesTodayResponse {
-  zones: RamassageZone[];
-  totalColis: number;
-}
 
 export interface MarquerRamasseRequest {
   livraisonIds: number[];
@@ -68,29 +42,13 @@ export interface MarquerRamasseRequest {
 export interface LivraisonAdmin {
   id: number;
   numeroTracking: string;
+  qrCodeUrl: string;
   statut: string;
-  vendeur: {
-    nom: string;
-    prenom: string;
-    telephone: string;
-  };
-  client: {
-    nom: string;
-    telephone: string;
-    adresse: string;
-    commune: string;
-    quartier: string;
-  };
-  produit: {
-    description: string;
-    fragile: boolean;
-  };
-  financier: {
-    montantCOD: number;
-    fraisLivraison: number;
-  };
-  urgence: 'NORMAL' | 'EXPRESS';
+  montantCOD: number;
+  fraisLivraison: number;
+  montantARecevoir: number;
   dateCreation: string;
+  message: string;
 }
 
 export interface LivraisonsAdminResponse {
@@ -232,4 +190,34 @@ export interface AdminDashboard {
   ramassages: RamassagesToday;
   livraisons: LivraisonsALivrer;
   paiements: PaiementsPending;
+}
+
+export interface RamassageZone {
+  zone: string; // ← STRING, pas un objet
+  nombreColis: number;
+  vendeurs: RamassageVendeur[];
+}
+
+export interface RamassageVendeur {
+  id: number; // ← id, pas vendeurId
+  nom: string;
+  prenom: string;
+  telephone: string;
+  adresse: string; // ← adresse simple, pas adresseComplete
+  nombreColis: number;
+  colis: RamassageColis[];
+}
+
+export interface RamassageColis {
+  id: number;
+  numeroTracking: string;
+  nomClient: string; // ← STRING, pas objet client
+  descriptionProduit?: string;
+  fragile?: boolean;
+  urgence?: 'NORMAL' | 'EXPRESS';
+}
+
+export interface RamassagesTodayResponse {
+  zones: RamassageZone[];
+  totalColis: number;
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { StatutVendeur } from '../../../core/models/vendeur.model';
 
 @Component({
   selector: 'app-login',
@@ -31,34 +32,51 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.loginForm.invalid) {
-      return;
-    }
+  if (this.loginForm.invalid) {
+    return;
+  }
 
-    this.loading = true;
-    this.errorMessage = '';
+  this.loading = true;
+  this.errorMessage = '';
 
-    const { telephone, password } = this.loginForm.value;
+  const { telephone, password } = this.loginForm.value;
 
-    this.authService.login(telephone, password).subscribe({
-      next: (response) => {
-        // Redirection selon le rôle
-        if (response.user.role === 'VENDEUR') {
-          this.router.navigate(['/vendeur/dashboard']);
-        } else if (response.user.role === 'ADMIN') {
-          this.router.navigate(['/admin/dashboard']);
-        }
-      },
-      error: (error) => {
-        this.loading = false;
-        if (error.status === 401) {
-          this.errorMessage = 'Téléphone ou mot de passe incorrect';
+  this.authService.login(telephone, password).subscribe({
+    next: (response) => {
+      console.log('✅ Login réussi:', response.user);
+      console.log('📋 Rôle:', response.user.role);
+      console.log('📋 Statut:', response.user.statut);
+      console.log('📋 Type statut:', typeof response.user.statut);
+
+      // Redirection selon rôle ET statut
+      if (response.user.role === 'ADMIN') {
+        console.log('➡️ Redirection admin...');
+        this.router.navigate(['/admin/dashboard']);
+      } else {
+        console.log('➡️ Traitement vendeur...');
+        
+        // Vérifier statut vendeur
+        if (response.user.statut === StatutVendeur.EN_ATTENTE_VALIDATION) {
+          console.log('➡️ Redirection en attente validation...');
+          this.router.navigate(['/en-attente-validation']);
+        } else if (response.user.statut === 'SUSPENDU' || response.user.statut === 'BLOQUE') {
+          console.log('➡️ Redirection compte suspendu...');
+          this.router.navigate(['vendeur/compte-suspendu']);
         } else {
-          this.errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+          console.log('➡️ Redirection dashboard vendeur...');
+          this.router.navigate(['/vendeur/dashboard']);
         }
       }
-    });
-  }
+
+      this.loading = false;
+    },
+    error: (error) => {
+      console.error('❌ Erreur login:', error);
+      this.errorMessage = error.error?.message || 'Identifiants incorrects';
+      this.loading = false;
+    }
+  });
+}
 
   get telephone() { return this.loginForm.get('telephone'); }
   get password() { return this.loginForm.get('password'); }

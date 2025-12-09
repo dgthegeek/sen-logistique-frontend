@@ -157,6 +157,36 @@
                                     Pour faciliter la localisation
                                 </p>
                             </div>
+
+                            <!-- Aperçu tarif (si quartier sélectionné) -->
+                            <div *ngIf="tarifPreview && !calculatingPreview"
+                                class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg animate-fadeIn">
+                                <h3 class="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                                    💰 Frais de livraison pour cette zone
+                                </h3>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-blue-700">Zone:</span>
+                                        <span class="font-medium text-blue-900">{{ tarifPreview.zone }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-blue-700">Tarif {{ livraisonForm.value.urgence === 'EXPRESS' ? 'express ⚡' : 'standard' }}:</span>
+                                        <span class="font-bold text-lg text-blue-900">{{ tarifPreview.montant | fcfa }}</span>
+                                    </div>
+                                    <div class="flex justify-between" *ngIf="tarifPreview.delaiEstime">
+                                        <span class="text-blue-700">Délai estimé:</span>
+                                        <span class="font-medium text-blue-900">{{ tarifPreview.delaiEstime }}</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-blue-600 mt-3">
+                                    ℹ️ Ces frais seront ajoutés au prix de votre produit
+                                </p>
+                            </div>
+
+                            <div *ngIf="calculatingPreview" class="mt-6 p-4 bg-muted/30 border rounded-lg text-center animate-pulse">
+                                <div class="inline-block w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin mr-2"></div>
+                                <span class="text-sm text-muted-foreground">Calcul du tarif...</span>
+                            </div>
                         </div>
                     </div>
 
@@ -198,24 +228,23 @@
                                 </p>
                             </div>
 
-                            <!-- Montant COD -->
+                            <!-- Montant produit -->
                             <div>
-                                <label class="form-label">Montant à collecter (COD) *</label>
+                                <label class="form-label">Prix du produit (ce que vous voulez recevoir) *</label>
                                 <div class="relative">
-                                    <input formControlName="montantCOD" type="number" class="form-input pr-16"
-                                        [class.border-destructive]="livraisonForm.get('montantCOD')?.invalid && livraisonForm.get('montantCOD')?.touched"
+                                    <input formControlName="montantProduit" type="number" class="form-input pr-16 text-xl font-bold"
+                                        [class.border-destructive]="livraisonForm.get('montantProduit')?.invalid && livraisonForm.get('montantProduit')?.touched"
                                         placeholder="35000" min="0" />
-                                    <span
-                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                                         FCFA
                                     </span>
                                 </div>
-                                <p *ngIf="livraisonForm.get('montantCOD')?.invalid && livraisonForm.get('montantCOD')?.touched"
+                                <p *ngIf="livraisonForm.get('montantProduit')?.invalid && livraisonForm.get('montantProduit')?.touched"
                                     class="form-error">
                                     Le montant est requis
                                 </p>
                                 <p class="form-helper">
-                                    Montant que le client doit payer à la livraison
+                                    💡 Indiquez le prix de votre produit. Les frais de livraison seront ajoutés automatiquement.
                                 </p>
                             </div>
 
@@ -229,8 +258,7 @@
                                             class="mt-1 w-4 h-4 text-primary border-gray-300 focus:ring-primary" />
                                         <div class="flex-1">
                                             <div class="font-medium text-foreground">Livraison normale</div>
-                                            <div class="text-sm text-muted-foreground">Délai: 24-48h • Tarif standard
-                                            </div>
+                                            <div class="text-sm text-muted-foreground">Délai: 24-48h • Tarif standard</div>
                                         </div>
                                     </label>
 
@@ -240,8 +268,7 @@
                                             class="mt-1 w-4 h-4 text-primary border-gray-300 focus:ring-primary" />
                                         <div class="flex-1">
                                             <div class="font-medium text-foreground">Livraison express ⚡</div>
-                                            <div class="text-sm text-muted-foreground">Délai: Même jour • Tarif majoré
-                                                +50%</div>
+                                            <div class="text-sm text-muted-foreground">Délai: Même jour • Tarif majoré +50%</div>
                                         </div>
                                     </label>
                                 </div>
@@ -270,6 +297,52 @@
                                     Indications spéciales pour la livraison
                                 </p>
                             </div>
+
+                            <!-- Récapitulatif financier interactif -->
+                            <div *ngIf="tarifPreview && livraisonForm.value.montantProduit > 0" 
+                                class="mt-6 p-6 bg-gradient-to-br from-green-50 to-blue-50 border-2 border-primary/30 rounded-xl shadow-sm animate-fadeIn">
+                                <h3 class="font-semibold text-foreground mb-4 flex items-center gap-2 text-lg">
+                                    💰 Récapitulatif financier
+                                </h3>
+                                
+                                <div class="space-y-4">
+                                    <!-- Prix produit -->
+                                    <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                                        <div>
+                                            <div class="text-sm text-muted-foreground">Prix de votre produit</div>
+                                            <div class="text-xs text-muted-foreground mt-0.5">Ce que vous recevrez</div>
+                                        </div>
+                                        <span class="text-2xl font-bold text-green-600">{{ livraisonForm.value.montantProduit | fcfa }}</span>
+                                    </div>
+                                    
+                                    <!-- Frais livraison -->
+                                    <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                                        <div>
+                                            <div class="text-sm text-muted-foreground">Frais de livraison</div>
+                                            <div class="text-xs text-muted-foreground mt-0.5">{{ tarifPreview.zone }} • {{ livraisonForm.value.urgence === 'EXPRESS' ? 'Express ⚡' : 'Standard' }}</div>
+                                        </div>
+                                        <span class="text-lg font-semibold text-orange-600">{{ tarifPreview.montant | fcfa }}</span>
+                                    </div>
+                                    
+                                    <!-- Total COD -->
+                                    <div class="border-t-2 border-primary/20 pt-4">
+                                        <div class="flex justify-between items-center">
+                                            <div>
+                                                <div class="font-semibold text-foreground">Total à collecter (COD)</div>
+                                                <div class="text-xs text-muted-foreground mt-0.5">Montant que le client paiera</div>
+                                            </div>
+                                            <span class="text-3xl font-bold text-primary">{{ montantCODTotal | fcfa }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Info -->
+                                    <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                        <p class="text-xs text-blue-800">
+                                            ℹ️ Le client paiera <strong>{{ montantCODTotal | fcfa }}</strong> et vous recevrez <strong>{{ livraisonForm.value.montantProduit | fcfa }}</strong> après livraison.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -288,19 +361,16 @@
                                     <div class="space-y-2 text-sm">
                                         <div class="flex">
                                             <span class="text-muted-foreground w-32">Nom:</span>
-                                            <span class="text-foreground font-medium">{{ livraisonForm.value.nomClient
-                                                }}</span>
+                                            <span class="text-foreground font-medium">{{ livraisonForm.value.nomClient }}</span>
                                         </div>
                                         <div class="flex">
                                             <span class="text-muted-foreground w-32">Téléphone:</span>
-                                            <span class="text-foreground font-medium">{{
-                                                livraisonForm.value.telephoneClient }}</span>
+                                            <span class="text-foreground font-medium">{{ livraisonForm.value.telephoneClient }}</span>
                                         </div>
                                         <div class="flex">
                                             <span class="text-muted-foreground w-32">Adresse:</span>
                                             <span class="text-foreground">
-                                                {{ livraisonForm.value.adresseComplete }}, {{
-                                                livraisonForm.value.quartier }}, {{ livraisonForm.value.commune }}
+                                                {{ livraisonForm.value.adresseComplete }}, {{ livraisonForm.value.quartier }}, {{ livraisonForm.value.commune }}
                                             </span>
                                         </div>
                                         <div *ngIf="livraisonForm.value.pointRepere" class="flex">
@@ -318,8 +388,7 @@
                                     <div class="space-y-2 text-sm">
                                         <div class="flex">
                                             <span class="text-muted-foreground w-32">Description:</span>
-                                            <span class="text-foreground">{{ livraisonForm.value.descriptionProduit
-                                                }}</span>
+                                            <span class="text-foreground">{{ livraisonForm.value.descriptionProduit }}</span>
                                         </div>
                                         <div class="flex">
                                             <span class="text-muted-foreground w-32">Type:</span>
@@ -329,19 +398,15 @@
                                         </div>
                                         <div class="flex">
                                             <span class="text-muted-foreground w-32">Fragile:</span>
-                                            <span class="text-foreground">{{ livraisonForm.value.fragile ? 'Oui' : 'Non'
-                                                }}</span>
+                                            <span class="text-foreground">{{ livraisonForm.value.fragile ? 'Oui' : 'Non' }}</span>
                                         </div>
                                         <div *ngIf="livraisonForm.value.poidsEstime" class="flex">
                                             <span class="text-muted-foreground w-32">Poids:</span>
-                                            <span class="text-foreground">{{ livraisonForm.value.poidsEstime }}
-                                                kg</span>
+                                            <span class="text-foreground">{{ livraisonForm.value.poidsEstime }} kg</span>
                                         </div>
                                         <div class="flex">
-                                            <span class="text-muted-foreground w-32">Montant COD:</span>
-                                            <span class="text-foreground font-semibold text-primary">
-                                                {{ livraisonForm.value.montantCOD }}
-                                            </span>
+                                            <span class="text-muted-foreground w-32">Prix produit:</span>
+                                            <span class="text-foreground font-semibold text-green-600">{{ livraisonForm.value.montantProduit | fcfa }}</span>
                                         </div>
                                         <div *ngIf="livraisonForm.value.notesLivreur" class="flex">
                                             <span class="text-muted-foreground w-32">Notes:</span>
@@ -352,8 +417,7 @@
                                             <span class="text-foreground">
                                                 {{
                                                 livraisonForm.value.creneauSouhaite === 'MATIN' ? 'Matin (8h-12h)' :
-                                                livraisonForm.value.creneauSouhaite === 'APRES_MIDI' ? 'Après-midi
-                                                (12h-18h)' :
+                                                livraisonForm.value.creneauSouhaite === 'APRES_MIDI' ? 'Après-midi (12h-18h)' :
                                                 livraisonForm.value.creneauSouhaite === 'SOIR' ? 'Soir (18h-21h)' : ''
                                                 }}
                                             </span>
@@ -364,44 +428,38 @@
                         </div>
 
                         <!-- Calcul Tarif -->
-                        <div class="card bg-primary/5 border-primary/20">
-                            <h3 class="font-semibold text-foreground mb-4">💰 Détails financiers</h3>
+                        <div class="card bg-gradient-to-br from-green-50 to-blue-50 border-2 border-primary/30">
+                            <h3 class="font-semibold text-foreground mb-4 text-lg">💰 Résumé financier</h3>
 
                             <div *ngIf="calculatingTarif" class="text-center py-8">
-                                <div
-                                    class="inline-block w-6 h-6 border-3 border-primary border-t-transparent rounded-full animate-spin mb-2">
-                                </div>
-                                <p class="text-sm text-muted-foreground">Calcul du tarif...</p>
+                                <div class="inline-block w-6 h-6 border-3 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+                                <p class="text-sm text-muted-foreground">Calcul en cours...</p>
                             </div>
 
-                            <div *ngIf="tarif && !calculatingTarif" class="space-y-3">
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="text-muted-foreground">Montant à collecter (COD):</span>
-                                    <span class="font-medium">{{ livraisonForm.value.montantCOD }}</span>
+                            <div *ngIf="tarif && !calculatingTarif" class="space-y-4">
+                                <!-- Prix produit -->
+                                <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                                    <span class="text-muted-foreground">Prix de votre produit:</span>
+                                    <span class="text-xl font-bold text-green-600">{{ livraisonForm.value.montantProduit | fcfa }}</span>
                                 </div>
-                                <div class="space-y-2 mb-6 text-sm">
-                                    <div class="flex justify-between">
-                                        <span class="text-muted-foreground">Montant COD:</span>
-                                        <span class="font-medium">{{ createdLivraison?.montantCOD | fcfa }}</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-muted-foreground">Frais de livraison:</span>
-                                        <span class="font-medium text-destructive">- {{ createdLivraison?.fraisLivraison
-                                            | fcfa }}</span>
-                                    </div>
-                                    <div class="flex justify-between border-t pt-2">
-                                        <span class="text-muted-foreground font-semibold">Vous recevrez:</span>
-                                        <span class="font-semibold text-green-600">{{ createdLivraison?.montantARecevoir
-                                            | fcfa }}</span>
+                                
+                                <!-- Frais -->
+                                <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                                    <span class="text-muted-foreground">Frais de livraison:</span>
+                                    <span class="text-lg font-semibold text-orange-600">{{ tarif.montant | fcfa }}</span>
+                                </div>
+                                
+                                <!-- Total COD -->
+                                <div class="border-t-2 border-primary/20 pt-4">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-semibold text-foreground">Client paiera (COD):</span>
+                                        <span class="text-3xl font-bold text-primary">{{ montantCODTotal | fcfa }}</span>
                                     </div>
                                 </div>
-                                <div class="border-t border-primary/20"></div>
-                                <div class="flex justify-between items-center">
-                                    <span class="font-semibold text-foreground">Vous recevrez:</span>
-                                    <span class="text-2xl font-bold text-green-600">{{tarif.montantARecevoir}}</span>
-                                </div>
-                                <p class="text-xs text-muted-foreground mt-2">
-                                    Zone: {{ tarif.zone }} • Délai estimé: {{ tarif.delaiEstime }}
+                                
+                                <p class="text-xs text-muted-foreground mt-4">
+                                    📍 {{ tarif.zone }} 
+                                    <span *ngIf="tarif.delaiEstime">• ⏱️ {{ tarif.delaiEstime }}</span>
                                 </p>
                             </div>
                         </div>
@@ -480,7 +538,7 @@
                     Voir mes livraisons
                 </button>
                 <button class="btn-outline w-full" routerLink="/vendeur/creer-livraison"
-                    (click)="createdLivraison = null; currentStep = 1; livraisonForm.reset({ urgence: 'NORMAL', fragile: false, montantCOD: 0 })">
+                    (click)="createdLivraison = null; currentStep = 1; livraisonForm.reset({ urgence: 'NORMAL', fragile: false, montantProduit: 0 })">
                     Créer une autre livraison
                 </button>
             </div>

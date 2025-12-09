@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-tracking-home',
@@ -13,13 +14,16 @@ import { FormsModule } from '@angular/forms';
 export class TrackingHomeComponent {
   numeroTracking = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private toastService: ToastService
+  ) {}
 
   searchTracking() {
     const numero = this.numeroTracking.trim().toUpperCase();
     
     if (!numero) {
-      alert('Veuillez entrer un numéro de tracking');
+      this.toastService.error('Veuillez entrer un numéro de tracking');
       return;
     }
 

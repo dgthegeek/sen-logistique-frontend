@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/user.model';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +16,11 @@ import { User } from '../../../core/models/user.model';
 export class HeaderComponent implements OnInit {
   currentUser: User | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private confirmationService: ConfirmationService,
+    private toastService: ToastService
+  ) { }
 
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
@@ -23,8 +29,14 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
-      this.authService.logout();
-    }
+    this.confirmationService.confirm({
+      title: 'Se déconnecter',
+      message: 'Êtes-vous sûr ?',
+      type: 'warning',
+      onConfirm: () => {
+        this.authService.logout();
+        this.toastService.success('Déconnexion réussie !');
+      }
+    });
   }
 }

@@ -13,6 +13,7 @@ import {
 } from '../models/admin.model';
 import { TrackingInfo } from '../models/tracking.model';
 import { ConfirmLivraisonRequest, ConfirmLivraisonResponse, DeliveryInfo } from '../models/delivery.model';
+import { AdminVendeurActionResponse, AdminVendeursEnAttenteResponse, BloquerVendeurRequest, PageVendeur, SuspendreVendeurRequest, VendeurDetailDTO, VendeurFilters } from '../models/vendeur.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -135,9 +136,9 @@ export class ApiService {
     return this.http.get<LivraisonAdmin>(`${this.baseUrl}/admin/livraisons/${id}`);
   }
 
-  getLivraisonByNumero(numero: string): Observable<LivraisonAdmin> {
-    return this.http.get<LivraisonAdmin>(`${this.baseUrl}/delivery/${numero}`);
-  }
+  getLivraisonByNumero(numeroTracking: string): Observable<DeliveryInfo> {
+  return this.http.get<DeliveryInfo>(`${this.baseUrl}/delivery/${numeroTracking}`);
+}
 
   confirmerLivraison(numero: string, data: ConfirmerLivraisonRequest): Observable<ConfirmerLivraisonResponse> {
     return this.http.post<ConfirmerLivraisonResponse>(`${this.baseUrl}/delivery/${numero}/livrer`, data);
@@ -195,4 +196,67 @@ export class ApiService {
   confirmerLivraisonPublic(numeroTracking: string, data: ConfirmLivraisonRequest): Observable<ConfirmLivraisonResponse> {
     return this.http.post<ConfirmLivraisonResponse>(`${this.baseUrl}/delivery/${numeroTracking}/livrer`, data);
   }
+
+  getVendeursEnAttente(): Observable<AdminVendeursEnAttenteResponse> {
+    return this.http.get<AdminVendeursEnAttenteResponse>(`${this.baseUrl}/admin/vendeurs/en-attente`);
+  }
+
+  // Liste tous les vendeurs avec filtres et pagination
+  getVendeurs(filters?: VendeurFilters, page: number = 0, size: number = 20): Observable<PageVendeur> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    if (filters?.statut) {
+      params = params.set('statut', filters.statut);
+    }
+
+    if (filters?.quartier) {
+      params = params.set('quartier', filters.quartier);
+    }
+
+    if (filters?.commune) {
+      params = params.set('commune', filters.commune);
+    }
+
+    if (filters?.search) {
+      params = params.set('search', filters.search);
+    }
+
+    if (filters?.sort) {
+      params = params.set('sort', filters.sort);
+    }
+
+    if (filters?.order) {
+      params = params.set('order', filters.order);
+    }
+
+    return this.http.get<PageVendeur>(`${this.baseUrl}/admin/vendeurs`, { params });
+  }
+
+  // Détails d'un vendeur
+  getVendeurDetail(id: number): Observable<VendeurDetailDTO> {
+    return this.http.get<VendeurDetailDTO>(`${this.baseUrl}/admin/vendeurs/${id}`);
+  }
+
+  // Valider un vendeur
+  validerVendeur(id: number): Observable<AdminVendeurActionResponse> {
+    return this.http.post<AdminVendeurActionResponse>(`${this.baseUrl}/admin/vendeurs/${id}/valider`, {});
+  }
+
+  // Suspendre un vendeur
+  suspendreVendeur(id: number, data: SuspendreVendeurRequest): Observable<AdminVendeurActionResponse> {
+    return this.http.post<AdminVendeurActionResponse>(`${this.baseUrl}/admin/vendeurs/${id}/suspendre`, data);
+  }
+
+  // Bloquer un vendeur
+  bloquerVendeur(id: number, data: BloquerVendeurRequest): Observable<AdminVendeurActionResponse> {
+    return this.http.post<AdminVendeurActionResponse>(`${this.baseUrl}/admin/vendeurs/${id}/bloquer`, data);
+  }
+
+  // Réactiver un vendeur
+  reactiverVendeur(id: number): Observable<AdminVendeurActionResponse> {
+    return this.http.post<AdminVendeurActionResponse>(`${this.baseUrl}/admin/vendeurs/${id}/reactiver`, {});
+  }
+
 }

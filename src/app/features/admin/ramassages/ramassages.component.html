@@ -26,7 +26,7 @@
 
             <button (click)="marquerRamasse()" [disabled]="selectedColis.size === 0 || processingRamassage"
               class="btn-primary" [class.opacity-50]="selectedColis.size === 0 || processingRamassage">
-              <span *ngIf="!processingRamassage">✅ Marquer ramassé ({{ selectedColis.size }})</span>
+              <span *ngIf="!processingRamassage">Marquer ramassé ({{ selectedColis.size }})</span>
               <span *ngIf="processingRamassage">Traitement...</span>
             </button>
           </div>
@@ -51,12 +51,12 @@
         <div *ngIf="ramassages && !loading" class="space-y-4">
           <!-- Empty State -->
           <div *ngIf="ramassages.zones.length === 0" class="card text-center py-12">
-            <div class="text-6xl mb-4">📦</div>
+            <div class="text-6xl mb-4">✅</div>
             <h3 class="text-xl font-semibold text-foreground mb-2">
-              Aucun ramassage prévu aujourd'hui
+              Tous les ramassages sont effectués !
             </h3>
             <p class="text-muted-foreground">
-              Les colis à ramasser apparaîtront ici
+              Aucun colis en attente de ramassage
             </p>
           </div>
 
@@ -65,14 +65,14 @@
             <!-- Zone Header -->
             <div
               class="flex items-center justify-between cursor-pointer hover:bg-muted/50 p-4 -m-4 mb-4 rounded-lg transition-colors"
-              (click)="toggleZone(zone.zone.id)">
+              (click)="toggleZone(zone.zone)">
               <div class="flex items-center gap-4">
                 <div class="text-2xl">
-                  {{ isZoneExpanded(zone.zone.id) ? '📂' : '📁' }}
+                  {{ isZoneExpanded(zone.zone) ? '📂' : '📁' }}
                 </div>
                 <div>
                   <h2 class="text-xl font-bold text-foreground">
-                    Zone {{ zone.zone.nom }}
+                    {{ zone.zone }}
                   </h2>
                   <p class="text-sm text-muted-foreground">
                     {{ zone.nombreColis }} colis • {{ zone.vendeurs.length }} vendeur{{ zone.vendeurs.length > 1 ? 's' :
@@ -86,44 +86,42 @@
                   Tout sélectionner
                 </button>
                 <span class="text-2xl">
-                  {{ isZoneExpanded(zone.zone.id) ? '▼' : '▶' }}
+                  {{ isZoneExpanded(zone.zone) ? '▼' : '▶' }}
                 </span>
               </div>
             </div>
 
             <!-- Zone Content (Vendeurs) -->
-            <div *ngIf="isZoneExpanded(zone.zone.id)" class="space-y-4">
+            <div *ngIf="isZoneExpanded(zone.zone)" class="space-y-4">
               <!-- Vendeur Card -->
               <div *ngFor="let vendeur of zone.vendeurs" class="border rounded-lg overflow-hidden">
                 <!-- Vendeur Header -->
                 <div
                   class="flex items-center justify-between p-4 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors"
-                  (click)="toggleVendeur(vendeur.vendeurId)">
+                  (click)="toggleVendeur(vendeur.id)">
                   <div class="flex items-center gap-4 flex-1">
                     <div class="text-xl">
-                      {{ isVendeurExpanded(vendeur.vendeurId) ? '📦' : '📋' }}
+                      {{ isVendeurExpanded(vendeur.id) ? '📦' : '📋' }}
                     </div>
                     <div class="flex-1">
                       <div class="font-semibold text-foreground">
                         {{ vendeur.prenom }} {{ vendeur.nom }}
                       </div>
                       <div class="text-sm text-muted-foreground">
-                        {{ vendeur.nomBoutique }}
+                        {{ vendeur.telephone }}
                       </div>
                       <div class="text-sm text-muted-foreground mt-1">
-                        {{ vendeur.nombreColis }} colis • {{ vendeur.quartier }}, {{ vendeur.commune }}
+                        {{ vendeur.nombreColis }} colis
                       </div>
                     </div>
 
                     <div class="flex gap-2">
                       <button (click)="callVendeur(vendeur.telephone); $event.stopPropagation()"
                         class="btn-outline text-sm">
-                        📞 {{ vendeur.telephone }}
+                        📞
                       </button>
-                      <button
-                        (click)="openMaps(vendeur.adresseComplete, vendeur.commune, vendeur.quartier); $event.stopPropagation()"
-                        class="btn-outline text-sm">
-                        🗺️ Maps
+                      <button (click)="openMaps(vendeur.adresse); $event.stopPropagation()" class="btn-outline text-sm">
+                        🗺️
                       </button>
                     </div>
                   </div>
@@ -134,43 +132,43 @@
                       Tout sélectionner
                     </button>
                     <span class="text-xl">
-                      {{ isVendeurExpanded(vendeur.vendeurId) ? '▼' : '▶' }}
+                      {{ isVendeurExpanded(vendeur.id) ? '▼' : '▶' }}
                     </span>
                   </div>
                 </div>
 
-                <!-- Adresse -->
-                <div *ngIf="isVendeurExpanded(vendeur.vendeurId)" class="px-4 pt-2 pb-4 bg-muted/10 text-sm">
+                <!-- Adresse vendeur (ramassage) -->
+                <div *ngIf="isVendeurExpanded(vendeur.id)" class="px-4 pt-2 pb-4 bg-blue-50 border-t border-blue-200">
                   <div class="flex items-start gap-2">
-                    <span class="text-muted-foreground">📍</span>
+                    <span class="text-blue-600 text-lg">📍</span>
                     <div>
-                      <div class="font-medium">{{ vendeur.adresseComplete }}</div>
-                      <div class="text-muted-foreground">
-                        {{ vendeur.quartier }}, {{ vendeur.commune }}
-                      </div>
-                      <div *ngIf="vendeur.pointRepere" class="text-muted-foreground text-xs mt-1">
-                        Point de repère: {{ vendeur.pointRepere }}
+                      <div class="text-sm text-blue-800 font-semibold mb-1">Adresse de ramassage</div>
+                      <div class="font-medium text-foreground">{{ vendeur.adresse }}</div>
+                      <div class="text-xs text-muted-foreground mt-1">
+                        Colis à récupérer chez ce vendeur
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <!-- Colis List -->
-                <div *ngIf="isVendeurExpanded(vendeur.vendeurId)" class="p-4 space-y-2">
+                <div *ngIf="isVendeurExpanded(vendeur.id)" class="p-4 space-y-2">
                   <div *ngFor="let colis of vendeur.colis"
                     class="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
                     (click)="toggleColis(colis.id)" [class]="isColisSelected(colis.id) ? 'bg-primary/10' : ''"
                     [class.border-primary]="isColisSelected(colis.id)">
+
                     <input type="checkbox" [checked]="isColisSelected(colis.id)" (click)="$event.stopPropagation()"
                       (change)="toggleColis(colis.id)" class="mt-1 w-4 h-4" />
 
                     <div class="flex-1">
+                      <!-- Header avec tracking et badges -->
                       <div class="flex items-start justify-between mb-2">
                         <div>
                           <div class="font-mono font-semibold text-primary">
                             {{ colis.numeroTracking }}
                           </div>
-                          <div class="text-sm text-foreground">
+                          <div class="text-sm text-foreground" *ngIf="colis.descriptionProduit">
                             {{ colis.descriptionProduit }}
                           </div>
                         </div>
@@ -180,11 +178,17 @@
                         </div>
                       </div>
 
-                      <div class="text-sm text-muted-foreground">
-                        Client: {{ colis.client.nom }} • {{ colis.client.telephone }}
-                      </div>
-                      <div class="text-sm text-muted-foreground">
-                        Destination: {{ colis.client.adresse }}
+                      <!-- Infos client -->
+                      <div class="space-y-1 text-sm">
+                        <div class="text-muted-foreground">
+                          <span class="font-semibold">Client destinataire:</span> {{ colis.nomClient }}
+                        </div>
+
+                        <!-- Note explicative -->
+                        <div class="text-xs text-muted-foreground bg-muted/30 p-2 rounded">
+                          ℹ️ À ramasser chez <span class="font-medium">{{ vendeur.prenom }} {{ vendeur.nom }}</span> :
+                          {{ vendeur.adresse }}
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -1,0 +1,109 @@
+<div class="min-h-screen bg-gradient-to-br flex items-center justify-center p-4" [ngClass]="bgClass">
+    <div class="card max-w-2xl w-full text-center">
+        <!-- Icon -->
+        <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" [ngClass]="iconBgClass">
+            <span class="text-6xl">{{ icon }}</span>
+        </div>
+
+        <!-- Titre -->
+        <h1 class="text-3xl font-bold text-foreground mb-4">
+            {{ titre }}
+        </h1>
+
+        <!-- Message selon statut -->
+        <p class="text-lg text-muted-foreground mb-6" *ngIf="isEnAttente">
+            Merci de vous être inscrit, <span class="font-semibold text-foreground">{{ user?.prenom }}</span> !
+        </p>
+
+        <p class="text-lg text-muted-foreground mb-6" *ngIf="isSuspendu">
+            Votre compte a été temporairement suspendu.
+        </p>
+
+        <p class="text-lg text-muted-foreground mb-6" *ngIf="isBloque">
+            Votre compte a été bloqué définitivement.
+        </p>
+
+        <!-- Contenu EN_ATTENTE_VALIDATION -->
+        <div *ngIf="isEnAttente" class="border rounded-lg p-6 mb-8 text-left" [ngClass]="cardBorderClass">
+            <div class="flex items-start gap-4">
+                <div class="text-3xl">📋</div>
+                <div>
+                    <h3 class="font-semibold text-foreground mb-2">Prochaines étapes</h3>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-600 mt-1">•</span>
+                            <span>Notre équipe va vérifier vos informations</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-600 mt-1">•</span>
+                            <span>Vous recevrez un <strong>SMS de confirmation</strong> dès que votre compte sera
+                                activé</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-600 mt-1">•</span>
+                            <span>Délai habituel : <strong>24 à 48 heures</strong></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu SUSPENDU/BLOQUE -->
+        <div *ngIf="isSuspendu || isBloque" class="border rounded-lg p-6 mb-6 text-left" [ngClass]="cardBorderClass">
+            <div class="flex items-start gap-4">
+                <div class="text-3xl">ℹ️</div>
+                <div>
+                    <h3 class="font-semibold text-foreground mb-2">
+                        {{ isBloque ? 'Raison du blocage' : 'Raison de la suspension' }}
+                    </h3>
+                    <p class="text-sm text-muted-foreground">
+                        Pour plus d'informations sur les raisons de cette décision, veuillez contacter notre équipe.
+                    </p>
+                    <p class="text-sm text-muted-foreground mt-2" *ngIf="isSuspendu">
+                        Votre compte peut être réactivé après résolution du problème.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
+            <div class="flex items-start gap-3">
+                <div class="text-2xl">{{ isEnAttente ? '💡' : '📞' }}</div>
+                <div class="text-sm">
+                    <p class="font-semibold text-foreground mb-1">
+                        {{ isEnAttente ? 'Besoin d\'aide ?' : 'Contactez-nous' }}
+                    </p>
+                    <p class="text-muted-foreground mb-2" *ngIf="isEnAttente">
+                        Contactez notre équipe :
+                    </p>
+                    <p class="text-muted-foreground mb-2" *ngIf="!isEnAttente">
+                        Notre équipe est disponible pour vous aider.
+                    </p>
+                    <div class="space-y-1">
+                        <p>
+                            <a href="tel:+221781082373" class="text-primary hover:underline">+221 78 108 23 73</a>
+                        </p>
+                        <p>
+                            <a href="mailto:dioks&#64;gmail.com" class="text-primary hover:underline">
+                                dioks&#64;gmail.com
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex gap-3">
+            <button (click)="logout()" class="flex-1" [class.btn-outline]="isEnAttente"
+                [class.btn-primary]="!isEnAttente">
+                Se déconnecter
+            </button>
+            <a routerLink="/tracking" class="flex-1" [class.btn-secondary]="isEnAttente"
+                [class.btn-outline]="!isEnAttente">
+                Suivre un colis
+            </a>
+        </div>
+    </div>
+</div>
