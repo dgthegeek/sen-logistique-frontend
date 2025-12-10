@@ -1,24 +1,8 @@
-<div class="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
-    <!-- Header -->
-    <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <a routerLink="/tracking" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                    <div class="text-3xl">📦</div>
-                    <div>
-                        <h1 class="text-xl font-bold text-primary">Sen-Logistique</h1>
-                        <p class="text-xs text-muted-foreground">Suivi de colis</p>
-                    </div>
-                </a>
-                <a routerLink="/tracking" class="btn-outline text-sm">
-                    ← Nouvelle recherche
-                </a>
-            </div>
-        </div>
-    </header>
+<app-auth-header [linkUrl]="'/tracking'" [linkText]="'Nouvelle recherche'"></app-auth-header>
 
-    <!-- Content -->
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-primary/5 via-background to-primary/10 py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+
         <!-- Loading -->
         <div *ngIf="loading" class="card">
             <div class="flex items-center justify-center py-12">
@@ -40,13 +24,14 @@
             <p class="text-muted-foreground mb-6">
                 {{ errorMessage }}
             </p>
-            <button (click)="retrySearch()" class="btn-primary">
-                ← Effectuer une nouvelle recherche
+            <button routerLink="/tracking" class="btn-primary">
+                ← Nouvelle recherche
             </button>
         </div>
 
         <!-- Tracking Info -->
         <div *ngIf="tracking && !loading" class="space-y-6">
+
             <!-- Header Card -->
             <div class="card">
                 <div class="text-center mb-8">
@@ -54,10 +39,10 @@
                     <h2 class="text-3xl font-bold text-foreground mb-2">
                         {{ getStatusLabel(tracking.statut) }}
                     </h2>
-                    <div class="flex items-center justify-center gap-2 text-muted-foreground mb-4">
-                        <span class="font-mono text-lg">{{ tracking.numeroTracking }}</span>
+                    <div class="font-mono text-lg text-muted-foreground mb-4">
+                        {{ tracking.numeroTracking }}
                     </div>
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-lg border-2"
+                    <div class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-lg border-2"
                         [ngClass]="getStatusColor(tracking.statut)">
                         {{ getStatusIcon(tracking.statut) }} {{ getStatusLabel(tracking.statut) }}
                     </div>
@@ -91,7 +76,8 @@
                     <div *ngFor="let step of tracking.timeline; let i = index; let last = last" class="relative">
                         <!-- Timeline line -->
                         <div *ngIf="!last" class="absolute left-6 top-12 w-0.5 h-full -ml-px"
-                            [class.bg-primary]="step.effectue" [class.bg-muted]="!step.effectue"></div>
+                            [class.bg-primary]="step.effectue" [class.bg-muted]="!step.effectue">
+                        </div>
 
                         <!-- Step -->
                         <div class="flex items-start gap-4">
@@ -113,10 +99,7 @@
                                     [class.text-muted-foreground]="!step.effectue">
                                     {{ getEtapeLabel(step.etape) }}
                                 </div>
-                                <div class="text-sm" [ngClass]="{
-       'text-muted-foreground': step.effectue,
-       'text-muted-foreground/50': !step.effectue
-     }">
+                                <div class="text-sm text-muted-foreground">
                                     {{ step.date ? formatDate(step.date) : 'En attente' }}
                                 </div>
                             </div>
@@ -129,20 +112,19 @@
             <div class="card bg-blue-50 border-blue-200">
                 <div class="flex items-start gap-4">
                     <div class="text-3xl">💡</div>
-                    <div>
+                    <div class="flex-1">
                         <h3 class="font-semibold text-foreground mb-2">
                             Besoin d'aide ?
                         </h3>
                         <p class="text-sm text-muted-foreground mb-3">
-                            Si vous avez des questions sur votre livraison, contactez votre vendeur ou notre service
-                            client.
+                            Si vous avez des questions sur votre livraison, contactez-nous.
                         </p>
                         <div class="flex flex-wrap gap-3">
-                            <a href="tel:+221781082373" class="btn-outline text-sm">
-                                📞 Appeler le service client
+                            <a href="tel:+221XXXXXXXXX" class="btn-outline text-sm">
+                                📞 Appeler
                             </a>
-                            <a href="mailto:dioks&#64;gmail.com" class="btn-outline text-sm">
-                                📧 Envoyer un email
+                            <a href="mailto:contact@dioks.sn" class="btn-outline text-sm">
+                                📧 Email
                             </a>
                         </div>
                     </div>
@@ -157,11 +139,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t mt-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm text-muted-foreground">
-            © 2025 Sen-Logistique. Tous droits réservés.
-        </div>
-    </footer>
 </div>

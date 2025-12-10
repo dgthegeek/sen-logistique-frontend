@@ -4,11 +4,12 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { FcfaPipe } from '../../shared/pipes/fcfa.pipe';
 import { TrackingInfo, TimelineStep } from '../../core/models/tracking.model';
+import { AuthHeaderComponent } from "../../shared/components/auth-header/auth-header.component";
 
 @Component({
   selector: 'app-tracking-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FcfaPipe],
+  imports: [CommonModule, RouterModule, FcfaPipe, AuthHeaderComponent],
   templateUrl: './tracking-detail.component.html',
   styleUrls: ['./tracking-detail.component.css']
 })

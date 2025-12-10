@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { StatutVendeur } from '../../../core/models/vendeur.model';
+import { AuthHeaderComponent } from "../../../shared/components/auth-header/auth-header.component";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AuthHeaderComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })

@@ -21,22 +21,25 @@ import { AdminFinancesComponent } from './features/admin/finances/finances.compo
 import { GestionVendeursComponent } from './features/admin/gestion-vendeurs/gestion-vendeurs.component';
 
 // Public pages
+import { LandingComponent } from './pages/landing/landing.component';
 import { TrackingHomeComponent } from './pages/tracking-home/tracking-home.component';
 import { TrackingDetailComponent } from './pages/tracking-detail/tracking-detail.component';
 import { DeliveryConfirmComponent } from './pages/delivery-confirm/delivery-confirm.component';
 import { StatutCompteComponent } from './pages/statut-compte/statut-compte.component';
 
 export const routes: Routes = [
-  // Page statut compte (UNE SEULE PAGE DYNAMIQUE)
+  // Landing page comme page par défaut
+  { path: '', component: LandingComponent },
+  
+  // Page statut compte (EN_ATTENTE / SUSPENDU / BLOQUE)
   { path: 'statut-compte', component: StatutCompteComponent },
 
   // Public tracking pages
   { path: 'tracking', component: TrackingHomeComponent },
   { path: 'tracking/:numero', component: TrackingDetailComponent },
   { path: 'delivery/:numero', component: DeliveryConfirmComponent },
-
+  
   // Auth (avec guestGuard pour bloquer si déjà connecté)
-  { path: '', redirectTo: '/tracking', pathMatch: 'full' },
   { 
     path: 'login', 
     component: LoginComponent,
@@ -76,6 +79,6 @@ export const routes: Routes = [
     ]
   },
 
-  // Fallback
-  { path: '**', redirectTo: '/tracking' }
+  // Fallback Landing
+  { path: '**', redirectTo: '' }
 ];

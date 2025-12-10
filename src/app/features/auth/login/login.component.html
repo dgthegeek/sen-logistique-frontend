@@ -1,8 +1,10 @@
-<div class="min-h-screen bg-background flex items-center justify-center p-4">
+<app-auth-header [linkUrl]="'/register'" [linkText]="'Créer un compte'"></app-auth-header>
+
+<div class="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-primary/5 via-background to-primary/10 flex items-center justify-center p-4">
   <div class="card max-w-md w-full">
     <div class="text-center mb-6">
-      <h1 class="text-3xl font-bold text-foreground mb-2">sen-logistique</h1>
-      <p class="text-muted-foreground">Connectez-vous à votre compte</p>
+      <h1 class="text-3xl font-bold text-foreground mb-2">Connexion</h1>
+      <p class="text-muted-foreground">Accédez à votre espace vendeur</p>
     </div>
 
     <!-- Message d'erreur -->
@@ -50,20 +52,27 @@
       <!-- Bouton Submit -->
       <button
         type="submit"
-        class="btn-primary w-full mb-4"
+        class="btn-primary w-full py-3"
         [disabled]="loading || loginForm.invalid"
       >
         <span *ngIf="!loading">Se connecter</span>
-        <span *ngIf="loading">Connexion...</span>
+        <span *ngIf="loading">Connexion en cours...</span>
       </button>
-
-      <!-- Lien inscription -->
-      <p class="text-center text-sm text-muted-foreground">
-        Pas encore de compte ?
-        <a routerLink="/register" class="text-primary hover:underline font-medium">
-          Créer un compte
-        </a>
-      </p>
     </form>
+
+    <!-- Divider -->
+    <div class="relative my-6">
+      <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t"></div>
+      </div>
+      <div class="relative flex justify-center text-sm">
+        <span class="px-2 bg-card text-muted-foreground">Pas encore de compte ?</span>
+      </div>
+    </div>
+
+    <!-- Lien inscription -->
+    <a routerLink="/register" class="btn-outline w-full text-center block py-3">
+      Créer un compte gratuitement
+    </a>
   </div>
 </div>

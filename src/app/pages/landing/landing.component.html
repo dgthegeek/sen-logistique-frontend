@@ -1,0 +1,312 @@
+<app-public-header></app-public-header>
+
+<main class="bg-background">
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-primary/10 via-background to-primary/5 py-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+                        Livraison rapide et fiable pour vos clients
+                        <span class="text-primary">Partout !</span>
+                    </h1>
+                    <p class="text-lg text-muted-foreground mb-8">
+                        La plateforme de livraison pensée pour vos business. Gérez vos livraisons en toute simplicité
+                        avec paiement à la livraison (COD).
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a routerLink="/register" class="btn-primary text-lg px-8 py-4 text-center">
+                            🚀 Commencer maintenant
+                        </a>
+                        <a routerLink="/tracking" class="btn-outline text-lg px-8 py-4 text-center">
+                            📦 Suivre un colis
+                        </a>
+                    </div>
+                    <p class="text-sm text-muted-foreground mt-6">
+                        ✓ Sans engagement • ✓ Gratuit à l'inscription • ✓ Support inclus
+                    </p>
+                </div>
+                <div class="hidden lg:block">
+                    <div class="relative">
+                        <div class="absolute -top-4 -right-4 w-72 h-72 bg-primary/20 rounded-full blur-3xl"></div>
+                        <div class="absolute -bottom-4 -left-4 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
+                        <div class="hidden lg:block">
+                            <div class="relative">
+                                <!-- Effet de fond animé -->
+                                <div
+                                    class="absolute -top-4 -right-4 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse">
+                                </div>
+                                <div class="absolute -bottom-4 -left-4 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"
+                                    style="animation-delay: 1s;"></div>
+
+                                <!-- Card principale -->
+                                <div class="relative bg-white rounded-2xl shadow-2xl p-8 border-2 border-primary/10">
+                                    <!-- Stats en temps réel -->
+                                    <div class="grid grid-cols-2 gap-4 mb-6">
+                                        <div class="bg-green-50 rounded-xl p-4 text-center">
+                                            <div class="text-3xl font-bold text-green-600 mb-1">95%</div>
+                                            <div class="text-xs text-green-700">Livraisons réussies</div>
+                                        </div>
+                                        <div class="bg-blue-50 rounded-xl p-4 text-center">
+                                            <div class="text-3xl font-bold text-blue-600 mb-1">24h</div>
+                                            <div class="text-xs text-blue-700">Délai max</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Timeline de livraison -->
+                                    <div class="space-y-4">
+                                        <div class="flex items-start gap-4">
+                                            <div class="relative">
+                                                <div
+                                                    class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                </div>
+                                                <div
+                                                    class="absolute top-12 left-1/2 w-0.5 h-12 bg-gradient-to-b from-green-500 to-blue-500 -translate-x-1/2">
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 pt-2">
+                                                <p class="font-semibold text-foreground">Commande créée</p>
+                                                <p class="text-sm text-muted-foreground">En quelques clics</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex items-start gap-4">
+                                            <div class="relative">
+                                                <div
+                                                    class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                                                    </svg>
+                                                </div>
+                                                <div
+                                                    class="absolute top-12 left-1/2 w-0.5 h-12 bg-gradient-to-b from-blue-500 to-purple-500 -translate-x-1/2">
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 pt-2">
+                                                <p class="font-semibold text-foreground">Ramassage</p>
+                                                <p class="text-sm text-muted-foreground">À votre domicile</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex items-start gap-4">
+                                            <div
+                                                class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                                                </svg>
+                                            </div>
+                                            <div class="flex-1 pt-2">
+                                                <p class="font-semibold text-foreground">Livraison</p>
+                                                <p class="text-sm text-muted-foreground">Paiement collecté</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Badge confiance -->
+                                    <div
+                                        class="mt-6 pt-6 border-t flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        <span>200+ vendeurs font confiance à Dioks</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                    Nos Services
+                </h2>
+                <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Des solutions complètes pour gérer vos livraisons en toute sérénité
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div *ngFor="let service of services" class="card text-center hover:shadow-lg transition-shadow">
+                    <div class="text-5xl mb-4">{{ service.icon }}</div>
+                    <h3 class="text-xl font-bold text-foreground mb-3">{{ service.title }}</h3>
+                    <p class="text-muted-foreground">{{ service.description }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Dioks Section -->
+    <section id="why-dioks" class="py-20 bg-muted/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                    Pourquoi choisir Dioks ?
+                </h2>
+                <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    La plateforme de livraison conçue spécialement pour vos business
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div *ngFor="let advantage of advantages" class="text-center">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl text-primary">{{ advantage.icon }}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-foreground mb-2">{{ advantage.title }}</h3>
+                    <p class="text-muted-foreground">{{ advantage.description }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                    Comment ça marche ?
+                </h2>
+                <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    4 étapes simples pour gérer vos livraisons
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div *ngFor="let step of steps; let i = index" class="relative">
+                    <div class="text-center">
+                        <div
+                            class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                            {{ step.number }}
+                        </div>
+                        <h3 class="text-xl font-bold text-foreground mb-3">{{ step.title }}</h3>
+                        <p class="text-muted-foreground">{{ step.description }}</p>
+                    </div>
+                    <div *ngIf="i < steps.length - 1"
+                        class="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-primary/20 -translate-x-1/2">
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <a routerLink="/register" class="btn-primary text-lg px-8 py-4">
+                    Commencer maintenant
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-20 bg-primary text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div *ngFor="let stat of stats" class="text-center">
+                    <div class="text-4xl md:text-5xl font-bold mb-2">{{ stat.value }}</div>
+                    <div class="text-primary-foreground/80">{{ stat.label }}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                    Ce que disent nos partenaires
+                </h2>
+                <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Des centaines de vendeurs nous font confiance chaque jour
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div *ngFor="let testimonial of testimonials" class="card">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="text-4xl">{{ testimonial.image }}</div>
+                        <div>
+                            <h4 class="font-bold text-foreground">{{ testimonial.name }}</h4>
+                            <p class="text-sm text-muted-foreground">{{ testimonial.role }}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-1 mb-3">
+                        <span *ngFor="let star of [1,2,3,4,5]" class="text-yellow-400">⭐</span>
+                    </div>
+                    <p class="text-muted-foreground">{{ testimonial.text }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final Section -->
+    <section class="py-20 bg-gradient-to-br from-primary/10 via-background to-primary/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                Prêt à développer votre business ?
+            </h2>
+            <p class="text-lg text-muted-foreground mb-8">
+                Rejoignez les centaines de vendeurs qui font confiance à Dioks pour leurs livraisons
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a routerLink="/register" class="btn-primary text-lg px-8 py-4">
+                    Créer mon compte gratuitement
+                </a>
+                <a routerLink="/login" class="btn-outline text-lg px-8 py-4">
+                    Se connecter
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-muted/30">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                    Contactez-nous
+                </h2>
+                <p class="text-lg text-muted-foreground">
+                    Une question ? Notre équipe est là pour vous aider
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card text-center">
+                    <div class="text-4xl mb-4">📍</div>
+                    <h3 class="font-bold text-foreground mb-2">Adresse</h3>
+                    <p class="text-muted-foreground">Dakar, Sénégal</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-4xl mb-4">📞</div>
+                    <h3 class="font-bold text-foreground mb-2">Téléphone</h3>
+                    <a href="tel:+221781082373" class="text-primary hover:underline">+221 78 108 23 73</a>
+                </div>
+                <div class="card text-center">
+                    <div class="text-4xl mb-4">📧</div>
+                    <h3 class="font-bold text-foreground mb-2">Email</h3>
+                    <a href="mailto:dioks&#64;gmail.com" class="text-primary hover:underline">dioks&#64;gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<app-public-footer></app-public-footer>

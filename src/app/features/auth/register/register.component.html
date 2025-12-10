@@ -1,161 +1,211 @@
-<div class="min-h-screen bg-background flex items-center justify-center p-4">
-  <div class="card max-w-2xl w-full">
-    <!-- Header -->
-    <div class="text-center mb-6">
-      <h1 class="text-3xl font-bold text-foreground mb-2">Créer un compte</h1>
-      <p class="text-muted-foreground">Rejoignez sen-logistique</p>
+<app-auth-header [linkUrl]="'/login'" [linkText]="'Se connecter'"></app-auth-header>
+
+<div class="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-primary/5 via-background to-primary/10 py-12 px-4">
+  <div class="max-w-2xl mx-auto">
+    
+    <!-- Header Section -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-3">
+        Créer un compte
+      </h1>
+      <p class="text-lg text-muted-foreground">
+        Rejoignez Dioks et commencez à gérer vos livraisons
+      </p>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="mb-8">
-      <div class="flex justify-between mb-2">
-        <span class="text-sm font-medium" [class.text-primary]="currentStep >= 1">1. Informations</span>
-        <span class="text-sm font-medium" [class.text-primary]="currentStep >= 2">2. Boutique</span>
-        <span class="text-sm font-medium" [class.text-primary]="currentStep >= 3">3. Adresse</span>
+    <!-- Form Card -->
+    <div class="card">
+      <!-- Progress Bar -->
+      <div class="mb-8">
+        <div class="flex justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors"
+                 [class.bg-primary]="currentStep >= 1"
+                 [class.text-white]="currentStep >= 1"
+                 [class.bg-muted]="currentStep < 1">
+              1
+            </div>
+            <span class="text-sm font-medium" [class.text-primary]="currentStep >= 1">Informations</span>
+          </div>
+          <div class="flex-1 flex items-center mx-2">
+            <div class="h-1 w-full rounded-full" [class.bg-primary]="currentStep >= 2" [class.bg-muted]="currentStep < 2"></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors"
+                 [class.bg-primary]="currentStep >= 2"
+                 [class.text-white]="currentStep >= 2"
+                 [class.bg-muted]="currentStep < 2">
+              2
+            </div>
+            <span class="text-sm font-medium" [class.text-primary]="currentStep >= 2">Boutique</span>
+          </div>
+          <div class="flex-1 flex items-center mx-2">
+            <div class="h-1 w-full rounded-full" [class.bg-primary]="currentStep >= 3" [class.bg-muted]="currentStep < 3"></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors"
+                 [class.bg-primary]="currentStep >= 3"
+                 [class.text-white]="currentStep >= 3"
+                 [class.bg-muted]="currentStep < 3">
+              3
+            </div>
+            <span class="text-sm font-medium" [class.text-primary]="currentStep >= 3">Adresse</span>
+          </div>
+        </div>
       </div>
-      <div class="w-full bg-muted rounded-full h-2">
-        <div class="bg-primary h-2 rounded-full transition-all" [style.width.%]="(currentStep / 3) * 100"></div>
+
+      <!-- Message d'erreur -->
+      <div *ngIf="errorMessage" class="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+        {{ errorMessage }}
       </div>
-    </div>
 
-    <!-- Message d'erreur -->
-    <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
-      {{ errorMessage }}
-    </div>
-
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <!-- ÉTAPE 1: Informations personnelles -->
-      <div *ngIf="currentStep === 1">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="form-label">Prénom *</label>
-            <input formControlName="prenom" type="text" class="form-input" placeholder="Fatou" />
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- ÉTAPE 1: Informations personnelles -->
+        <div *ngIf="currentStep === 1" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Prénom *</label>
+              <input formControlName="prenom" type="text" class="form-input" placeholder="Fatou" />
+            </div>
+            <div>
+              <label class="form-label">Nom *</label>
+              <input formControlName="nom" type="text" class="form-input" placeholder="Diop" />
+            </div>
           </div>
-          <div>
-            <label class="form-label">Nom *</label>
-            <input formControlName="nom" type="text" class="form-input" placeholder="Diop" />
-          </div>
-        </div>
 
-        <div class="mb-4">
-          <label class="form-label">Téléphone *</label>
-          <input formControlName="telephone" type="tel" class="form-input" placeholder="77 123 45 67" />
-          <p *ngIf="registerForm.get('telephone')?.invalid && registerForm.get('telephone')?.touched" class="form-error">
-            Format invalide (ex: 77 123 45 67)
-          </p>
-        </div>
-
-        <div class="mb-4">
-          <label class="form-label">Email (optionnel)</label>
-          <input formControlName="email" type="email" class="form-input" placeholder="fatou@example.com" />
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label class="form-label">Mot de passe *</label>
-            <input formControlName="password" type="password" class="form-input" placeholder="••••••••" />
-          </div>
-          <div>
-            <label class="form-label">Confirmer *</label>
-            <input formControlName="confirmPassword" type="password" class="form-input" placeholder="••••••••" />
-            <p *ngIf="registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched" class="form-error">
-              Les mots de passe ne correspondent pas
+            <label class="form-label">Téléphone *</label>
+            <input formControlName="telephone" type="tel" class="form-input" placeholder="77 123 45 67" />
+            <p *ngIf="registerForm.get('telephone')?.invalid && registerForm.get('telephone')?.touched" class="form-error">
+              Format invalide (ex: 77 123 45 67)
             </p>
           </div>
-        </div>
-      </div>
 
-      <!-- ÉTAPE 2: Boutique -->
-      <div *ngIf="currentStep === 2">
-        <div class="mb-4">
-          <label class="form-label">Nom de la boutique</label>
-          <input formControlName="nomBoutique" type="text" class="form-input" placeholder="Fatou Fashion" />
-        </div>
-
-        <div class="mb-4">
-          <label class="form-label">Catégorie d'activité</label>
-          <input formControlName="categorieActivite" type="text" class="form-input" placeholder="Mode, Cosmétiques..." />
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label class="form-label">Instagram</label>
-            <input formControlName="instagram" type="text" class="form-input" placeholder="@fatoufashion" />
+            <label class="form-label">Email (optionnel)</label>
+            <input formControlName="email" type="email" class="form-input" placeholder="fatou&#64;example.com" />
           </div>
-          <div>
-            <label class="form-label">Facebook</label>
-            <input formControlName="facebook" type="text" class="form-input" placeholder="Fatou Fashion" />
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Mot de passe *</label>
+              <input formControlName="password" type="password" class="form-input" placeholder="••••••••" />
+            </div>
+            <div>
+              <label class="form-label">Confirmer *</label>
+              <input formControlName="confirmPassword" type="password" class="form-input" placeholder="••••••••" />
+              <p *ngIf="registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched" class="form-error">
+                Les mots de passe ne correspondent pas
+              </p>
+            </div>
           </div>
         </div>
+
+        <!-- ÉTAPE 2: Boutique -->
+        <div *ngIf="currentStep === 2" class="space-y-4">
+          <div>
+            <label class="form-label">Nom de la boutique</label>
+            <input formControlName="nomBoutique" type="text" class="form-input" placeholder="Fatou Fashion" />
+          </div>
+
+          <div>
+            <label class="form-label">Catégorie d'activité</label>
+            <select formControlName="categorieActivite" class="form-select">
+              <option value="">Sélectionner une catégorie</option>
+              <option value="Mode">Mode & Vêtements</option>
+              <option value="Cosmétiques">Cosmétiques & Beauté</option>
+              <option value="Électronique">Électronique</option>
+              <option value="Accessoires">Accessoires</option>
+              <option value="Alimentation">Alimentation</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Instagram</label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">&#64;</span>
+                <input formControlName="instagram" type="text" class="form-input pl-8" placeholder="fatoufashion" />
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Facebook</label>
+              <input formControlName="facebook" type="text" class="form-input" placeholder="Fatou Fashion" />
+            </div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 3: Adresse -->
+        <div *ngIf="currentStep === 3" class="space-y-4">
+          <div>
+            <label class="form-label">Commune *</label>
+            <select formControlName="commune" class="form-select">
+              <option value="">Sélectionner une commune</option>
+              <option *ngFor="let commune of communes" [value]="commune">{{ commune }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="form-label">Quartier *</label>
+            <select formControlName="quartier" class="form-select" [disabled]="!registerForm.get('commune')?.value">
+              <option value="">Sélectionner un quartier</option>
+              <option *ngFor="let quartier of filteredQuartiers" [value]="quartier.nom">{{ quartier.nom }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="form-label">Adresse complète *</label>
+            <textarea formControlName="adresseComplete" class="form-textarea" rows="3" placeholder="Villa 123, Rue SC-45..."></textarea>
+          </div>
+
+          <div>
+            <label class="form-label">Point de repère</label>
+            <input formControlName="pointRepere" type="text" class="form-input" placeholder="Près de la station Total..." />
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mt-8 pt-6 border-t">
+          <button
+            type="button"
+            class="btn-outline px-6"
+            (click)="previousStep()"
+            *ngIf="currentStep > 1"
+          >
+            ← Précédent
+          </button>
+
+          <button
+            type="button"
+            class="btn-primary px-8 ml-auto"
+            (click)="nextStep()"
+            *ngIf="currentStep < 3"
+          >
+            Suivant →
+          </button>
+
+          <button
+            type="submit"
+            class="btn-primary px-8 py-3 ml-auto"
+            *ngIf="currentStep === 3"
+            [disabled]="loading || registerForm.invalid"
+          >
+            <span *ngIf="!loading">Créer mon compte</span>
+            <span *ngIf="loading">Création...</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Footer -->
+      <div class="mt-6 pt-6 border-t text-center">
+        <p class="text-sm text-muted-foreground">
+          Déjà inscrit ?
+          <a routerLink="/login" class="text-primary hover:underline font-medium">
+            Se connecter
+          </a>
+        </p>
       </div>
-
-      <!-- ÉTAPE 3: Adresse -->
-      <div *ngIf="currentStep === 3">
-        <div class="mb-4">
-          <label class="form-label">Commune *</label>
-          <select formControlName="commune" class="form-select">
-            <option value="">Sélectionner une commune</option>
-            <option *ngFor="let commune of communes" [value]="commune">{{ commune }}</option>
-          </select>
-        </div>
-
-        <div class="mb-4">
-          <label class="form-label">Quartier *</label>
-          <select formControlName="quartier" class="form-select">
-            <option value="">Sélectionner un quartier</option>
-            <option *ngFor="let quartier of filteredQuartiers" [value]="quartier.nom">{{ quartier.nom }}</option>
-          </select>
-        </div>
-
-        <div class="mb-4">
-          <label class="form-label">Adresse complète *</label>
-          <textarea formControlName="adresseComplete" class="form-textarea" rows="3" placeholder="Villa 123, Rue SC-45..."></textarea>
-        </div>
-
-        <div class="mb-4">
-          <label class="form-label">Point de repère</label>
-          <input formControlName="pointRepere" type="text" class="form-input" placeholder="Près de la station Total..." />
-        </div>
-      </div>
-
-      <!-- Navigation Buttons -->
-      <div class="flex justify-between mt-6">
-        <button
-          type="button"
-          class="btn-outline"
-          (click)="previousStep()"
-          *ngIf="currentStep > 1"
-        >
-          Précédent
-        </button>
-
-        <button
-          type="button"
-          class="btn-primary ml-auto"
-          (click)="nextStep()"
-          *ngIf="currentStep < 3"
-        >
-          Suivant
-        </button>
-
-        <button
-          type="submit"
-          class="btn-primary ml-auto"
-          *ngIf="currentStep === 3"
-          [disabled]="loading || registerForm.invalid"
-        >
-          <span *ngIf="!loading">Créer mon compte</span>
-          <span *ngIf="loading">Création...</span>
-        </button>
-      </div>
-
-      <!-- Lien connexion -->
-      <p class="text-center text-sm text-muted-foreground mt-4">
-        Déjà un compte ?
-        <a routerLink="/login" class="text-primary hover:underline font-medium">
-          Se connecter
-        </a>
-      </p>
-    </form>
+    </div>
   </div>
 </div>
