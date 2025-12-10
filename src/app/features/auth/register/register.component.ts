@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ApiService } from '../../../core/services/api.service';
 import { Quartier } from '../../../core/models/auth.model';
+import { StatutVendeur } from '../../../core/models/vendeur.model';
 
 @Component({
   selector: 'app-register',
@@ -102,28 +103,35 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.registerForm.invalid) {
-      return;
-    }
-
-    this.loading = true;
-    this.errorMessage = '';
-
-    const formValue = this.registerForm.value;
-    delete formValue.confirmPassword; // Ne pas envoyer confirmPassword
-
-    this.authService.register(formValue).subscribe({
-      next: (response) => {
-        this.router.navigate(['/vendeur/dashboard']);
-      },
-      error: (error) => {
-        this.loading = false;
-        if (error.status === 409) {
-          this.errorMessage = 'Ce numéro de téléphone est déjà utilisé';
-        } else {
-          this.errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-        }
-      }
+  if (this.registerForm.invalid) {
+    Object.keys(this.registerForm.controls).forEach(key => {
+      this.registerForm.get(key)?.markAsTouched();
     });
+    return;
   }
+
+  this.loading = true;
+  this.errorMessage = '';
+
+  this.authService.register(this.registerForm.value).subscribe({
+    next: (response) => {
+      console.log('✅ Inscription réussie:', response.user);
+
+      // Vérifier statut après inscription
+      if (response.user.statut === StatutVendeur.EN_ATTENTE_VALIDATION) {
+        this.router.navigate(['/en-attente-validation']);
+      } else {
+        // Cas rare : compte directement actif
+        this.router.navigate(['/vendeur/dashboard']);
+      }
+
+      this.loading = false;
+    },
+    error: (error) => {
+      console.error('❌ Erreur inscription:', error);
+      this.errorMessage = error.error?.message || 'Erreur lors de l\'inscription';
+      this.loading = false;
+    }
+  });
+}
 }

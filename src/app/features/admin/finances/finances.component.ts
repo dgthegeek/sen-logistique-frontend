@@ -8,6 +8,8 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
 import { AdminFinancesDashboard, PaiementsPending, DemandePaiementPending, TransactionAdmin, TransactionsResponse } from '../../../core/models/admin.model';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
 
 @Component({
   selector: 'app-admin-finances',
@@ -20,11 +22,11 @@ export class AdminFinancesComponent implements OnInit {
   dashboard: AdminFinancesDashboard | null = null;
   paiementsPending: PaiementsPending | null = null;
   transactions: TransactionAdmin[] = [];
-  
+
   loading = true;
   loadingTransactions = false;
   errorMessage = '';
-  
+
   // Période dashboard
   selectedPeriode: 'jour' | 'semaine' | 'mois' | 'tout' = 'jour';
   periodes = [
@@ -33,18 +35,18 @@ export class AdminFinancesComponent implements OnInit {
     { value: 'mois', label: 'Ce mois' },
     { value: 'tout', label: 'Tout' }
   ];
-  
+
   // Pagination transactions
   currentPage = 0;
   pageSize = 50;
   totalElements = 0;
   totalPages = 0;
-  
+
   // Filtres transactions
   selectedVendeurId: number | null = null;
   dateDebut = '';
   dateFin = '';
-  
+
   // Modal paiement
   showPayerModal = false;
   selectedDemande: DemandePaiementPending | null = null;
@@ -52,7 +54,11 @@ export class AdminFinancesComponent implements OnInit {
   commentairePaiement = '';
   submittingPaiement = false;
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private toastService: ToastService,
+    private confirmationService: ConfirmationService,
+  ) { }
 
   ngOnInit() {
     this.loadFinances();
@@ -61,7 +67,7 @@ export class AdminFinancesComponent implements OnInit {
   loadFinances() {
     this.loading = true;
     this.errorMessage = '';
-    
+
     forkJoin({
       dashboard: this.apiService.getAdminFinancesDashboard(this.selectedPeriode),
       paiementsPending: this.apiService.getPaiementsPending()
@@ -87,7 +93,7 @@ export class AdminFinancesComponent implements OnInit {
 
   loadTransactions() {
     this.loadingTransactions = true;
-    
+
     this.apiService.getTransactionsAdmin(
       this.selectedVendeurId || undefined,
       this.dateDebut || undefined,
@@ -146,18 +152,41 @@ export class AdminFinancesComponent implements OnInit {
     if (!this.selectedDemande) return;
 
     if (this.montantAPayer <= 0) {
-      alert('Le montant doit être supérieur à 0');
+      this.toastService.warning('Le montant doit être supérieur à 0');
       return;
     }
 
+    // ✅ Vérification montant supérieur
     if (this.montantAPayer > this.selectedDemande.montant) {
-      if (!confirm(`Le montant (${this.montantAPayer} FCFA) est supérieur au solde (${this.selectedDemande.montant} FCFA). Confirmer ?`)) {
-        return;
-      }
+      this.confirmationService.confirm({
+        title: 'Montant supérieur au solde',
+        message: `Le montant (${this.montantAPayer} FCFA) est supérieur au solde (${this.selectedDemande.montant} FCFA). Confirmer quand même ?`,
+        confirmText: 'Confirmer',
+        cancelText: 'Annuler',
+        type: 'warning',
+        onConfirm: () => {
+          this.executePayerVendeur();
+        }
+      });
+      return;
     }
 
-    const message = `Payer ${this.montantAPayer} FCFA à ${this.selectedDemande.vendeur.prenom} ${this.selectedDemande.vendeur.nom} ?`;
-    if (!confirm(message)) return;
+    // ✅ Confirmation normale
+    this.confirmationService.confirm({
+      title: 'Confirmer le paiement',
+      message: `Payer ${this.montantAPayer} FCFA à ${this.selectedDemande.vendeur.prenom} ${this.selectedDemande.vendeur.nom} ?`,
+      confirmText: 'Payer',
+      cancelText: 'Annuler',
+      type: 'success',
+      onConfirm: () => {
+        this.executePayerVendeur();
+      }
+    });
+  }
+
+  // ✅ Séparer la logique d'exécution
+  executePayerVendeur() {
+    if (!this.selectedDemande) return;
 
     this.submittingPaiement = true;
 
@@ -166,14 +195,14 @@ export class AdminFinancesComponent implements OnInit {
       commentaire: this.commentairePaiement || undefined
     }).subscribe({
       next: (response) => {
-        alert(response.message + '\nRéférence: ' + response.reference);
+        this.toastService.success(`${response.message}\nRéférence: ${response.reference}`);
         this.closePayerModal();
         this.loadFinances();
         this.submittingPaiement = false;
       },
       error: (error) => {
         console.error('Erreur:', error);
-        alert(error.error?.message || 'Erreur lors du paiement');
+        this.toastService.error(error.error?.message || 'Erreur lors du paiement');
         this.submittingPaiement = false;
       }
     });
@@ -184,7 +213,7 @@ export class AdminFinancesComponent implements OnInit {
   }
 
   getStatutBadgeClass(statut: string): string {
-    const classes: {[key: string]: string} = {
+    const classes: { [key: string]: string } = {
       'EFFECTUE': 'badge-delivered',
       'EN_ATTENTE': 'badge-pending',
       'ANNULE': 'badge-canceled'
@@ -193,7 +222,7 @@ export class AdminFinancesComponent implements OnInit {
   }
 
   getTypeBadgeClass(type: string): string {
-    const classes: {[key: string]: string} = {
+    const classes: { [key: string]: string } = {
       'PAIEMENT_VENDEUR': 'badge-delivered',
       'LIVRAISON': 'badge-transit',
       'COMMISSION': 'badge-pending'
@@ -202,7 +231,7 @@ export class AdminFinancesComponent implements OnInit {
   }
 
   getPeriodeLabel(): string {
-    const labels: {[key: string]: string} = {
+    const labels: { [key: string]: string } = {
       'jour': 'aujourd\'hui',
       'semaine': 'cette semaine',
       'mois': 'ce mois',

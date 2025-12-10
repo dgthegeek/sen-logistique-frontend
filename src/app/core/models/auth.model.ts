@@ -5,6 +5,19 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface Quartier {
+  id: number;
+  nom: string;
+  commune: string;
+}
+
+import { StatutVendeur } from './vendeur.model';
+
+export interface LoginRequest {
+  telephone: string;
+  password: string;
+}
+
 export interface RegisterRequest {
   nom: string;
   prenom: string;
@@ -15,20 +28,29 @@ export interface RegisterRequest {
   categorieActivite?: string;
   instagram?: string;
   facebook?: string;
-  commune: string;
-  quartier: string;
-  adresseComplete: string;
+  commune?: string;
+  quartier?: string;
+  adresseComplete?: string;
   pointRepere?: string;
 }
 
 export interface AuthResponse {
   token: string;
-  type: string; 
-  user: User;
+  refreshToken?: string;
+  type: string;
+  user: UserInfo;
 }
 
-export interface Quartier {
+export interface UserInfo {
   id: number;
   nom: string;
-  commune: string;
+  prenom: string;
+  telephone: string;
+  email?: string;
+  role: 'VENDEUR' | 'ADMIN';
+  nomBoutique?: string;
+  commune?: string;
+  quartier?: string;
+  adresseComplete?: string;
+  statut?: StatutVendeur; // ← NOUVEAU CHAMP
 }

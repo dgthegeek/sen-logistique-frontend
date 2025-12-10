@@ -26,6 +26,8 @@ export class CreerLivraisonComponent implements OnInit {
   
   tarif: CalculTarifResponse | null = null;
   calculatingTarif = false;
+  tarifPreview: CalculTarifResponse | null = null;
+  calculatingPreview = false;
   
   loading = false;
   errorMessage = '';
@@ -53,28 +55,50 @@ export class CreerLivraisonComponent implements OnInit {
       descriptionProduit: ['', Validators.required],
       fragile: [false],
       poidsEstime: [''],
-      montantCOD: [0, [Validators.required, Validators.min(0)]],
+      montantProduit: [0, [Validators.required, Validators.min(0)]], // ← RENOMMÉ
       urgence: ['NORMAL', Validators.required],
-      notesPourLivreur: ['']
+      creneauSouhaite: [''],
+      notesLivreur: ['']
     });
   }
 
   ngOnInit() {
     this.loadZones();
     
+    // WATCH: Commune → Load quartiers
     this.livraisonForm.get('commune')?.valueChanges.subscribe(commune => {
       if (commune) {
         this.loadQuartiers(commune);
+        this.livraisonForm.patchValue({ quartier: '' }, { emitEvent: false });
+        this.tarifPreview = null;
       }
     });
     
-    this.livraisonForm.get('montantCOD')?.valueChanges.subscribe(() => {
+    // WATCH: Quartier → Calculer preview (avec setTimeout pour forcer le trigger)
+    this.livraisonForm.get('quartier')?.valueChanges.subscribe(quartier => {
+      if (quartier && this.livraisonForm.get('commune')?.value) {
+        // ✅ CORRECTION: setTimeout pour forcer le trigger après le render
+        setTimeout(() => {
+          this.calculerTarifPreview();
+        }, 100);
+      }
+    });
+    
+    // WATCH: Montant produit → Recalculer
+    this.livraisonForm.get('montantProduit')?.valueChanges.subscribe(() => {
+      if (this.currentStep === 2 && this.livraisonForm.get('quartier')?.value) {
+        this.calculerTarifPreview();
+      }
       if (this.currentStep === 3) {
         this.calculerTarif();
       }
     });
     
+    // WATCH: Urgence → Recalculer
     this.livraisonForm.get('urgence')?.valueChanges.subscribe(() => {
+      if (this.currentStep === 2 && this.livraisonForm.get('quartier')?.value) {
+        this.calculerTarifPreview();
+      }
       if (this.currentStep === 3) {
         this.calculerTarif();
       }
@@ -102,18 +126,54 @@ export class CreerLivraisonComponent implements OnInit {
         this.filteredQuartiers = quartiers;
       },
       error: (error) => {
-        console.error('Erreur chargement quartiers:', error);
+        console.error('❌ Erreur chargement quartiers:', error);
+        this.filteredQuartiers = [];
       }
     });
   }
 
   getZoneIdByCommune(commune: string): number | null {
     const zone = this.zones.find(z => z.communes.includes(commune));
-    if (zone) {
-      return zone.id;
+    return zone ? zone.id : null;
+  }
+
+  calculerTarifPreview() {
+    const formValue = this.livraisonForm.value;
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const zoneId = this.getZoneIdByCommune(formValue.commune);
+    
+    if (!zoneId || !formValue.quartier) {
+      return;
     }
-    console.warn(`⚠️ Aucune zone trouvée pour la commune: ${commune}`);
-    return null;
+    
+    this.calculatingPreview = true;
+    
+    // ✅ CORRECTION: COD = montantProduit + frais (temporaire 0 pour calculer les frais)
+    this.apiService.calculerTarif({
+      zoneId: zoneId,
+      communeDepart: currentUser.commune || 'Dakar',
+      quartierDepart: currentUser.quartier || 'Plateau',
+      communeDestination: formValue.commune,
+      quartierDestination: formValue.quartier,
+      montantCOD: 0, // On met 0 juste pour récupérer les frais
+      urgence: formValue.urgence
+    }).subscribe({
+      next: (response) => {
+        this.tarifPreview = response;
+        this.calculatingPreview = false;
+      },
+      error: (error) => {
+        console.error('❌ Erreur calcul tarif preview:', error);
+        this.calculatingPreview = false;
+      }
+    });
+  }
+
+  // ✅ GETTER: Calcul COD total
+  get montantCODTotal(): number {
+    const montantProduit = this.livraisonForm.get('montantProduit')?.value || 0;
+    const fraisLivraison = this.tarifPreview?.montant || 0;
+    return montantProduit + fraisLivraison;
   }
 
   nextStep() {
@@ -127,8 +187,11 @@ export class CreerLivraisonComponent implements OnInit {
       }
       
       this.currentStep = 2;
+      if (this.livraisonForm.get('quartier')?.value) {
+        this.calculerTarifPreview();
+      }
     } else if (this.currentStep === 2) {
-      const step2Fields = ['descriptionProduit', 'montantCOD', 'urgence'];
+      const step2Fields = ['descriptionProduit', 'montantProduit', 'urgence'];
       const step2Valid = step2Fields.every(field => this.livraisonForm.get(field)?.valid);
       
       if (!step2Valid) {
@@ -172,7 +235,7 @@ export class CreerLivraisonComponent implements OnInit {
       quartierDepart: currentUser.quartier || 'Plateau',
       communeDestination: formValue.commune,
       quartierDestination: formValue.quartier,
-      montantCOD: formValue.montantCOD,
+      montantCOD: 0, // Juste pour récupérer les frais
       urgence: formValue.urgence
     }).subscribe({
       next: (response) => {
@@ -180,7 +243,7 @@ export class CreerLivraisonComponent implements OnInit {
         this.calculatingTarif = false;
       },
       error: (error) => {
-        console.error('Erreur calcul tarif:', error);
+        console.error('❌ Erreur calcul tarif:', error);
         this.calculatingTarif = false;
         this.errorMessage = error.error?.message || 'Impossible de calculer le tarif';
       }
@@ -203,6 +266,9 @@ export class CreerLivraisonComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
+    // ✅ CORRECTION: COD = montantProduit + fraisLivraison
+    const montantCOD = this.montantCODTotal;
+
     const request: CreateLivraisonRequest = {
       nomClient: formValue.nomClient,
       telephoneClient: formValue.telephoneClient,
@@ -213,10 +279,10 @@ export class CreerLivraisonComponent implements OnInit {
       descriptionProduit: formValue.descriptionProduit,
       fragile: formValue.fragile,
       poids: formValue.poidsEstime || undefined,
-      montantCOD: formValue.montantCOD,
+      montantCOD: montantCOD, // ← COD TOTAL
       zoneId: zoneId,
       urgence: formValue.urgence,
-      notesPourLivreur: formValue.notesPourLivreur || undefined
+      notesPourLivreur: formValue.notesLivreur || undefined
     };
 
     this.apiService.creerLivraison(request).subscribe({

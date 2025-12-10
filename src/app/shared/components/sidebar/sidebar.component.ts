@@ -31,6 +31,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Ramassages', route: '/admin/ramassages', icon: '📦' },
         { label: 'Livraisons', route: '/admin/livraisons', icon: '🚚' },
         { label: 'Finances', route: '/admin/finances', icon: '💰' },
+        { label: 'Gestion vendeurs', route: '/admin/vendeurs', icon: '👥' }, 
       ];
     } else {
       this.menuItems = [

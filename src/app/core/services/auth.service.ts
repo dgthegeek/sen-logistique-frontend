@@ -83,4 +83,7 @@ export class AuthService {
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
+  get currentUserValue(): User | null {
+  return this.currentUserSubject.value;
+}
 }

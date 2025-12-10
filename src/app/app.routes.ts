@@ -3,6 +3,8 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { vendeurGuard } from './core/guards/vendeur.guard';
+import { guestGuard } from './core/guards/guest.guard';
 
 // Vendeur imports
 import { DashboardComponent as VendeurDashboardComponent } from './features/vendeur/dashboard/dashboard.component';
@@ -16,24 +18,37 @@ import { AdminDashboardComponent } from './features/admin/dashboard/dashboard.co
 import { RamassagesComponent } from './features/admin/ramassages/ramassages.component';
 import { AdminLivraisonsComponent } from './features/admin/livraisons/livraisons.component';
 import { AdminFinancesComponent } from './features/admin/finances/finances.component';
-import { vendeurGuard } from './core/guards/role.guard';
+import { GestionVendeursComponent } from './features/admin/gestion-vendeurs/gestion-vendeurs.component';
+
+// Public pages
 import { TrackingHomeComponent } from './pages/tracking-home/tracking-home.component';
 import { TrackingDetailComponent } from './pages/tracking-detail/tracking-detail.component';
 import { DeliveryConfirmComponent } from './pages/delivery-confirm/delivery-confirm.component';
+import { StatutCompteComponent } from './pages/statut-compte/statut-compte.component';
 
 export const routes: Routes = [
+  // Page statut compte (UNE SEULE PAGE DYNAMIQUE)
+  { path: 'statut-compte', component: StatutCompteComponent },
+
   // Public tracking pages
   { path: 'tracking', component: TrackingHomeComponent },
   { path: 'tracking/:numero', component: TrackingDetailComponent },
-  { path: '', redirectTo: '/tracking', pathMatch: 'full' },
   { path: 'delivery/:numero', component: DeliveryConfirmComponent },
-  
-  // Auth
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
 
-  // Vendeur routes
+  // Auth (avec guestGuard pour bloquer si déjà connecté)
+  { path: '', redirectTo: '/tracking', pathMatch: 'full' },
+  { 
+    path: 'login', 
+    component: LoginComponent,
+    canActivate: [guestGuard]
+  },
+  { 
+    path: 'register', 
+    component: RegisterComponent,
+    canActivate: [guestGuard]
+  },
+
+  // Vendeur routes (avec authGuard + vendeurGuard)
   {
     path: 'vendeur',
     canActivate: [authGuard, vendeurGuard],
@@ -41,13 +56,13 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: VendeurDashboardComponent },
       { path: 'creer-livraison', component: CreerLivraisonComponent },
-      { path: 'livraisons/:id', component: LivraisonDetailComponent },
       { path: 'livraisons', component: LivraisonsComponent },
+      { path: 'livraisons/:id', component: LivraisonDetailComponent },
       { path: 'finances', component: VendeurFinancesComponent },
     ]
   },
 
-  // Admin routes
+  // Admin routes (avec authGuard + adminGuard)
   {
     path: 'admin',
     canActivate: [authGuard, adminGuard],
@@ -57,9 +72,10 @@ export const routes: Routes = [
       { path: 'ramassages', component: RamassagesComponent },
       { path: 'livraisons', component: AdminLivraisonsComponent },
       { path: 'finances', component: AdminFinancesComponent },
+      { path: 'vendeurs', component: GestionVendeursComponent },
     ]
   },
 
   // Fallback
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/tracking' }
 ];
