@@ -3,31 +3,52 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastService } from '../../core/services/toast.service';
+import { AuthHeaderComponent } from "../../shared/components/auth-header/auth-header.component";
 
 @Component({
   selector: 'app-tracking-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, AuthHeaderComponent],
   templateUrl: './tracking-home.component.html',
   styleUrls: ['./tracking-home.component.css']
 })
 export class TrackingHomeComponent {
-  numeroTracking = '';
+  trackingNumber = '';
+  loading = false;
+  errorMessage = '';
 
   constructor(
     private router: Router,
     private toastService: ToastService
   ) {}
 
-  searchTracking() {
-    const numero = this.numeroTracking.trim().toUpperCase();
+  onSearch(event: Event) {
+    event.preventDefault();
+    
+    // Reset error message
+    this.errorMessage = '';
+    
+    const numero = this.trackingNumber.trim().toUpperCase();
     
     if (!numero) {
-      this.toastService.error('Veuillez entrer un numéro de tracking');
+      this.errorMessage = 'Veuillez entrer un numéro de tracking';
       return;
     }
 
+    // Validation du format (optionnel)
+    const trackingPattern = /^DKR-\d{8}-\d{5}$/;
+    if (!trackingPattern.test(numero)) {
+      this.errorMessage = 'Format de numéro invalide. Format attendu: DKR-20250101-00001';
+      return;
+    }
+
+    // Simulate loading
+    this.loading = true;
+
     // Rediriger vers la page de détail
-    this.router.navigate(['/tracking', numero]);
+    setTimeout(() => {
+      this.router.navigate(['/tracking', numero]);
+      this.loading = false;
+    }, 300);
   }
 }

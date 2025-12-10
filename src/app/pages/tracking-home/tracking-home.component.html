@@ -1,125 +1,65 @@
-<div class="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
-  <!-- Header -->
-  <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center gap-3">
-          <div class="text-3xl">📦</div>
-          <div>
-            <h1 class="text-xl font-bold text-primary">Sen-Logistique</h1>
-            <p class="text-xs text-muted-foreground">Suivi de colis</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-4">
-          <a routerLink="/login" class="btn-ghost text-sm">
-            Connexion
-          </a>
-          <a routerLink="/register" class="btn-primary text-sm">
-            S'inscrire
-          </a>
-        </div>
-      </div>
-    </div>
-  </header>
+<!-- Refonte -->
+<app-auth-header [linkUrl]="'/'" [linkText]="'Retour accueil'"></app-auth-header>
 
-  <!-- Hero Section -->
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <div class="text-center mb-12">
-      <div class="text-7xl mb-6 animate-bounce">📦</div>
-      <h1 class="text-4xl md:text-5xl font-bold text-foreground mb-4">
-        Suivez votre colis en temps réel
+<div class="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-primary/5 via-background to-primary/10 flex items-center justify-center p-4">
+  <div class="max-w-2xl w-full">
+    
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="text-6xl mb-4">📦</div>
+      <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-3">
+        Suivre mon colis
       </h1>
-      <p class="text-xl text-muted-foreground mb-8">
-        Entrez votre numéro de tracking pour voir où se trouve votre commande
+      <p class="text-lg text-muted-foreground">
+        Entrez votre numéro de tracking pour suivre votre livraison en temps réel
       </p>
     </div>
 
-    <!-- Search Box -->
-    <div class="card max-w-2xl mx-auto">
-      <form (ngSubmit)="searchTracking()" class="space-y-6">
+    <!-- Search Card -->
+    <div class="card">
+      <form (submit)="onSearch($event)" class="space-y-6">
         <div>
-          <label class="form-label text-lg">Numéro de tracking</label>
+          <label for="tracking" class="form-label text-lg">
+            Numéro de tracking
+          </label>
           <input
-            [(ngModel)]="numeroTracking"
-            name="tracking"
+            id="tracking"
+            [(ngModel)]="trackingNumber"
+            name="trackingNumber"
             type="text"
-            class="form-input text-center text-xl font-mono"
-            placeholder="Ex: DKR-20251201-00002"
-            autofocus
+            class="form-input text-xl font-mono text-center"
+            placeholder="DKR-20250101-00001"
             required
           />
           <p class="form-helper text-center">
-            Le numéro de tracking vous a été envoyé par SMS
+            Le numéro se trouve sur votre reçu de livraison
           </p>
         </div>
 
-        <button type="submit" class="btn-primary w-full py-4 text-lg">
-          🔍 Suivre mon colis
+        <button
+          type="submit"
+          class="btn-primary w-full py-4 text-lg"
+          [disabled]="!trackingNumber || loading"
+        >
+          <span *ngIf="!loading">🔍 Rechercher</span>
+          <span *ngIf="loading">Recherche en cours...</span>
         </button>
       </form>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="mt-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+        {{ errorMessage }}
+      </div>
     </div>
 
-    <!-- Features -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
-      <div class="text-center p-6 bg-white rounded-lg border">
-        <div class="text-4xl mb-3">⚡</div>
-        <h3 class="font-semibold text-foreground mb-2">Rapide</h3>
-        <p class="text-sm text-muted-foreground">
-          Livraison en 24-48h à Dakar
-        </p>
-      </div>
-
-      <div class="text-center p-6 bg-white rounded-lg border">
-        <div class="text-4xl mb-3">🔒</div>
-        <h3 class="font-semibold text-foreground mb-2">Sécurisé</h3>
-        <p class="text-sm text-muted-foreground">
-          Paiement à la livraison (COD)
-        </p>
-      </div>
-
-      <div class="text-center p-6 bg-white rounded-lg border">
-        <div class="text-4xl mb-3">📍</div>
-        <h3 class="font-semibold text-foreground mb-2">Suivi en temps réel</h3>
-        <p class="text-sm text-muted-foreground">
-          Suivez votre colis étape par étape
-        </p>
-      </div>
+    <!-- Help -->
+    <div class="mt-8 text-center">
+      <p class="text-sm text-muted-foreground mb-3">
+        Vous ne trouvez pas votre numéro de tracking ?
+      </p>
+      <a href="mailto:contact@dioks.sn" class="text-primary hover:underline text-sm font-medium">
+        Contactez-nous
+      </a>
     </div>
   </div>
-
-  <!-- Footer -->
-  <footer class="bg-white border-t mt-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <h3 class="font-semibold text-foreground mb-3">Sen-Logistique</h3>
-          <p class="text-sm text-muted-foreground">
-            Plateforme de livraison pour les vendeurs de Dakar
-          </p>
-        </div>
-
-        <div>
-          <h3 class="font-semibold text-foreground mb-3">Liens rapides</h3>
-          <ul class="space-y-2 text-sm text-muted-foreground">
-            <li><a routerLink="/tracking" class="hover:text-primary">Suivre un colis</a></li>
-            <li><a routerLink="/login" class="hover:text-primary">Connexion vendeur</a></li>
-            <li><a routerLink="/register" class="hover:text-primary">Devenir vendeur</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 class="font-semibold text-foreground mb-3">Contact</h3>
-          <ul class="space-y-2 text-sm text-muted-foreground">
-            <li>📧 dioks&#64;gmail.com</li>
-            <li>📞 +221 78 108 23 73</li>
-            <li>📍 Dakar, Sénégal</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-        © 2025 Sen-Logistique. Tous droits réservés.
-      </div>
-    </div>
-  </footer>
 </div>

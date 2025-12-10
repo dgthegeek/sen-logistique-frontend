@@ -6,11 +6,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ApiService } from '../../../core/services/api.service';
 import { Quartier } from '../../../core/models/auth.model';
 import { StatutVendeur } from '../../../core/models/vendeur.model';
+import { AuthHeaderComponent } from "../../../shared/components/auth-header/auth-header.component";
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, AuthHeaderComponent],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
