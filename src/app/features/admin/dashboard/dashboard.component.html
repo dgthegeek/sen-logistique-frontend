@@ -4,286 +4,308 @@
   <div class="flex">
     <app-sidebar></app-sidebar>
 
-    <main class="flex-1 p-6">
-      <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="mb-8">
-          <h1 class="text-3xl font-bold text-foreground mb-2">
-            Dashboard Admin
-          </h1>
-          <p class="text-muted-foreground">
-            Vue d'ensemble de l'activité • Rafraîchissement automatique toutes les 30s
-          </p>
-        </div>
-
-        <!-- Loading -->
-        <div *ngIf="loading && !dashboard" class="card">
-          <div class="flex items-center justify-center py-12">
-            <div class="text-center">
-              <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
-              <p class="text-muted-foreground">Chargement du dashboard...</p>
-            </div>
+    <main class="flex-1 w-full overflow-x-hidden">
+      <div class="p-4 sm:p-6 lg:p-8">
+        <div class="max-w-7xl mx-auto">
+          <!-- Header -->
+          <div class="mb-6 sm:mb-8">
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+              Dashboard Admin
+            </h1>
+            <p class="text-sm sm:text-base text-muted-foreground">
+              Vue d'ensemble de l'activité
+              <span class="hidden sm:inline"> • Rafraîchissement automatique toutes les 30s</span>
+            </p>
           </div>
-        </div>
 
-        <!-- Error -->
-        <div *ngIf="errorMessage && !loading" class="card">
-          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
-            {{ errorMessage }}
-            <button (click)="loadDashboard()" class="ml-4 underline">
-              Réessayer
-            </button>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div *ngIf="dashboard" class="space-y-6">
-          <!-- Stats Financières (3 colonnes) -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Cash collecté -->
-            <div class="stat-card bg-green-50 border-green-200">
-              <div class="stat-card-icon bg-green-100 text-green-600">
-                💵
-              </div>
-              <div class="stat-card-value text-green-600">
-                {{ dashboard.finances.cashCollecte | fcfa }}
-              </div>
-              <div class="stat-card-label">
-                Cash collecté aujourd'hui
-              </div>
-            </div>
-
-            <!-- À payer vendeurs -->
-            <div class="stat-card bg-orange-50 border-orange-200">
-              <div class="stat-card-icon bg-orange-100 text-orange-600">
-                💸
-              </div>
-              <div class="stat-card-value text-orange-600">
-                {{ dashboard.finances.aPayerVendeurs | fcfa }}
-              </div>
-              <div class="stat-card-label">
-                À payer aux vendeurs
-              </div>
-            </div>
-
-            <!-- Commissions -->
-            <div class="stat-card bg-primary/5 border-primary/20">
-              <div class="stat-card-icon bg-primary/10 text-primary">
-                📈
-              </div>
-              <div class="stat-card-value text-primary">
-                {{ dashboard.finances.commissions | fcfa }}
-              </div>
-              <div class="stat-card-label">
-                Commissions plateforme
+          <!-- Loading -->
+          <div *ngIf="loading && !dashboard" class="card">
+            <div class="flex items-center justify-center py-12">
+              <div class="text-center">
+                <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+                <p class="text-sm sm:text-base text-muted-foreground">Chargement du dashboard...</p>
               </div>
             </div>
           </div>
 
-          <!-- Stats Activité (3 colonnes) -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Livraisons -->
-            <div class="stat-card">
-              <div class="stat-card-icon bg-blue-100 text-blue-600">
-                📦
-              </div>
-              <div class="stat-card-value">
-                {{ dashboard.finances.statistiques.nombreLivraisons }}
-              </div>
-              <div class="stat-card-label">
-                Livraisons aujourd'hui
-              </div>
-            </div>
-
-            <!-- Taux de réussite -->
-            <div class="stat-card">
-              <div class="stat-card-icon bg-purple-100 text-purple-600">
-                ⭐
-              </div>
-              <div class="stat-card-value" [ngClass]="getTauxReussiteClass()">
-                {{ formatTauxReussite() }}
-              </div>
-              <div class="stat-card-label">
-                Taux de réussite
-              </div>
-            </div>
-
-            <!-- Vendeurs actifs -->
-            <div class="stat-card">
-              <div class="stat-card-icon bg-indigo-100 text-indigo-600">
-                👥
-              </div>
-              <div class="stat-card-value">
-                {{ dashboard.finances.statistiques.nombreVendeurs }}
-              </div>
-              <div class="stat-card-label">
-                Vendeurs actifs
-              </div>
+          <!-- Error -->
+          <div *ngIf="errorMessage && !loading" class="card">
+            <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm sm:text-base">
+              {{ errorMessage }}
+              <button (click)="loadDashboard()" class="ml-2 sm:ml-4 underline">
+                Réessayer
+              </button>
             </div>
           </div>
 
-          <!-- Grid 2 colonnes : Ramassages + Livraisons -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Ramassages -->
+          <!-- Content -->
+          <div *ngIf="dashboard" class="space-y-4 sm:space-y-6">
+            <!-- Stats Financières (1 col mobile, 3 cols desktop) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              <!-- Cash collecté -->
+              <div class="stat-card bg-green-50 border-green-200">
+                <div class="stat-card-icon bg-green-100 text-green-600">
+                  💵
+                </div>
+                <div class="stat-card-value text-green-600 text-xl sm:text-2xl">
+                  {{ dashboard.finances.cashCollecte | fcfa }}
+                </div>
+                <div class="stat-card-label text-xs sm:text-sm">
+                  Cash collecté aujourd'hui
+                </div>
+              </div>
+
+              <!-- À payer vendeurs -->
+              <div class="stat-card bg-orange-50 border-orange-200">
+                <div class="stat-card-icon bg-orange-100 text-orange-600">
+                  💸
+                </div>
+                <div class="stat-card-value text-orange-600 text-xl sm:text-2xl">
+                  {{ dashboard.finances.aPayerVendeurs | fcfa }}
+                </div>
+                <div class="stat-card-label text-xs sm:text-sm">
+                  À payer aux vendeurs
+                </div>
+              </div>
+
+              <!-- Commissions -->
+              <div class="stat-card bg-primary/5 border-primary/20 sm:col-span-2 lg:col-span-1">
+                <div class="stat-card-icon bg-primary/10 text-primary">
+                  📈
+                </div>
+                <div class="stat-card-value text-primary text-xl sm:text-2xl">
+                  {{ dashboard.finances.commissions | fcfa }}
+                </div>
+                <div class="stat-card-label text-xs sm:text-sm">
+                  Commissions plateforme
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats Activité (1 col mobile, 3 cols desktop) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              <!-- Livraisons -->
+              <div class="stat-card">
+                <div class="stat-card-icon bg-blue-100 text-blue-600">
+                  📦
+                </div>
+                <div class="stat-card-value text-xl sm:text-2xl">
+                  {{ dashboard.finances.statistiques.nombreLivraisons }}
+                </div>
+                <div class="stat-card-label text-xs sm:text-sm">
+                  Livraisons aujourd'hui
+                </div>
+              </div>
+
+              <!-- Taux de réussite -->
+              <div class="stat-card">
+                <div class="stat-card-icon bg-purple-100 text-purple-600">
+                  ⭐
+                </div>
+                <div class="stat-card-value text-xl sm:text-2xl" [ngClass]="getTauxReussiteClass()">
+                  {{ formatTauxReussite() }}
+                </div>
+                <div class="stat-card-label text-xs sm:text-sm">
+                  Taux de réussite
+                </div>
+              </div>
+
+              <!-- Vendeurs actifs -->
+              <div class="stat-card sm:col-span-2 lg:col-span-1">
+                <div class="stat-card-icon bg-indigo-100 text-indigo-600">
+                  👥
+                </div>
+                <div class="stat-card-value text-xl sm:text-2xl">
+                  {{ dashboard.finances.statistiques.nombreVendeurs }}
+                </div>
+                <div class="stat-card-label text-xs sm:text-sm">
+                  Vendeurs actifs
+                </div>
+              </div>
+            </div>
+
+            <!-- Grid 1 col mobile, 2 cols desktop : Ramassages + Livraisons -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+              <!-- Ramassages -->
+              <div class="card">
+                <div class="flex items-center justify-between mb-4 sm:mb-6">
+                  <h2 class="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+                    <span class="text-xl sm:text-2xl">📦</span>
+                    <span class="hidden sm:inline">Ramassages du jour</span>
+                    <span class="sm:hidden">Ramassages</span>
+                  </h2>
+                  <span class="badge badge-pending text-sm sm:text-base">
+                    {{ dashboard.ramassages.totalColis }}
+                  </span>
+                </div>
+
+                <div *ngIf="dashboard.ramassages.totalColis > 0" class="space-y-2 sm:space-y-3">
+                  <div
+                    *ngFor="let zone of dashboard.ramassages.zones"
+                    class="flex items-center justify-between p-2 sm:p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                      <div class="text-xl sm:text-2xl flex-shrink-0">🗺️</div>
+                      <div class="min-w-0">
+                        <div class="font-semibold text-foreground text-sm sm:text-base truncate">{{ zone.zone }}</div>
+                        <div class="text-xs sm:text-sm text-muted-foreground">
+                          {{ zone.vendeurs.length }} vendeur{{ zone.vendeurs.length > 1 ? 's' : '' }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                      <div class="text-base sm:text-lg font-bold text-primary">{{ zone.nombreColis }}</div>
+                      <div class="text-xs text-muted-foreground">colis</div>
+                    </div>
+                  </div>
+
+                  <button routerLink="/admin/ramassages" class="btn-outline w-full mt-3 sm:mt-4 text-sm sm:text-base py-2 sm:py-3">
+                    <span class="hidden sm:inline">Organiser les ramassages →</span>
+                    <span class="sm:hidden">Voir ramassages →</span>
+                  </button>
+                </div>
+
+                <div *ngIf="dashboard.ramassages.totalColis === 0" class="text-center py-6 sm:py-8">
+                  <div class="text-3xl sm:text-4xl mb-2">✅</div>
+                  <p class="text-sm sm:text-base text-muted-foreground">Aucun ramassage prévu</p>
+                </div>
+              </div>
+
+              <!-- Livraisons en cours -->
+              <div class="card">
+                <div class="flex items-center justify-between mb-4 sm:mb-6">
+                  <h2 class="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+                    <span class="text-xl sm:text-2xl">🚚</span>
+                    <span class="hidden sm:inline">Livraisons en cours</span>
+                    <span class="sm:hidden">Livraisons</span>
+                  </h2>
+                  <span class="badge badge-transit text-sm sm:text-base">
+                    {{ dashboard.livraisons.totalColis }}
+                  </span>
+                </div>
+
+                <div *ngIf="dashboard.livraisons.totalColis > 0" class="space-y-2 sm:space-y-3">
+                  <div
+                    *ngFor="let zone of dashboard.livraisons.zones"
+                    class="flex items-center justify-between p-2 sm:p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                      <div class="text-xl sm:text-2xl flex-shrink-0">📍</div>
+                      <div class="min-w-0">
+                        <div class="font-semibold text-foreground text-sm sm:text-base truncate">{{ zone.zone }}</div>
+                        <div class="text-xs sm:text-sm text-muted-foreground">Zone de livraison</div>
+                      </div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                      <div class="text-base sm:text-lg font-bold text-primary">{{ zone.nombreColis }}</div>
+                      <div class="text-xs text-muted-foreground">colis</div>
+                    </div>
+                  </div>
+
+                  <button routerLink="/admin/livraisons" class="btn-outline w-full mt-3 sm:mt-4 text-sm sm:text-base py-2 sm:py-3">
+                    <span class="hidden sm:inline">Gérer les livraisons →</span>
+                    <span class="sm:hidden">Voir livraisons →</span>
+                  </button>
+                </div>
+
+                <div *ngIf="dashboard.livraisons.totalColis === 0" class="text-center py-6 sm:py-8">
+                  <div class="text-3xl sm:text-4xl mb-2">✅</div>
+                  <p class="text-sm sm:text-base text-muted-foreground">Aucune livraison en cours</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Demandes de paiement -->
             <div class="card">
-              <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-foreground flex items-center gap-2">
-                  📦 Ramassages du jour
+              <div class="flex items-center justify-between mb-4 sm:mb-6 flex-wrap gap-2">
+                <h2 class="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+                  <span class="text-xl sm:text-2xl">💸</span>
+                  <span class="hidden sm:inline">Demandes de paiement en attente</span>
+                  <span class="sm:hidden">Demandes paiement</span>
                 </h2>
-                <span class="badge badge-pending text-base">
-                  {{ dashboard.ramassages.totalColis }} colis
+                <span class="badge badge-pending text-sm sm:text-base">
+                  {{ dashboard.paiements.demandes.length }}
                 </span>
               </div>
 
-              <div *ngIf="dashboard.ramassages.totalColis > 0" class="space-y-3">
+              <div *ngIf="dashboard.paiements.demandes.length > 0" class="space-y-2 sm:space-y-3">
                 <div
-                  *ngFor="let zone of dashboard.ramassages.zones"
-                  class="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                  *ngFor="let demande of dashboard.paiements.demandes"
+                  class="flex items-center justify-between p-3 sm:p-4 border rounded-lg hover:bg-muted/50 transition-colors gap-3"
                 >
-                  <div class="flex items-center gap-3">
-                    <div class="text-2xl">🗺️</div>
-                    <div>
-                      <div class="font-semibold text-foreground">{{ zone.zone }}</div>
-                      <div class="text-sm text-muted-foreground">
-                        {{ zone.vendeurs.length }} vendeur{{ zone.vendeurs.length > 1 ? 's' : '' }}
+                  <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+                    <div class="text-xl sm:text-2xl flex-shrink-0">👤</div>
+                    <div class="min-w-0">
+                      <div class="font-semibold text-foreground text-sm sm:text-base truncate">
+                        {{ demande.vendeur.prenom }} {{ demande.vendeur.nom }}
+                      </div>
+                      <div class="text-xs sm:text-sm text-muted-foreground">
+                        {{ demande.nombreLivraisons }} livraison{{ demande.nombreLivraisons > 1 ? 's' : '' }}
                       </div>
                     </div>
                   </div>
-                  <div class="text-right">
-                    <div class="text-lg font-bold text-primary">{{ zone.nombreColis }}</div>
-                    <div class="text-xs text-muted-foreground">colis</div>
+                  <div class="text-right flex-shrink-0">
+                    <div class="text-base sm:text-xl font-bold text-primary">
+                      {{ demande.montant | fcfa }}
+                    </div>
                   </div>
                 </div>
 
-                <button routerLink="/admin/ramassages" class="btn-outline w-full mt-4">
-                  Organiser les ramassages →
+                <div class="flex items-center justify-between pt-3 sm:pt-4 border-t">
+                  <div class="font-semibold text-foreground text-sm sm:text-base">Total à payer</div>
+                  <div class="text-xl sm:text-2xl font-bold text-primary">
+                    {{ dashboard.paiements.totalAPayer | fcfa }}
+                  </div>
+                </div>
+
+                <button routerLink="/admin/finances" class="btn-primary w-full mt-3 sm:mt-4 text-sm sm:text-base py-2 sm:py-3">
+                  <span class="hidden sm:inline">Gérer les paiements →</span>
+                  <span class="sm:hidden">Gérer paiements →</span>
                 </button>
               </div>
 
-              <div *ngIf="dashboard.ramassages.totalColis === 0" class="text-center py-8">
-                <div class="text-4xl mb-2">✅</div>
-                <p class="text-muted-foreground">Aucun ramassage prévu</p>
+              <div *ngIf="dashboard.paiements.demandes.length === 0" class="text-center py-6 sm:py-8">
+                <div class="text-3xl sm:text-4xl mb-2">✅</div>
+                <p class="text-sm sm:text-base text-muted-foreground">Aucune demande de paiement</p>
               </div>
             </div>
 
-            <!-- Livraisons en cours -->
-            <div class="card">
-              <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-foreground flex items-center gap-2">
-                  🚚 Livraisons en cours
-                </h2>
-                <span class="badge badge-transit text-base">
-                  {{ dashboard.livraisons.totalColis }} colis
+            <!-- Quick Actions (2 cols mobile, 4 cols desktop) -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <button routerLink="/admin/ramassages" class="btn-primary py-4 sm:py-6 flex flex-col items-center gap-1 sm:gap-2">
+                <span class="text-xl sm:text-2xl">📦</span>
+                <span class="text-xs sm:text-sm text-center">
+                  <span class="hidden sm:inline">Organiser ramassages</span>
+                  <span class="sm:hidden">Ramassages</span>
                 </span>
-              </div>
-
-              <div *ngIf="dashboard.livraisons.totalColis > 0" class="space-y-3">
-                <div
-                  *ngFor="let zone of dashboard.livraisons.zones"
-                  class="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <div class="flex items-center gap-3">
-                    <div class="text-2xl">📍</div>
-                    <div>
-                      <div class="font-semibold text-foreground">{{ zone.zone }}</div>
-                      <div class="text-sm text-muted-foreground">Zone de livraison</div>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    <div class="text-lg font-bold text-primary">{{ zone.nombreColis }}</div>
-                    <div class="text-xs text-muted-foreground">colis</div>
-                  </div>
-                </div>
-
-                <button routerLink="/admin/livraisons" class="btn-outline w-full mt-4">
-                  Gérer les livraisons →
-                </button>
-              </div>
-
-              <div *ngIf="dashboard.livraisons.totalColis === 0" class="text-center py-8">
-                <div class="text-4xl mb-2">✅</div>
-                <p class="text-muted-foreground">Aucune livraison en cours</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Demandes de paiement -->
-          <div class="card">
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-xl font-bold text-foreground flex items-center gap-2">
-                💸 Demandes de paiement en attente
-              </h2>
-              <span class="badge badge-pending text-base">
-                {{ dashboard.paiements.demandes.length }} demande{{ dashboard.paiements.demandes.length > 1 ? 's' : '' }}
-              </span>
-            </div>
-
-            <div *ngIf="dashboard.paiements.demandes.length > 0" class="space-y-3">
-              <div
-                *ngFor="let demande of dashboard.paiements.demandes"
-                class="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-              >
-                <div class="flex items-center gap-4">
-                  <div class="text-2xl">👤</div>
-                  <div>
-                    <div class="font-semibold text-foreground">
-                      {{ demande.vendeur.prenom }} {{ demande.vendeur.nom }}
-                    </div>
-                    <div class="text-sm text-muted-foreground">
-                      {{ demande.nombreLivraisons }} livraison{{ demande.nombreLivraisons > 1 ? 's' : '' }}
-                    </div>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <div class="text-xl font-bold text-primary">
-                    {{ demande.montant | fcfa }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between pt-4 border-t">
-                <div class="font-semibold text-foreground">Total à payer</div>
-                <div class="text-2xl font-bold text-primary">
-                  {{ dashboard.paiements.totalAPayer | fcfa }}
-                </div>
-              </div>
-
-              <button routerLink="/admin/finances" class="btn-primary w-full mt-4">
-                Gérer les paiements →
+              </button>
+              <button routerLink="/admin/livraisons" class="btn-secondary py-4 sm:py-6 flex flex-col items-center gap-1 sm:gap-2">
+                <span class="text-xl sm:text-2xl">🚚</span>
+                <span class="text-xs sm:text-sm text-center">
+                  <span class="hidden sm:inline">Gérer livraisons</span>
+                  <span class="sm:hidden">Livraisons</span>
+                </span>
+              </button>
+              <button routerLink="/admin/finances" class="btn-outline py-4 sm:py-6 flex flex-col items-center gap-1 sm:gap-2">
+                <span class="text-xl sm:text-2xl">💰</span>
+                <span class="text-xs sm:text-sm text-center">
+                  <span class="hidden sm:inline">Gérer paiements</span>
+                  <span class="sm:hidden">Paiements</span>
+                </span>
+              </button>
+              <button routerLink="/admin/livraisons" class="btn-outline py-4 sm:py-6 flex flex-col items-center gap-1 sm:gap-2">
+                <span class="text-xl sm:text-2xl">📱</span>
+                <span class="text-xs sm:text-sm text-center">Scanner QR</span>
               </button>
             </div>
 
-            <div *ngIf="dashboard.paiements.demandes.length === 0" class="text-center py-8">
-              <div class="text-4xl mb-2">✅</div>
-              <p class="text-muted-foreground">Aucune demande de paiement</p>
+            <!-- Indicateur rafraîchissement -->
+            <div class="text-center">
+              <p class="text-xs text-muted-foreground">
+                🔄 <span class="hidden sm:inline">Rafraîchissement automatique toutes les 30 secondes</span>
+                <span class="sm:hidden">Auto-refresh 30s</span>
+              </p>
             </div>
-          </div>
-
-          <!-- Quick Actions -->
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button routerLink="/admin/ramassages" class="btn-primary py-6 flex flex-col items-center gap-2">
-              <span class="text-2xl">📦</span>
-              <span>Organiser ramassages</span>
-            </button>
-            <button routerLink="/admin/livraisons" class="btn-secondary py-6 flex flex-col items-center gap-2">
-              <span class="text-2xl">🚚</span>
-              <span>Gérer livraisons</span>
-            </button>
-            <button routerLink="/admin/finances" class="btn-outline py-6 flex flex-col items-center gap-2">
-              <span class="text-2xl">💰</span>
-              <span>Gérer paiements</span>
-            </button>
-            <button routerLink="/admin/livraisons" class="btn-outline py-6 flex flex-col items-center gap-2">
-              <span class="text-2xl">📱</span>
-              <span>Scanner QR</span>
-            </button>
-          </div>
-
-          <!-- Indicateur rafraîchissement -->
-          <div class="text-center">
-            <p class="text-xs text-muted-foreground">
-              🔄 Rafraîchissement automatique toutes les 30 secondes
-            </p>
           </div>
         </div>
       </div>

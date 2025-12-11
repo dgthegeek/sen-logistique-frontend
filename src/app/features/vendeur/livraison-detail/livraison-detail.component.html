@@ -4,10 +4,10 @@
   <div class="flex">
     <app-sidebar></app-sidebar>
 
-    <main class="flex-1 p-6">
+    <main class="flex-1 p-4 sm:p-6">
       <div class="max-w-5xl mx-auto">
         <!-- Back Button -->
-        <button routerLink="/vendeur/livraisons" class="btn-ghost mb-6 text-sm">
+        <button routerLink="/vendeur/livraisons" class="btn-ghost mb-4 sm:mb-6 text-xs sm:text-sm">
           ← Retour à mes livraisons
         </button>
 
@@ -16,42 +16,42 @@
           <div class="flex items-center justify-center py-12">
             <div class="text-center">
               <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
-              <p class="text-muted-foreground">Chargement...</p>
+              <p class="text-muted-foreground text-sm">Chargement...</p>
             </div>
           </div>
         </div>
 
         <!-- Error -->
         <div *ngIf="errorMessage && !loading" class="card">
-          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
             {{ errorMessage }}
           </div>
         </div>
 
         <!-- Content -->
-        <div *ngIf="livraison && !loading" class="space-y-6">
-          <!-- Header Card -->
+        <div *ngIf="livraison && !loading" class="space-y-4 sm:space-y-6">
+          <!-- Header Card (Responsive) -->
           <div class="card">
-            <div class="flex items-start justify-between mb-6">
-              <div>
-                <div class="text-sm text-muted-foreground mb-1">Numéro de suivi</div>
-                <h1 class="text-3xl font-bold font-mono text-primary mb-2">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4 sm:mb-6">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs sm:text-sm text-muted-foreground mb-1">Numéro de suivi</div>
+                <h1 class="text-2xl sm:text-3xl font-bold font-mono text-primary mb-2 break-all">
                   {{ livraison.numeroTracking }}
                 </h1>
-                <div class="text-sm text-muted-foreground">
+                <div class="text-xs sm:text-sm text-muted-foreground">
                   Créé le {{ formatDate(livraison.dateCreation) }}
                 </div>
               </div>
-              <div class="text-right">
-                <span [class]="getStatusBadgeClass(livraison.statut)" class="text-base">
+              <div class="text-left sm:text-right">
+                <span [class]="getStatusBadgeClass(livraison.statut)" class="text-sm sm:text-base">
                   {{ getStatusIcon(livraison.statut) }} {{ getStatusLabel(livraison.statut) }}
                 </span>
               </div>
             </div>
 
-            <!-- Timeline -->
-            <div *ngIf="!['ECHEC_ABSENT', 'ECHEC_REFUSE', 'ANNULEE'].includes(livraison.statut)" class="mb-6">
-              <div class="flex items-center justify-between relative">
+            <!-- Timeline (Responsive - Scroll horizontal sur mobile) -->
+            <div *ngIf="!['ECHEC_ABSENT', 'ECHEC_REFUSE', 'ANNULEE'].includes(livraison.statut)" class="mb-4 sm:mb-6 overflow-x-auto">
+              <div class="flex items-center justify-between relative min-w-[600px] sm:min-w-0">
                 <div class="absolute top-4 left-0 right-0 h-0.5 bg-muted -z-10">
                   <div 
                     class="h-full bg-primary transition-all duration-500"
@@ -64,7 +64,7 @@
                   class="flex flex-col items-center flex-1"
                 >
                   <div 
-                    class="w-8 h-8 rounded-full flex items-center justify-center mb-2 transition-all"
+                    class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center mb-2 transition-all"
                     [class.bg-primary]="step.completed"
                     [class.text-primary-foreground]="step.completed"
                     [class.bg-muted]="!step.completed"
@@ -72,107 +72,107 @@
                     [class.ring-4]="step.active"
                     [class]="step.active ? 'ring-primary/20' : ''"
                   >
-                    <span *ngIf="step.completed">✓</span>
-                    <span *ngIf="!step.completed">•</span>
+                    <span *ngIf="step.completed" class="text-xs sm:text-sm">✓</span>
+                    <span *ngIf="!step.completed" class="text-xs sm:text-sm">•</span>
                   </div>
-                  <div class="text-xs font-medium text-center" [class.text-primary]="step.active">
+                  <div class="text-xs font-medium text-center whitespace-nowrap" [class.text-primary]="step.active">
                     {{ step.label }}
                   </div>
-                  <div class="text-xs text-muted-foreground text-center mt-1">
+                  <div class="text-xs text-muted-foreground text-center mt-1 whitespace-nowrap">
                     {{ formatDateShort(step.date) }}
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Quick Actions -->
-            <div class="flex flex-wrap gap-3">
-              <button (click)="callClient()" class="btn-primary flex items-center gap-2">
-                📞 Appeler le client
+            <!-- Quick Actions (Responsive) -->
+            <div class="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
+              <button (click)="callClient()" class="btn-primary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3">
+                📞 <span class="hidden sm:inline">Appeler le</span> client
               </button>
-              <button (click)="openMaps()" class="btn-secondary flex items-center gap-2">
-                🗺️ Ouvrir Maps
+              <button (click)="openMaps()" class="btn-secondary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3">
+                🗺️ <span class="hidden sm:inline">Ouvrir</span> Maps
               </button>
               <button
                 *ngIf="livraison.qrCodeUrl"
                 (click)="downloadQRCode()"
-                class="btn-outline flex items-center gap-2"
+                class="btn-outline flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3"
               >
-                📄 Télécharger QR Code
+                📄 <span class="hidden sm:inline">Télécharger</span> QR
               </button>
             </div>
           </div>
 
-          <!-- Main Grid -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Main Grid (Responsive) -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <!-- Informations Client -->
             <div class="card">
-              <h2 class="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-                👤 Informations client
+              <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
+                👤 <span class="hidden sm:inline">Informations</span> Client
               </h2>
 
-              <div class="space-y-3">
+              <div class="space-y-2.5 sm:space-y-3">
                 <div>
-                  <div class="text-sm text-muted-foreground">Nom complet</div>
-                  <div class="font-medium text-foreground">{{ livraison.client.nom }}</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">Nom complet</div>
+                  <div class="font-medium text-foreground text-sm sm:text-base">{{ livraison.client.nom }}</div>
                 </div>
 
                 <div>
-                  <div class="text-sm text-muted-foreground">Téléphone</div>
-                  <div class="font-medium text-foreground">{{ livraison.client.telephone }}</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">Téléphone</div>
+                  <div class="font-medium text-foreground text-sm sm:text-base">{{ livraison.client.telephone }}</div>
                 </div>
 
-                <div class="border-t pt-3">
-                  <div class="text-sm text-muted-foreground mb-1">Adresse de livraison</div>
-                  <div class="font-medium text-foreground">{{ livraison.client.adresse }}</div>
-                  <div class="text-sm text-muted-foreground mt-1">
+                <div class="border-t pt-2.5 sm:pt-3">
+                  <div class="text-xs sm:text-sm text-muted-foreground mb-1">Adresse de livraison</div>
+                  <div class="font-medium text-foreground text-sm sm:text-base break-words">{{ livraison.client.adresse }}</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground mt-1">
                     {{ livraison.zone }}
                   </div>
                 </div>
 
                 <div *ngIf="livraison.client.pointRepere">
-                  <div class="text-sm text-muted-foreground">Point de repère</div>
-                  <div class="text-foreground">{{ livraison.client.pointRepere }}</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">Point de repère</div>
+                  <div class="text-foreground text-sm sm:text-base">{{ livraison.client.pointRepere }}</div>
                 </div>
               </div>
             </div>
 
             <!-- Détails Colis -->
             <div class="card">
-              <h2 class="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-                📦 Détails du colis
+              <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
+                📦 Détails<span class="hidden sm:inline"> du colis</span>
               </h2>
 
-              <div class="space-y-3">
+              <div class="space-y-2.5 sm:space-y-3">
                 <div>
-                  <div class="text-sm text-muted-foreground">Description</div>
-                  <div class="font-medium text-foreground">{{ livraison.produit.description }}</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">Description</div>
+                  <div class="font-medium text-foreground text-sm sm:text-base">{{ livraison.produit.description }}</div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <div class="text-sm text-muted-foreground">Type</div>
-                    <div class="font-medium text-foreground">
+                    <div class="text-xs sm:text-sm text-muted-foreground">Type</div>
+                    <div class="font-medium text-foreground text-sm sm:text-base">
                       {{ livraison.urgence === 'EXPRESS' ? 'Express ⚡' : 'Normal' }}
                     </div>
                   </div>
 
                   <div>
-                    <div class="text-sm text-muted-foreground">Fragile</div>
-                    <div class="font-medium text-foreground">
+                    <div class="text-xs sm:text-sm text-muted-foreground">Fragile</div>
+                    <div class="font-medium text-foreground text-sm sm:text-base">
                       {{ livraison.produit.fragile ? 'Oui ⚠️' : 'Non' }}
                     </div>
                   </div>
                 </div>
 
                 <div *ngIf="livraison.produit.poids">
-                  <div class="text-sm text-muted-foreground">Poids estimé</div>
-                  <div class="font-medium text-foreground">{{ livraison.produit.poids }} kg</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">Poids estimé</div>
+                  <div class="font-medium text-foreground text-sm sm:text-base">{{ livraison.produit.poids }} kg</div>
                 </div>
 
-                <div *ngIf="livraison.commentaireLivraison" class="border-t pt-3">
-                  <div class="text-sm text-muted-foreground mb-1">Commentaire du livreur</div>
-                  <div class="text-foreground bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm">
+                <div *ngIf="livraison.commentaireLivraison" class="border-t pt-2.5 sm:pt-3">
+                  <div class="text-xs sm:text-sm text-muted-foreground mb-1">Commentaire du livreur</div>
+                  <div class="text-foreground bg-yellow-50 border border-yellow-200 p-2.5 sm:p-3 rounded-lg text-xs sm:text-sm">
                     {{ livraison.commentaireLivraison }}
                   </div>
                 </div>
@@ -180,86 +180,86 @@
             </div>
           </div>
 
-          <!-- Détails Financiers -->
+          <!-- Détails Financiers (Responsive) -->
           <div class="card bg-primary/5 border-primary/20">
-            <h2 class="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+            <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
               💰 Détails financiers
             </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <div class="text-sm text-muted-foreground mb-1">Montant à collecter (COD)</div>
-                <div class="text-2xl font-bold text-foreground">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+              <div class="text-center sm:text-left">
+                <div class="text-xs sm:text-sm text-muted-foreground mb-1">Montant à collecter (COD)</div>
+                <div class="text-xl sm:text-2xl font-bold text-foreground">
                   {{ livraison.financier.montantCOD | fcfa }}
                 </div>
               </div>
 
-              <div>
-                <div class="text-sm text-muted-foreground mb-1">Frais de livraison</div>
-                <div class="text-2xl font-bold text-destructive">
+              <div class="text-center sm:text-left">
+                <div class="text-xs sm:text-sm text-muted-foreground mb-1">Frais de livraison</div>
+                <div class="text-xl sm:text-2xl font-bold text-destructive">
                   - {{ livraison.financier.fraisLivraison | fcfa }}
                 </div>
               </div>
 
-              <div>
-                <div class="text-sm text-muted-foreground mb-1">Vous recevrez</div>
-                <div class="text-3xl font-bold text-green-600">
+              <div class="text-center sm:text-left">
+                <div class="text-xs sm:text-sm text-muted-foreground mb-1">Vous recevrez</div>
+                <div class="text-2xl sm:text-3xl font-bold text-green-600">
                   {{ (livraison.financier.montantCOD - livraison.financier.fraisLivraison) | fcfa }}
                 </div>
               </div>
             </div>
 
-            <div *ngIf="livraison.financier.cashCollecte !== null" class="mt-4 pt-4 border-t border-primary/20">
-              <div class="text-sm text-muted-foreground">
+            <div *ngIf="livraison.financier.cashCollecte !== null" class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-primary/20">
+              <div class="text-xs sm:text-sm text-muted-foreground text-center sm:text-left">
                 Cash collecté: {{ livraison.financier.cashCollecte | fcfa }}
               </div>
             </div>
           </div>
 
-          <!-- Dates importantes -->
+          <!-- Dates importantes (Responsive) -->
           <div class="card">
-            <h2 class="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+            <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
               📅 Historique
             </h2>
 
-            <div class="space-y-3">
-              <div class="flex items-start gap-4">
-                <div class="w-2 h-2 bg-primary rounded-full mt-2"></div>
-                <div class="flex-1">
-                  <div class="font-medium text-foreground">Livraison créée</div>
-                  <div class="text-sm text-muted-foreground">{{ formatDate(livraison.dateCreation) }}</div>
+            <div class="space-y-2.5 sm:space-y-3">
+              <div class="flex items-start gap-3 sm:gap-4">
+                <div class="w-2 h-2 bg-primary rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                <div class="flex-1 min-w-0">
+                  <div class="font-medium text-foreground text-sm sm:text-base">Livraison créée</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.dateCreation) }}</div>
                 </div>
               </div>
 
-              <div *ngIf="livraison.dateRamassage" class="flex items-start gap-4">
-                <div class="w-2 h-2 bg-primary rounded-full mt-2"></div>
-                <div class="flex-1">
-                  <div class="font-medium text-foreground">Colis ramassé</div>
-                  <div class="text-sm text-muted-foreground">{{ formatDate(livraison.dateRamassage) }}</div>
+              <div *ngIf="livraison.dateRamassage" class="flex items-start gap-3 sm:gap-4">
+                <div class="w-2 h-2 bg-primary rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                <div class="flex-1 min-w-0">
+                  <div class="font-medium text-foreground text-sm sm:text-base">Colis ramassé</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.dateRamassage) }}</div>
                 </div>
               </div>
 
-              <div *ngIf="livraison.dateLivraison" class="flex items-start gap-4">
-                <div class="w-2 h-2 bg-green-600 rounded-full mt-2"></div>
-                <div class="flex-1">
-                  <div class="font-medium text-foreground">Colis livré</div>
-                  <div class="text-sm text-muted-foreground">{{ formatDate(livraison.dateLivraison) }}</div>
+              <div *ngIf="livraison.dateLivraison" class="flex items-start gap-3 sm:gap-4">
+                <div class="w-2 h-2 bg-green-600 rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                <div class="flex-1 min-w-0">
+                  <div class="font-medium text-foreground text-sm sm:text-base">Colis livré</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.dateLivraison) }}</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- QR Code Preview -->
+          <!-- QR Code Preview (Responsive) -->
           <div *ngIf="livraison.qrCodeUrl" class="card text-center">
-            <h2 class="text-xl font-bold text-foreground mb-4">
+            <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">
               QR Code de suivi
             </h2>
             <img
               [src]="livraison.qrCodeUrl"
               [alt]="'QR Code ' + livraison.numeroTracking"
-              class="mx-auto max-w-xs w-full border rounded-lg shadow-sm"
+              class="mx-auto max-w-[200px] sm:max-w-xs w-full border rounded-lg shadow-sm"
             />
-            <p class="text-sm text-muted-foreground mt-4">
+            <p class="text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4">
               Ce QR code permet au livreur de confirmer la livraison
             </p>
           </div>

@@ -8,67 +8,69 @@
         <app-sidebar></app-sidebar>
 
         <!-- Main Content -->
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-4 sm:p-6">
             <div class="max-w-4xl mx-auto">
                 <!-- Header -->
-                <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-foreground mb-2">
+                <div class="mb-6 sm:mb-8">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
                         Nouvelle livraison
                     </h1>
-                    <p class="text-muted-foreground">
+                    <p class="text-sm sm:text-base text-muted-foreground">
                         Créez une nouvelle demande de livraison
                     </p>
                 </div>
 
-                <!-- Progress Bar -->
-                <div class="card mb-8">
-                    <div class="flex justify-between mb-4">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors"
+                <!-- Progress Bar (Responsive) -->
+                <div class="card mb-6 sm:mb-8">
+                    <div class="flex justify-between mb-3 sm:mb-4">
+                        <div class="flex items-center gap-1 sm:gap-2 flex-1">
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium transition-colors flex-shrink-0"
                                 [class.bg-primary]="currentStep >= 1" [class.text-primary-foreground]="currentStep >= 1"
                                 [class.bg-muted]="currentStep < 1" [class.text-muted-foreground]="currentStep < 1">
                                 1
                             </div>
-                            <span class="text-sm font-medium" [class.text-primary]="currentStep >= 1"
+                            <span class="text-xs sm:text-sm font-medium" [class.text-primary]="currentStep >= 1"
                                 [class.text-muted-foreground]="currentStep < 1">
-                                Informations client
+                                <span class="hidden sm:inline">Informations client</span>
+                                <span class="sm:hidden">Client</span>
                             </span>
                         </div>
 
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors"
+                        <div class="flex items-center gap-1 sm:gap-2 flex-1">
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium transition-colors flex-shrink-0"
                                 [class.bg-primary]="currentStep >= 2" [class.text-primary-foreground]="currentStep >= 2"
                                 [class.bg-muted]="currentStep < 2" [class.text-muted-foreground]="currentStep < 2">
                                 2
                             </div>
-                            <span class="text-sm font-medium" [class.text-primary]="currentStep >= 2"
+                            <span class="text-xs sm:text-sm font-medium" [class.text-primary]="currentStep >= 2"
                                 [class.text-muted-foreground]="currentStep < 2">
-                                Détails colis
+                                <span class="hidden sm:inline">Détails colis</span>
+                                <span class="sm:hidden">Colis</span>
                             </span>
                         </div>
 
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors"
+                        <div class="flex items-center gap-1 sm:gap-2 flex-1">
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium transition-colors flex-shrink-0"
                                 [class.bg-primary]="currentStep >= 3" [class.text-primary-foreground]="currentStep >= 3"
                                 [class.bg-muted]="currentStep < 3" [class.text-muted-foreground]="currentStep < 3">
                                 3
                             </div>
-                            <span class="text-sm font-medium" [class.text-primary]="currentStep >= 3"
+                            <span class="text-xs sm:text-sm font-medium" [class.text-primary]="currentStep >= 3"
                                 [class.text-muted-foreground]="currentStep < 3">
-                                Récapitulatif
+                                Récap
                             </span>
                         </div>
                     </div>
 
                     <!-- Progress Bar -->
-                    <div class="w-full bg-muted rounded-full h-2">
-                        <div class="bg-primary h-2 rounded-full transition-all duration-300"
+                    <div class="w-full bg-muted rounded-full h-1.5 sm:h-2">
+                        <div class="bg-primary h-1.5 sm:h-2 rounded-full transition-all duration-300"
                             [style.width.%]="(currentStep / 3) * 100"></div>
                     </div>
                 </div>
 
                 <!-- Error Message -->
-                <div *ngIf="errorMessage" class="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+                <div *ngIf="errorMessage" class="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
                     {{ errorMessage }}
                 </div>
 
@@ -76,53 +78,53 @@
                 <form [formGroup]="livraisonForm" (ngSubmit)="onSubmit()">
                     <!-- ÉTAPE 1: Informations Client -->
                     <div *ngIf="currentStep === 1" class="card">
-                        <h2 class="text-xl font-bold text-foreground mb-6">
+                        <h2 class="text-lg sm:text-xl font-bold text-foreground mb-4 sm:mb-6">
                             📋 Informations du client
                         </h2>
 
-                        <div class="space-y-4">
+                        <div class="space-y-3 sm:space-y-4">
                             <!-- Nom client -->
                             <div>
-                                <label class="form-label">Nom complet du client *</label>
-                                <input formControlName="nomClient" type="text" class="form-input"
+                                <label class="form-label text-xs sm:text-sm">Nom complet du client *</label>
+                                <input formControlName="nomClient" type="text" class="form-input text-sm sm:text-base"
                                     [class.border-destructive]="livraisonForm.get('nomClient')?.invalid && livraisonForm.get('nomClient')?.touched"
                                     placeholder="Fatou Diop" />
                                 <p *ngIf="livraisonForm.get('nomClient')?.invalid && livraisonForm.get('nomClient')?.touched"
-                                    class="form-error">
+                                    class="form-error text-xs">
                                     Le nom du client est requis
                                 </p>
                             </div>
 
                             <!-- Téléphone client -->
                             <div>
-                                <label class="form-label">Téléphone du client *</label>
-                                <input formControlName="telephoneClient" type="tel" class="form-input"
+                                <label class="form-label text-xs sm:text-sm">Téléphone du client *</label>
+                                <input formControlName="telephoneClient" type="tel" class="form-input text-sm sm:text-base"
                                     [class.border-destructive]="livraisonForm.get('telephoneClient')?.invalid && livraisonForm.get('telephoneClient')?.touched"
                                     placeholder="77 123 45 67" />
                                 <p *ngIf="livraisonForm.get('telephoneClient')?.invalid && livraisonForm.get('telephoneClient')?.touched"
-                                    class="form-error">
+                                    class="form-error text-xs">
                                     Numéro invalide (ex: 77 123 45 67)
                                 </p>
                             </div>
 
                             <!-- Commune -->
                             <div>
-                                <label class="form-label">Commune *</label>
-                                <select formControlName="commune" class="form-select"
+                                <label class="form-label text-xs sm:text-sm">Commune *</label>
+                                <select formControlName="commune" class="form-select text-sm sm:text-base"
                                     [class.border-destructive]="livraisonForm.get('commune')?.invalid && livraisonForm.get('commune')?.touched">
                                     <option value="">Sélectionner une commune</option>
                                     <option *ngFor="let commune of communes" [value]="commune">{{ commune }}</option>
                                 </select>
                                 <p *ngIf="livraisonForm.get('commune')?.invalid && livraisonForm.get('commune')?.touched"
-                                    class="form-error">
+                                    class="form-error text-xs">
                                     La commune est requise
                                 </p>
                             </div>
 
                             <!-- Quartier -->
                             <div>
-                                <label class="form-label">Quartier *</label>
-                                <select formControlName="quartier" class="form-select"
+                                <label class="form-label text-xs sm:text-sm">Quartier *</label>
+                                <select formControlName="quartier" class="form-select text-sm sm:text-base"
                                     [class.border-destructive]="livraisonForm.get('quartier')?.invalid && livraisonForm.get('quartier')?.touched"
                                     [disabled]="!livraisonForm.get('commune')?.value">
                                     <option value="">Sélectionner un quartier</option>
@@ -131,212 +133,212 @@
                                     </option>
                                 </select>
                                 <p *ngIf="livraisonForm.get('quartier')?.invalid && livraisonForm.get('quartier')?.touched"
-                                    class="form-error">
+                                    class="form-error text-xs">
                                     Le quartier est requis
                                 </p>
                             </div>
 
                             <!-- Adresse complète -->
                             <div>
-                                <label class="form-label">Adresse complète *</label>
-                                <textarea formControlName="adresseComplete" class="form-textarea"
+                                <label class="form-label text-xs sm:text-sm">Adresse complète *</label>
+                                <textarea formControlName="adresseComplete" class="form-textarea text-sm sm:text-base"
                                     [class.border-destructive]="livraisonForm.get('adresseComplete')?.invalid && livraisonForm.get('adresseComplete')?.touched"
                                     rows="3" placeholder="Villa 123, Rue SC-45..."></textarea>
                                 <p *ngIf="livraisonForm.get('adresseComplete')?.invalid && livraisonForm.get('adresseComplete')?.touched"
-                                    class="form-error">
+                                    class="form-error text-xs">
                                     L'adresse complète est requise
                                 </p>
                             </div>
 
                             <!-- Point de repère -->
                             <div>
-                                <label class="form-label">Point de repère (optionnel)</label>
-                                <input formControlName="pointRepere" type="text" class="form-input"
+                                <label class="form-label text-xs sm:text-sm">Point de repère (optionnel)</label>
+                                <input formControlName="pointRepere" type="text" class="form-input text-sm sm:text-base"
                                     placeholder="Près de la station Total..." />
-                                <p class="form-helper">
+                                <p class="form-helper text-xs">
                                     Pour faciliter la localisation
                                 </p>
                             </div>
 
-                            <!-- Aperçu tarif (si quartier sélectionné) -->
+                            <!-- Aperçu tarif -->
                             <div *ngIf="tarifPreview && !calculatingPreview"
-                                class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg animate-fadeIn">
-                                <h3 class="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                                class="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg animate-fadeIn">
+                                <h3 class="font-semibold text-blue-900 mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base">
                                     💰 Frais de livraison pour cette zone
                                 </h3>
-                                <div class="space-y-2 text-sm">
+                                <div class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                                     <div class="flex justify-between">
                                         <span class="text-blue-700">Zone:</span>
                                         <span class="font-medium text-blue-900">{{ tarifPreview.zone }}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-blue-700">Tarif {{ livraisonForm.value.urgence === 'EXPRESS' ? 'express ⚡' : 'standard' }}:</span>
-                                        <span class="font-bold text-lg text-blue-900">{{ tarifPreview.montant | fcfa }}</span>
+                                        <span class="font-bold text-base sm:text-lg text-blue-900">{{ tarifPreview.montant | fcfa }}</span>
                                     </div>
                                     <div class="flex justify-between" *ngIf="tarifPreview.delaiEstime">
                                         <span class="text-blue-700">Délai estimé:</span>
                                         <span class="font-medium text-blue-900">{{ tarifPreview.delaiEstime }}</span>
                                     </div>
                                 </div>
-                                <p class="text-xs text-blue-600 mt-3">
+                                <p class="text-xs text-blue-600 mt-2 sm:mt-3">
                                     ℹ️ Ces frais seront ajoutés au prix de votre produit
                                 </p>
                             </div>
 
-                            <div *ngIf="calculatingPreview" class="mt-6 p-4 bg-muted/30 border rounded-lg text-center animate-pulse">
+                            <div *ngIf="calculatingPreview" class="mt-4 sm:mt-6 p-3 sm:p-4 bg-muted/30 border rounded-lg text-center animate-pulse">
                                 <div class="inline-block w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin mr-2"></div>
-                                <span class="text-sm text-muted-foreground">Calcul du tarif...</span>
+                                <span class="text-xs sm:text-sm text-muted-foreground">Calcul du tarif...</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- ÉTAPE 2: Détails Colis -->
                     <div *ngIf="currentStep === 2" class="card">
-                        <h2 class="text-xl font-bold text-foreground mb-6">
+                        <h2 class="text-lg sm:text-xl font-bold text-foreground mb-4 sm:mb-6">
                             📦 Détails du colis
                         </h2>
 
-                        <div class="space-y-4">
+                        <div class="space-y-3 sm:space-y-4">
                             <!-- Description produit -->
                             <div>
-                                <label class="form-label">Description du produit *</label>
-                                <input formControlName="descriptionProduit" type="text" class="form-input"
+                                <label class="form-label text-xs sm:text-sm">Description du produit *</label>
+                                <input formControlName="descriptionProduit" type="text" class="form-input text-sm sm:text-base"
                                     [class.border-destructive]="livraisonForm.get('descriptionProduit')?.invalid && livraisonForm.get('descriptionProduit')?.touched"
-                                    placeholder="Vêtements, Cosmétiques, Électronique..." />
+                                    placeholder="Vêtements, Cosmétiques..." />
                                 <p *ngIf="livraisonForm.get('descriptionProduit')?.invalid && livraisonForm.get('descriptionProduit')?.touched"
-                                    class="form-error">
+                                    class="form-error text-xs">
                                     La description est requise
                                 </p>
                             </div>
 
                             <!-- Fragile -->
-                            <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-2 sm:gap-3">
                                 <input formControlName="fragile" type="checkbox" id="fragile"
                                     class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
-                                <label for="fragile" class="text-sm font-medium text-foreground cursor-pointer">
+                                <label for="fragile" class="text-xs sm:text-sm font-medium text-foreground cursor-pointer">
                                     Colis fragile (manipulation délicate requise)
                                 </label>
                             </div>
 
                             <!-- Poids estimé -->
                             <div>
-                                <label class="form-label">Poids estimé (kg) - optionnel</label>
-                                <input formControlName="poidsEstime" type="number" class="form-input" placeholder="2.5"
+                                <label class="form-label text-xs sm:text-sm">Poids estimé (kg) - optionnel</label>
+                                <input formControlName="poidsEstime" type="number" class="form-input text-sm sm:text-base" placeholder="2.5"
                                     min="0" step="0.1" />
-                                <p class="form-helper">
+                                <p class="form-helper text-xs">
                                     Estimation approximative du poids
                                 </p>
                             </div>
 
                             <!-- Montant produit -->
                             <div>
-                                <label class="form-label">Prix du produit (ce que vous voulez recevoir) *</label>
+                                <label class="form-label text-xs sm:text-sm">Prix du produit (ce que vous voulez recevoir) *</label>
                                 <div class="relative">
-                                    <input formControlName="montantProduit" type="number" class="form-input pr-16 text-xl font-bold"
+                                    <input formControlName="montantProduit" type="number" class="form-input pr-12 sm:pr-16 text-lg sm:text-xl font-bold"
                                         [class.border-destructive]="livraisonForm.get('montantProduit')?.invalid && livraisonForm.get('montantProduit')?.touched"
                                         placeholder="35000" min="0" />
-                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-muted-foreground">
                                         FCFA
                                     </span>
                                 </div>
                                 <p *ngIf="livraisonForm.get('montantProduit')?.invalid && livraisonForm.get('montantProduit')?.touched"
-                                    class="form-error">
+                                    class="form-error text-xs">
                                     Le montant est requis
                                 </p>
-                                <p class="form-helper">
+                                <p class="form-helper text-xs">
                                     💡 Indiquez le prix de votre produit. Les frais de livraison seront ajoutés automatiquement.
                                 </p>
                             </div>
 
                             <!-- Urgence -->
                             <div>
-                                <label class="form-label">Type de livraison *</label>
-                                <div class="space-y-3">
+                                <label class="form-label text-xs sm:text-sm">Type de livraison *</label>
+                                <div class="space-y-2 sm:space-y-3">
                                     <label
-                                        class="flex items-start gap-3 p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                                        class="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
                                         <input formControlName="urgence" type="radio" value="NORMAL"
-                                            class="mt-1 w-4 h-4 text-primary border-gray-300 focus:ring-primary" />
-                                        <div class="flex-1">
-                                            <div class="font-medium text-foreground">Livraison normale</div>
-                                            <div class="text-sm text-muted-foreground">Délai: 24-48h • Tarif standard</div>
+                                            class="mt-1 w-4 h-4 text-primary border-gray-300 focus:ring-primary flex-shrink-0" />
+                                        <div class="flex-1 min-w-0">
+                                            <div class="font-medium text-foreground text-sm sm:text-base">Livraison normale</div>
+                                            <div class="text-xs sm:text-sm text-muted-foreground">Délai: 24-48h • Tarif standard</div>
                                         </div>
                                     </label>
 
                                     <label
-                                        class="flex items-start gap-3 p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                                        class="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
                                         <input formControlName="urgence" type="radio" value="EXPRESS"
-                                            class="mt-1 w-4 h-4 text-primary border-gray-300 focus:ring-primary" />
-                                        <div class="flex-1">
-                                            <div class="font-medium text-foreground">Livraison express ⚡</div>
-                                            <div class="text-sm text-muted-foreground">Délai: Même jour • Tarif majoré +50%</div>
+                                            class="mt-1 w-4 h-4 text-primary border-gray-300 focus:ring-primary flex-shrink-0" />
+                                        <div class="flex-1 min-w-0">
+                                            <div class="font-medium text-foreground text-sm sm:text-base">Livraison express ⚡</div>
+                                            <div class="text-xs sm:text-sm text-muted-foreground">Délai: Même jour • Tarif majoré +50%</div>
                                         </div>
                                     </label>
                                 </div>
                             </div>
 
-                            <!-- Créneau souhaité (optionnel) -->
+                            <!-- Créneau souhaité -->
                             <div>
-                                <label class="form-label">Créneau de livraison souhaité (optionnel)</label>
-                                <select formControlName="creneauSouhaite" class="form-select">
+                                <label class="form-label text-xs sm:text-sm">Créneau de livraison souhaité (optionnel)</label>
+                                <select formControlName="creneauSouhaite" class="form-select text-sm sm:text-base">
                                     <option value="">Pas de préférence</option>
                                     <option value="MATIN">Matin (8h-12h)</option>
                                     <option value="APRES_MIDI">Après-midi (12h-18h)</option>
                                     <option value="SOIR">Soir (18h-21h)</option>
                                 </select>
-                                <p class="form-helper">
+                                <p class="form-helper text-xs">
                                     Indique quand le client préfère recevoir sa livraison
                                 </p>
                             </div>
 
                             <!-- Notes livreur -->
                             <div>
-                                <label class="form-label">Instructions pour le livreur (optionnel)</label>
-                                <textarea formControlName="notesLivreur" class="form-textarea" rows="3"
-                                    placeholder="Appeler 15 min avant l'arrivée, livrer après 15h..."></textarea>
-                                <p class="form-helper">
+                                <label class="form-label text-xs sm:text-sm">Instructions pour le livreur (optionnel)</label>
+                                <textarea formControlName="notesLivreur" class="form-textarea text-sm sm:text-base" rows="3"
+                                    placeholder="Appeler 15 min avant l'arrivée..."></textarea>
+                                <p class="form-helper text-xs">
                                     Indications spéciales pour la livraison
                                 </p>
                             </div>
 
-                            <!-- Récapitulatif financier interactif -->
+                            <!-- Récapitulatif financier interactif (Responsive) -->
                             <div *ngIf="tarifPreview && livraisonForm.value.montantProduit > 0" 
-                                class="mt-6 p-6 bg-gradient-to-br from-green-50 to-blue-50 border-2 border-primary/30 rounded-xl shadow-sm animate-fadeIn">
-                                <h3 class="font-semibold text-foreground mb-4 flex items-center gap-2 text-lg">
+                                class="mt-4 sm:mt-6 p-4 sm:p-6 bg-gradient-to-br from-green-50 to-blue-50 border-2 border-primary/30 rounded-xl shadow-sm animate-fadeIn">
+                                <h3 class="font-semibold text-foreground mb-3 sm:mb-4 flex items-center gap-2 text-base sm:text-lg">
                                     💰 Récapitulatif financier
                                 </h3>
                                 
-                                <div class="space-y-4">
+                                <div class="space-y-3 sm:space-y-4">
                                     <!-- Prix produit -->
-                                    <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                                    <div class="flex justify-between items-center p-2.5 sm:p-3 bg-white rounded-lg">
                                         <div>
-                                            <div class="text-sm text-muted-foreground">Prix de votre produit</div>
+                                            <div class="text-xs sm:text-sm text-muted-foreground">Prix de votre produit</div>
                                             <div class="text-xs text-muted-foreground mt-0.5">Ce que vous recevrez</div>
                                         </div>
-                                        <span class="text-2xl font-bold text-green-600">{{ livraisonForm.value.montantProduit | fcfa }}</span>
+                                        <span class="text-xl sm:text-2xl font-bold text-green-600">{{ livraisonForm.value.montantProduit | fcfa }}</span>
                                     </div>
                                     
                                     <!-- Frais livraison -->
-                                    <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                                    <div class="flex justify-between items-center p-2.5 sm:p-3 bg-white rounded-lg">
                                         <div>
-                                            <div class="text-sm text-muted-foreground">Frais de livraison</div>
+                                            <div class="text-xs sm:text-sm text-muted-foreground">Frais de livraison</div>
                                             <div class="text-xs text-muted-foreground mt-0.5">{{ tarifPreview.zone }} • {{ livraisonForm.value.urgence === 'EXPRESS' ? 'Express ⚡' : 'Standard' }}</div>
                                         </div>
-                                        <span class="text-lg font-semibold text-orange-600">{{ tarifPreview.montant | fcfa }}</span>
+                                        <span class="text-base sm:text-lg font-semibold text-orange-600">{{ tarifPreview.montant | fcfa }}</span>
                                     </div>
                                     
                                     <!-- Total COD -->
-                                    <div class="border-t-2 border-primary/20 pt-4">
+                                    <div class="border-t-2 border-primary/20 pt-3 sm:pt-4">
                                         <div class="flex justify-between items-center">
                                             <div>
-                                                <div class="font-semibold text-foreground">Total à collecter (COD)</div>
+                                                <div class="font-semibold text-foreground text-sm sm:text-base">Total à collecter (COD)</div>
                                                 <div class="text-xs text-muted-foreground mt-0.5">Montant que le client paiera</div>
                                             </div>
-                                            <span class="text-3xl font-bold text-primary">{{ montantCODTotal | fcfa }}</span>
+                                            <span class="text-2xl sm:text-3xl font-bold text-primary">{{ montantCODTotal | fcfa }}</span>
                                         </div>
                                     </div>
                                     
                                     <!-- Info -->
-                                    <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <div class="p-2.5 sm:p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                         <p class="text-xs text-blue-800">
                                             ℹ️ Le client paiera <strong>{{ montantCODTotal | fcfa }}</strong> et vous recevrez <strong>{{ livraisonForm.value.montantProduit | fcfa }}</strong> après livraison.
                                         </p>
@@ -346,35 +348,35 @@
                         </div>
                     </div>
 
-                    <!-- ÉTAPE 3: Récapitulatif -->
-                    <div *ngIf="currentStep === 3" class="space-y-6">
+                    <!-- ÉTAPE 3: Récapitulatif (Responsive) -->
+                    <div *ngIf="currentStep === 3" class="space-y-4 sm:space-y-6">
                         <!-- Récapitulatif Infos -->
                         <div class="card">
-                            <h2 class="text-xl font-bold text-foreground mb-6">
+                            <h2 class="text-lg sm:text-xl font-bold text-foreground mb-4 sm:mb-6">
                                 ✅ Récapitulatif
                             </h2>
 
-                            <div class="space-y-6">
+                            <div class="space-y-4 sm:space-y-6">
                                 <!-- Informations client -->
                                 <div>
-                                    <h3 class="font-semibold text-foreground mb-3">Client</h3>
-                                    <div class="space-y-2 text-sm">
-                                        <div class="flex">
-                                            <span class="text-muted-foreground w-32">Nom:</span>
+                                    <h3 class="font-semibold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Client</h3>
+                                    <div class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
+                                        <div class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Nom:</span>
                                             <span class="text-foreground font-medium">{{ livraisonForm.value.nomClient }}</span>
                                         </div>
-                                        <div class="flex">
-                                            <span class="text-muted-foreground w-32">Téléphone:</span>
+                                        <div class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Téléphone:</span>
                                             <span class="text-foreground font-medium">{{ livraisonForm.value.telephoneClient }}</span>
                                         </div>
-                                        <div class="flex">
-                                            <span class="text-muted-foreground w-32">Adresse:</span>
-                                            <span class="text-foreground">
+                                        <div class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Adresse:</span>
+                                            <span class="text-foreground break-words">
                                                 {{ livraisonForm.value.adresseComplete }}, {{ livraisonForm.value.quartier }}, {{ livraisonForm.value.commune }}
                                             </span>
                                         </div>
-                                        <div *ngIf="livraisonForm.value.pointRepere" class="flex">
-                                            <span class="text-muted-foreground w-32">Repère:</span>
+                                        <div *ngIf="livraisonForm.value.pointRepere" class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Repère:</span>
                                             <span class="text-foreground">{{ livraisonForm.value.pointRepere }}</span>
                                         </div>
                                     </div>
@@ -384,36 +386,36 @@
 
                                 <!-- Détails colis -->
                                 <div>
-                                    <h3 class="font-semibold text-foreground mb-3">Colis</h3>
-                                    <div class="space-y-2 text-sm">
-                                        <div class="flex">
-                                            <span class="text-muted-foreground w-32">Description:</span>
+                                    <h3 class="font-semibold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Colis</h3>
+                                    <div class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
+                                        <div class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Description:</span>
                                             <span class="text-foreground">{{ livraisonForm.value.descriptionProduit }}</span>
                                         </div>
-                                        <div class="flex">
-                                            <span class="text-muted-foreground w-32">Type:</span>
+                                        <div class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Type:</span>
                                             <span class="text-foreground">
                                                 {{ livraisonForm.value.urgence === 'EXPRESS' ? 'Express ⚡' : 'Normal' }}
                                             </span>
                                         </div>
-                                        <div class="flex">
-                                            <span class="text-muted-foreground w-32">Fragile:</span>
+                                        <div class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Fragile:</span>
                                             <span class="text-foreground">{{ livraisonForm.value.fragile ? 'Oui' : 'Non' }}</span>
                                         </div>
-                                        <div *ngIf="livraisonForm.value.poidsEstime" class="flex">
-                                            <span class="text-muted-foreground w-32">Poids:</span>
+                                        <div *ngIf="livraisonForm.value.poidsEstime" class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Poids:</span>
                                             <span class="text-foreground">{{ livraisonForm.value.poidsEstime }} kg</span>
                                         </div>
-                                        <div class="flex">
-                                            <span class="text-muted-foreground w-32">Prix produit:</span>
+                                        <div class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Prix produit:</span>
                                             <span class="text-foreground font-semibold text-green-600">{{ livraisonForm.value.montantProduit | fcfa }}</span>
                                         </div>
-                                        <div *ngIf="livraisonForm.value.notesLivreur" class="flex">
-                                            <span class="text-muted-foreground w-32">Notes:</span>
-                                            <span class="text-foreground">{{ livraisonForm.value.notesLivreur }}</span>
+                                        <div *ngIf="livraisonForm.value.notesLivreur" class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Notes:</span>
+                                            <span class="text-foreground break-words">{{ livraisonForm.value.notesLivreur }}</span>
                                         </div>
-                                        <div *ngIf="livraisonForm.value.creneauSouhaite" class="flex">
-                                            <span class="text-muted-foreground w-32">Créneau:</span>
+                                        <div *ngIf="livraisonForm.value.creneauSouhaite" class="flex flex-col sm:flex-row">
+                                            <span class="text-muted-foreground sm:w-32">Créneau:</span>
                                             <span class="text-foreground">
                                                 {{
                                                 livraisonForm.value.creneauSouhaite === 'MATIN' ? 'Matin (8h-12h)' :
@@ -427,37 +429,37 @@
                             </div>
                         </div>
 
-                        <!-- Calcul Tarif -->
+                        <!-- Calcul Tarif (Responsive) -->
                         <div class="card bg-gradient-to-br from-green-50 to-blue-50 border-2 border-primary/30">
-                            <h3 class="font-semibold text-foreground mb-4 text-lg">💰 Résumé financier</h3>
+                            <h3 class="font-semibold text-foreground mb-3 sm:mb-4 text-base sm:text-lg">💰 Résumé financier</h3>
 
-                            <div *ngIf="calculatingTarif" class="text-center py-8">
+                            <div *ngIf="calculatingTarif" class="text-center py-6 sm:py-8">
                                 <div class="inline-block w-6 h-6 border-3 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
-                                <p class="text-sm text-muted-foreground">Calcul en cours...</p>
+                                <p class="text-xs sm:text-sm text-muted-foreground">Calcul en cours...</p>
                             </div>
 
-                            <div *ngIf="tarif && !calculatingTarif" class="space-y-4">
+                            <div *ngIf="tarif && !calculatingTarif" class="space-y-3 sm:space-y-4">
                                 <!-- Prix produit -->
-                                <div class="flex justify-between items-center p-3 bg-white rounded-lg">
-                                    <span class="text-muted-foreground">Prix de votre produit:</span>
-                                    <span class="text-xl font-bold text-green-600">{{ livraisonForm.value.montantProduit | fcfa }}</span>
+                                <div class="flex justify-between items-center p-2.5 sm:p-3 bg-white rounded-lg">
+                                    <span class="text-xs sm:text-sm text-muted-foreground">Prix de votre produit:</span>
+                                    <span class="text-lg sm:text-xl font-bold text-green-600">{{ livraisonForm.value.montantProduit | fcfa }}</span>
                                 </div>
                                 
                                 <!-- Frais -->
-                                <div class="flex justify-between items-center p-3 bg-white rounded-lg">
-                                    <span class="text-muted-foreground">Frais de livraison:</span>
-                                    <span class="text-lg font-semibold text-orange-600">{{ tarif.montant | fcfa }}</span>
+                                <div class="flex justify-between items-center p-2.5 sm:p-3 bg-white rounded-lg">
+                                    <span class="text-xs sm:text-sm text-muted-foreground">Frais de livraison:</span>
+                                    <span class="text-base sm:text-lg font-semibold text-orange-600">{{ tarif.montant | fcfa }}</span>
                                 </div>
                                 
                                 <!-- Total COD -->
-                                <div class="border-t-2 border-primary/20 pt-4">
+                                <div class="border-t-2 border-primary/20 pt-3 sm:pt-4">
                                     <div class="flex justify-between items-center">
-                                        <span class="font-semibold text-foreground">Client paiera (COD):</span>
-                                        <span class="text-3xl font-bold text-primary">{{ montantCODTotal | fcfa }}</span>
+                                        <span class="font-semibold text-foreground text-sm sm:text-base">Client paiera (COD):</span>
+                                        <span class="text-2xl sm:text-3xl font-bold text-primary">{{ montantCODTotal | fcfa }}</span>
                                     </div>
                                 </div>
                                 
-                                <p class="text-xs text-muted-foreground mt-4">
+                                <p class="text-xs text-muted-foreground mt-3 sm:mt-4">
                                     📍 {{ tarif.zone }} 
                                     <span *ngIf="tarif.delaiEstime">• ⏱️ {{ tarif.delaiEstime }}</span>
                                 </p>
@@ -465,17 +467,17 @@
                         </div>
                     </div>
 
-                    <!-- Navigation Buttons -->
-                    <div class="flex justify-between mt-8">
-                        <button type="button" class="btn-outline" (click)="previousStep()" *ngIf="currentStep > 1">
+                    <!-- Navigation Buttons (Responsive) -->
+                    <div class="flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mt-6 sm:mt-8">
+                        <button type="button" class="btn-outline text-sm sm:text-base py-2 sm:py-3" (click)="previousStep()" *ngIf="currentStep > 1">
                             ← Précédent
                         </button>
 
-                        <button type="button" class="btn-primary ml-auto" (click)="nextStep()" *ngIf="currentStep < 3">
+                        <button type="button" class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:ml-auto" (click)="nextStep()" *ngIf="currentStep < 3">
                             Suivant →
                         </button>
 
-                        <button type="submit" class="btn-primary ml-auto text-lg px-8" *ngIf="currentStep === 3"
+                        <button type="submit" class="btn-primary text-base sm:text-lg px-6 sm:px-8 py-3 sm:ml-auto" *ngIf="currentStep === 3"
                             [disabled]="loading || livraisonForm.invalid">
                             <span *ngIf="!loading">✅ Confirmer la livraison</span>
                             <span *ngIf="loading">Création en cours...</span>
@@ -487,37 +489,37 @@
     </div>
 </div>
 
-<!-- Success Modal -->
+<!-- Success Modal (Responsive) -->
 <div *ngIf="createdLivraison" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
     (click)="closeSuccessModal()">
-    <div class="card max-w-lg w-full" (click)="$event.stopPropagation()">
+    <div class="card max-w-lg w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
         <div class="text-center">
             <!-- Success Icon -->
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span class="text-4xl">✅</span>
+            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-3xl sm:text-4xl">✅</span>
             </div>
 
-            <h2 class="text-2xl font-bold text-foreground mb-2">
+            <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-2">
                 Livraison créée avec succès !
             </h2>
 
-            <p class="text-muted-foreground mb-6">
+            <p class="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
                 {{ createdLivraison.message }}
             </p>
 
             <!-- Tracking Number -->
-            <div class="bg-primary/10 border border-primary/20 rounded-lg p-6 mb-6">
-                <p class="text-sm text-muted-foreground mb-2">Numéro de suivi</p>
-                <p class="text-3xl font-bold text-primary mb-4">
+            <div class="bg-primary/10 border border-primary/20 rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
+                <p class="text-xs sm:text-sm text-muted-foreground mb-2">Numéro de suivi</p>
+                <p class="text-2xl sm:text-3xl font-bold text-primary mb-3 sm:mb-4 break-all">
                     {{ createdLivraison.numeroTracking }}
                 </p>
-                <p class="text-sm text-destructive font-medium">
+                <p class="text-xs sm:text-sm text-destructive font-medium">
                     ⚠️ Écrivez ce numéro sur votre colis
                 </p>
             </div>
 
             <!-- Details -->
-            <div class="text-left space-y-2 mb-6 text-sm">
+            <div class="text-left space-y-1.5 sm:space-y-2 mb-4 sm:mb-6 text-xs sm:text-sm">
                 <div class="flex justify-between">
                     <span class="text-muted-foreground">Montant COD:</span>
                     <span class="font-medium">{{ createdLivraison.montantCOD | fcfa }}</span>
@@ -533,11 +535,11 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="space-y-3">
-                <button class="btn-primary w-full" (click)="closeSuccessModal()">
+            <div class="space-y-2 sm:space-y-3">
+                <button class="btn-primary w-full text-sm sm:text-base py-2 sm:py-3" (click)="closeSuccessModal()">
                     Voir mes livraisons
                 </button>
-                <button class="btn-outline w-full" routerLink="/vendeur/creer-livraison"
+                <button class="btn-outline w-full text-sm sm:text-base py-2 sm:py-3" routerLink="/vendeur/creer-livraison"
                     (click)="createdLivraison = null; currentStep = 1; livraisonForm.reset({ urgence: 'NORMAL', fragile: false, montantProduit: 0 })">
                     Créer une autre livraison
                 </button>

@@ -1,6 +1,26 @@
+<!-- Mobile Menu Button (Fixed) -->
+<button
+  (click)="toggleMobileMenu()"
+  class="md:hidden fixed bottom-4 right-4 z-50 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary/90 transition-colors"
+>
+  <svg *ngIf="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+  </svg>
+  <svg *ngIf="isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+  </svg>
+</button>
+
+<!-- Overlay (Mobile only) -->
+<div
+  *ngIf="isMobileMenuOpen"
+  (click)="closeMobileMenu()"
+  class="md:hidden fixed inset-0 bg-black/50 z-40 animate-fadeIn"
+></div>
+
+<!-- Sidebar Desktop -->
 <aside class="bg-card border-r h-screen w-64 hidden md:block sticky top-16">
   <nav class="p-4 space-y-2">
-
     <a
       *ngFor="let item of menuItems"
       [routerLink]="item.route"
@@ -10,6 +30,24 @@
       <span class="text-xl">{{ item.icon }}</span>
       <span>{{ item.label }}</span>
     </a>
+  </nav>
+</aside>
 
+<!-- Sidebar Mobile (Slide-in) -->
+<aside
+  *ngIf="isMobileMenuOpen"
+  class="md:hidden fixed left-0 top-16 bottom-0 w-64 bg-card border-r z-40 animate-slideInLeft overflow-y-auto"
+>
+  <nav class="p-4 space-y-2">
+    <a
+      *ngFor="let item of menuItems"
+      [routerLink]="item.route"
+      routerLinkActive="bg-primary text-primary-foreground"
+      (click)="closeMobileMenu()"
+      class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted transition-colors text-sm font-medium"
+    >
+      <span class="text-xl">{{ item.icon }}</span>
+      <span>{{ item.label }}</span>
+    </a>
   </nav>
 </aside>
