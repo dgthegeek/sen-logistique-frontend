@@ -4,29 +4,42 @@
   <div class="flex">
     <app-sidebar></app-sidebar>
 
-    <main class="flex-1 p-6">
+    <main class="flex-1 p-4 sm:p-6">
       <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="flex items-center justify-between mb-8">
+        <div class="flex flex-col gap-4 mb-6 sm:mb-8">
           <div>
-            <h1 class="text-3xl font-bold text-foreground mb-2">
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
               Ramassages à effectuer
             </h1>
-            <p class="text-muted-foreground" *ngIf="ramassages">
+            <p class="text-sm sm:text-base text-muted-foreground" *ngIf="ramassages">
               {{ ramassages.totalColis }} colis en attente de ramassage
             </p>
           </div>
 
-          <div class="flex gap-3">
-            <button (click)="imprimerQRCodes()" [disabled]="selectedColis.size === 0 || generatingQR"
-              class="btn-outline" [class.opacity-50]="selectedColis.size === 0 || generatingQR">
-              <span *ngIf="!generatingQR">📄 Imprimer QR ({{ selectedColis.size }})</span>
+          <!-- Actions (Responsive) -->
+          <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <button 
+              (click)="imprimerQRCodes()" 
+              [disabled]="selectedColis.size === 0 || generatingQR"
+              class="btn-outline text-sm sm:text-base py-2 sm:py-3" 
+              [class.opacity-50]="selectedColis.size === 0 || generatingQR"
+            >
+              <span *ngIf="!generatingQR">📄 <span class="hidden sm:inline">Imprimer</span> QR ({{ selectedColis.size }})</span>
               <span *ngIf="generatingQR">Génération...</span>
             </button>
 
-            <button (click)="marquerRamasse()" [disabled]="selectedColis.size === 0 || processingRamassage"
-              class="btn-primary" [class.opacity-50]="selectedColis.size === 0 || processingRamassage">
-              <span *ngIf="!processingRamassage">Marquer ramassé ({{ selectedColis.size }})</span>
+            <button 
+              (click)="marquerRamasse()" 
+              [disabled]="selectedColis.size === 0 || processingRamassage"
+              class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1" 
+              [class.opacity-50]="selectedColis.size === 0 || processingRamassage"
+            >
+              <span *ngIf="!processingRamassage">
+                <span class="hidden sm:inline">Marquer ramassé</span>
+                <span class="sm:hidden">Ramassé</span>
+                ({{ selectedColis.size }})
+              </span>
               <span *ngIf="processingRamassage">Traitement...</span>
             </button>
           </div>
@@ -42,108 +55,121 @@
 
         <!-- Error -->
         <div *ngIf="errorMessage && !loading" class="card">
-          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
             {{ errorMessage }}
           </div>
         </div>
 
         <!-- Zones -->
-        <div *ngIf="ramassages && !loading" class="space-y-4">
+        <div *ngIf="ramassages && !loading" class="space-y-3 sm:space-y-4">
           <!-- Empty State -->
-          <div *ngIf="ramassages.zones.length === 0" class="card text-center py-12">
-            <div class="text-6xl mb-4">✅</div>
-            <h3 class="text-xl font-semibold text-foreground mb-2">
+          <div *ngIf="ramassages.zones.length === 0" class="card text-center py-8 sm:py-12">
+            <div class="text-4xl sm:text-6xl mb-4">✅</div>
+            <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2">
               Tous les ramassages sont effectués !
             </h3>
-            <p class="text-muted-foreground">
+            <p class="text-sm sm:text-base text-muted-foreground">
               Aucun colis en attente de ramassage
             </p>
           </div>
 
           <!-- Zone Card -->
           <div *ngFor="let zone of ramassages.zones" class="card">
-            <!-- Zone Header -->
+            <!-- Zone Header (Responsive) -->
             <div
-              class="flex items-center justify-between cursor-pointer hover:bg-muted/50 p-4 -m-4 mb-4 rounded-lg transition-colors"
-              (click)="toggleZone(zone.zone)">
-              <div class="flex items-center gap-4">
-                <div class="text-2xl">
+              class="flex items-center justify-between cursor-pointer hover:bg-muted/50 p-3 sm:p-4 -m-3 sm:-m-4 mb-3 sm:mb-4 rounded-lg transition-colors"
+              (click)="toggleZone(zone.zone)"
+            >
+              <div class="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+                <div class="text-xl sm:text-2xl flex-shrink-0">
                   {{ isZoneExpanded(zone.zone) ? '📂' : '📁' }}
                 </div>
-                <div>
-                  <h2 class="text-xl font-bold text-foreground">
+                <div class="flex-1 min-w-0">
+                  <h2 class="text-base sm:text-xl font-bold text-foreground truncate">
                     {{ zone.zone }}
                   </h2>
-                  <p class="text-sm text-muted-foreground">
-                    {{ zone.nombreColis }} colis • {{ zone.vendeurs.length }} vendeur{{ zone.vendeurs.length > 1 ? 's' :
-                    '' }}
+                  <p class="text-xs sm:text-sm text-muted-foreground">
+                    {{ zone.nombreColis }} colis • {{ zone.vendeurs.length }} vendeur{{ zone.vendeurs.length > 1 ? 's' : '' }}
                   </p>
                 </div>
               </div>
 
-              <div class="flex items-center gap-3">
-                <button (click)="selectAllColisZone(zone); $event.stopPropagation()" class="btn-outline text-sm">
-                  Tout sélectionner
+              <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-2">
+                <button 
+                  (click)="selectAllColisZone(zone); $event.stopPropagation()" 
+                  class="btn-outline text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2 whitespace-nowrap"
+                >
+                  <span class="hidden sm:inline">Tout sélectionner</span>
+                  <span class="sm:hidden">Tout</span>
                 </button>
-                <span class="text-2xl">
+                <span class="text-lg sm:text-2xl">
                   {{ isZoneExpanded(zone.zone) ? '▼' : '▶' }}
                 </span>
               </div>
             </div>
 
             <!-- Zone Content (Vendeurs) -->
-            <div *ngIf="isZoneExpanded(zone.zone)" class="space-y-4">
+            <div *ngIf="isZoneExpanded(zone.zone)" class="space-y-3 sm:space-y-4">
               <!-- Vendeur Card -->
               <div *ngFor="let vendeur of zone.vendeurs" class="border rounded-lg overflow-hidden">
-                <!-- Vendeur Header -->
+                <!-- Vendeur Header (Responsive) -->
                 <div
-                  class="flex items-center justify-between p-4 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors"
-                  (click)="toggleVendeur(vendeur.id)">
-                  <div class="flex items-center gap-4 flex-1">
-                    <div class="text-xl">
+                  class="flex flex-col sm:flex-row sm:items-center gap-3 p-3 sm:p-4 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors"
+                  (click)="toggleVendeur(vendeur.id)"
+                >
+                  <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                    <div class="text-lg sm:text-xl flex-shrink-0">
                       {{ isVendeurExpanded(vendeur.id) ? '📦' : '📋' }}
                     </div>
-                    <div class="flex-1">
-                      <div class="font-semibold text-foreground">
+                    <div class="flex-1 min-w-0">
+                      <div class="font-semibold text-foreground text-sm sm:text-base truncate">
                         {{ vendeur.prenom }} {{ vendeur.nom }}
                       </div>
-                      <div class="text-sm text-muted-foreground">
+                      <div class="text-xs sm:text-sm text-muted-foreground">
                         {{ vendeur.telephone }}
                       </div>
-                      <div class="text-sm text-muted-foreground mt-1">
+                      <div class="text-xs sm:text-sm text-muted-foreground mt-1">
                         {{ vendeur.nombreColis }} colis
                       </div>
                     </div>
 
-                    <div class="flex gap-2">
-                      <button (click)="callVendeur(vendeur.telephone); $event.stopPropagation()"
-                        class="btn-outline text-sm">
+                    <div class="flex gap-2 flex-shrink-0">
+                      <button 
+                        (click)="callVendeur(vendeur.telephone); $event.stopPropagation()"
+                        class="btn-outline text-sm px-2 sm:px-3 py-1 sm:py-2"
+                      >
                         📞
                       </button>
-                      <button (click)="openMaps(vendeur.adresse); $event.stopPropagation()" class="btn-outline text-sm">
+                      <button 
+                        (click)="openMaps(vendeur.adresse); $event.stopPropagation()" 
+                        class="btn-outline text-sm px-2 sm:px-3 py-1 sm:py-2"
+                      >
                         🗺️
                       </button>
                     </div>
                   </div>
 
-                  <div class="flex items-center gap-3 ml-4">
-                    <button (click)="selectAllColisVendeur(vendeur); $event.stopPropagation()"
-                      class="btn-outline text-sm">
-                      Tout sélectionner
+                  <div class="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 sm:ml-4">
+                    <button 
+                      (click)="selectAllColisVendeur(vendeur); $event.stopPropagation()"
+                      class="btn-outline text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2 whitespace-nowrap"
+                    >
+                      <span class="hidden sm:inline">Tout sélectionner</span>
+                      <span class="sm:hidden">Tout</span>
                     </button>
-                    <span class="text-xl">
+                    <span class="text-lg sm:text-xl">
                       {{ isVendeurExpanded(vendeur.id) ? '▼' : '▶' }}
                     </span>
                   </div>
                 </div>
 
-                <!-- Adresse vendeur (ramassage) -->
-                <div *ngIf="isVendeurExpanded(vendeur.id)" class="px-4 pt-2 pb-4 bg-blue-50 border-t border-blue-200">
+                <!-- Adresse vendeur (ramassage) - Responsive -->
+                <div *ngIf="isVendeurExpanded(vendeur.id)" class="px-3 sm:px-4 pt-2 pb-3 sm:pb-4 bg-blue-50 border-t border-blue-200">
                   <div class="flex items-start gap-2">
-                    <span class="text-blue-600 text-lg">📍</span>
-                    <div>
-                      <div class="text-sm text-blue-800 font-semibold mb-1">Adresse de ramassage</div>
-                      <div class="font-medium text-foreground">{{ vendeur.adresse }}</div>
+                    <span class="text-blue-600 text-base sm:text-lg flex-shrink-0">📍</span>
+                    <div class="flex-1 min-w-0">
+                      <div class="text-xs sm:text-sm text-blue-800 font-semibold mb-1">Adresse de ramassage</div>
+                      <div class="font-medium text-foreground text-sm sm:text-base">{{ vendeur.adresse }}</div>
                       <div class="text-xs text-muted-foreground mt-1">
                         Colis à récupérer chez ce vendeur
                       </div>
@@ -151,43 +177,54 @@
                   </div>
                 </div>
 
-                <!-- Colis List -->
-                <div *ngIf="isVendeurExpanded(vendeur.id)" class="p-4 space-y-2">
-                  <div *ngFor="let colis of vendeur.colis"
-                    class="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
-                    (click)="toggleColis(colis.id)" [class]="isColisSelected(colis.id) ? 'bg-primary/10' : ''"
-                    [class.border-primary]="isColisSelected(colis.id)">
+                <!-- Colis List (Responsive) -->
+                <div *ngIf="isVendeurExpanded(vendeur.id)" class="p-3 sm:p-4 space-y-2">
+                  <div 
+                    *ngFor="let colis of vendeur.colis"
+                    class="flex items-start gap-2 sm:gap-3 p-3 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
+                    (click)="toggleColis(colis.id)" 
+                    [class]="isColisSelected(colis.id) ? 'bg-primary/10' : ''"
+                    [class.border-primary]="isColisSelected(colis.id)"
+                  >
+                    <input 
+                      type="checkbox" 
+                      [checked]="isColisSelected(colis.id)" 
+                      (click)="$event.stopPropagation()"
+                      (change)="toggleColis(colis.id)" 
+                      class="mt-1 w-4 h-4 flex-shrink-0" 
+                    />
 
-                    <input type="checkbox" [checked]="isColisSelected(colis.id)" (click)="$event.stopPropagation()"
-                      (change)="toggleColis(colis.id)" class="mt-1 w-4 h-4" />
-
-                    <div class="flex-1">
-                      <!-- Header avec tracking et badges -->
-                      <div class="flex items-start justify-between mb-2">
-                        <div>
-                          <div class="font-mono font-semibold text-primary">
+                    <div class="flex-1 min-w-0">
+                      <!-- Header avec tracking et badges (Responsive) -->
+                      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
+                        <div class="flex-1 min-w-0">
+                          <div class="font-mono font-semibold text-primary text-sm sm:text-base break-all">
                             {{ colis.numeroTracking }}
                           </div>
-                          <div class="text-sm text-foreground" *ngIf="colis.descriptionProduit">
+                          <div class="text-xs sm:text-sm text-foreground" *ngIf="colis.descriptionProduit">
                             {{ colis.descriptionProduit }}
                           </div>
                         </div>
-                        <div class="flex gap-2">
-                          <span *ngIf="colis.fragile" class="badge badge-failed">⚠️ Fragile</span>
-                          <span *ngIf="colis.urgence === 'EXPRESS'" class="badge badge-transit">⚡ Express</span>
+                        <div class="flex gap-2 flex-wrap">
+                          <span *ngIf="colis.fragile" class="badge badge-failed text-xs">⚠️ Fragile</span>
+                          <span *ngIf="colis.urgence === 'EXPRESS'" class="badge badge-transit text-xs">⚡ Express</span>
                         </div>
                       </div>
 
-                      <!-- Infos client -->
-                      <div class="space-y-1 text-sm">
+                      <!-- Infos client (Responsive) -->
+                      <div class="space-y-1 text-xs sm:text-sm">
                         <div class="text-muted-foreground">
                           <span class="font-semibold">Client destinataire:</span> {{ colis.nomClient }}
                         </div>
 
-                        <!-- Note explicative -->
-                        <div class="text-xs text-muted-foreground bg-muted/30 p-2 rounded">
-                          ℹ️ À ramasser chez <span class="font-medium">{{ vendeur.prenom }} {{ vendeur.nom }}</span> :
-                          {{ vendeur.adresse }}
+                        <!-- Note explicative (Responsive) -->
+                        <div class="text-xs bg-muted/30 p-2 rounded">
+                          <span class="text-muted-foreground">
+                            ℹ️ À ramasser chez <span class="font-medium">{{ vendeur.prenom }} {{ vendeur.nom }}</span>
+                          </span>
+                          <div class="text-muted-foreground mt-1 break-words">
+                            {{ vendeur.adresse }}
+                          </div>
                         </div>
                       </div>
                     </div>

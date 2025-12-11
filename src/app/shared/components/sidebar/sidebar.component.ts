@@ -19,6 +19,7 @@ interface MenuItem {
 export class SidebarComponent implements OnInit {
   menuItems: MenuItem[] = [];
   isAdmin = false;
+  isMobileMenuOpen = false; 
 
   constructor(private authService: AuthService) {}
 
@@ -41,5 +42,13 @@ export class SidebarComponent implements OnInit {
         { label: 'Mes finances', route: '/vendeur/finances', icon: '💰' },
       ];
     }
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
   }
 }

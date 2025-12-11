@@ -4,45 +4,45 @@
   <div class="flex">
     <app-sidebar></app-sidebar>
 
-    <main class="flex-1 p-6">
+    <main class="flex-1 p-4 sm:p-6">
       <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="flex items-center justify-between mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <div>
-            <h1 class="text-3xl font-bold text-foreground mb-2">
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
               Gestion des vendeurs
             </h1>
-            <p class="text-muted-foreground">
+            <p class="text-sm sm:text-base text-muted-foreground">
               {{ totalElements }} vendeur{{ totalElements > 1 ? 's' : '' }}
             </p>
           </div>
 
           <!-- Badge notification -->
-          <div *ngIf="nombreEnAttente > 0" class="flex items-center gap-2 bg-orange-50 border border-orange-200 px-4 py-2 rounded-lg">
-            <span class="text-orange-600 font-semibold">⚠️ {{ nombreEnAttente }} en attente</span>
+          <div *ngIf="nombreEnAttente > 0" class="flex items-center gap-2 bg-orange-50 border border-orange-200 px-3 sm:px-4 py-2 rounded-lg">
+            <span class="text-orange-600 font-semibold text-sm">⚠️ {{ nombreEnAttente }} en attente</span>
           </div>
         </div>
 
-        <!-- Tabs -->
-        <div class="card mb-6">
-          <div class="flex gap-2 border-b -mx-4 -mt-4 px-4">
+        <!-- Tabs (Responsive Scroll) -->
+        <div class="card mb-4 sm:mb-6 overflow-x-auto">
+          <div class="flex gap-1 sm:gap-2 border-b -mx-4 -mt-4 px-4 min-w-max">
             <button
               (click)="changeTab('en-attente')"
-              class="px-4 py-3 font-medium border-b-2 transition-colors"
+              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap"
               [class.border-primary]="activeTab === 'en-attente'"
               [class.text-primary]="activeTab === 'en-attente'"
               [class.border-transparent]="activeTab !== 'en-attente'"
               [class.text-muted-foreground]="activeTab !== 'en-attente'"
             >
               En attente
-              <span *ngIf="nombreEnAttente > 0" class="ml-2 badge badge-failed text-xs">
+              <span *ngIf="nombreEnAttente > 0" class="ml-1 sm:ml-2 badge badge-failed text-xs">
                 {{ nombreEnAttente }}
               </span>
             </button>
 
             <button
               (click)="changeTab('tous')"
-              class="px-4 py-3 font-medium border-b-2 transition-colors"
+              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap"
               [class.border-primary]="activeTab === 'tous'"
               [class.text-primary]="activeTab === 'tous'"
               [class.border-transparent]="activeTab !== 'tous'"
@@ -53,7 +53,7 @@
 
             <button
               (click)="changeTab('actifs')"
-              class="px-4 py-3 font-medium border-b-2 transition-colors"
+              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap"
               [class.border-primary]="activeTab === 'actifs'"
               [class.text-primary]="activeTab === 'actifs'"
               [class.border-transparent]="activeTab !== 'actifs'"
@@ -64,7 +64,7 @@
 
             <button
               (click)="changeTab('suspendus')"
-              class="px-4 py-3 font-medium border-b-2 transition-colors"
+              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap"
               [class.border-primary]="activeTab === 'suspendus'"
               [class.text-primary]="activeTab === 'suspendus'"
               [class.border-transparent]="activeTab !== 'suspendus'"
@@ -75,45 +75,45 @@
           </div>
         </div>
 
-        <!-- Filtres -->
-        <div class="card mb-6" *ngIf="activeTab === 'tous'">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Filtres (Responsive Grid) -->
+        <div class="card mb-4 sm:mb-6" *ngIf="activeTab === 'tous'">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div>
-              <label class="form-label">Recherche</label>
+              <label class="form-label text-xs sm:text-sm">Recherche</label>
               <input
                 [(ngModel)]="filters.search"
                 (keyup.enter)="onFilterChange()"
                 type="text"
-                class="form-input"
-                placeholder="Nom, téléphone, boutique..."
+                class="form-input text-sm"
+                placeholder="Nom, téléphone..."
               />
             </div>
 
             <div>
-              <label class="form-label">Commune</label>
+              <label class="form-label text-xs sm:text-sm">Commune</label>
               <input
                 [(ngModel)]="filters.commune"
                 (change)="onFilterChange()"
                 type="text"
-                class="form-input"
+                class="form-input text-sm"
                 placeholder="Ex: Dakar"
               />
             </div>
 
             <div>
-              <label class="form-label">Quartier</label>
+              <label class="form-label text-xs sm:text-sm">Quartier</label>
               <input
                 [(ngModel)]="filters.quartier"
                 (change)="onFilterChange()"
                 type="text"
-                class="form-input"
+                class="form-input text-sm"
                 placeholder="Ex: Mermoz"
               />
             </div>
 
             <div>
-              <label class="form-label">Tri</label>
-              <select [(ngModel)]="filters.sort" (change)="onFilterChange()" class="form-select">
+              <label class="form-label text-xs sm:text-sm">Tri</label>
+              <select [(ngModel)]="filters.sort" (change)="onFilterChange()" class="form-select text-sm">
                 <option value="dateInscription">Date d'inscription</option>
                 <option value="nombreLivraisons">Nombre de livraisons</option>
                 <option value="chiffreAffaires">Chiffre d'affaires</option>
@@ -131,14 +131,14 @@
 
         <!-- Error -->
         <div *ngIf="errorMessage && !loading" class="card">
-          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
             {{ errorMessage }}
           </div>
         </div>
 
         <!-- Table Desktop -->
         <div *ngIf="!loading && !errorMessage" class="card overflow-hidden">
-          <div class="hidden md:block overflow-x-auto">
+          <div class="hidden lg:block overflow-x-auto">
             <table class="table">
               <thead class="table-header">
                 <tr>
@@ -191,7 +191,6 @@
                         Détails
                       </button>
 
-                      <!-- Actions selon statut -->
                       <button
                         *ngIf="vendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
                         (click)="openActionModal(vendeur, 'valider')"
@@ -230,50 +229,50 @@
             </table>
           </div>
 
-          <!-- Cards Mobile -->
-          <div class="md:hidden space-y-4 p-4">
+          <!-- Cards Mobile/Tablet -->
+          <div class="lg:hidden space-y-3 sm:space-y-4 p-3 sm:p-4">
             <div
               *ngFor="let vendeur of vendeurs"
-              class="border rounded-lg p-4"
+              class="border rounded-lg p-3 sm:p-4"
             >
               <div class="flex items-start justify-between mb-3">
-                <div>
-                  <div class="font-semibold text-foreground">
+                <div class="flex-1 min-w-0">
+                  <div class="font-semibold text-foreground text-sm sm:text-base truncate">
                     {{ vendeur.prenom }} {{ vendeur.nom }}
                   </div>
-                  <div class="text-sm text-muted-foreground">
+                  <a [href]="'tel:' + vendeur.telephone" class="text-xs sm:text-sm text-primary hover:underline">
                     {{ vendeur.telephone }}
-                  </div>
+                  </a>
                 </div>
-                <span [class]="getStatutBadgeClass(vendeur.statut)">
+                <span [class]="getStatutBadgeClass(vendeur.statut)" class="text-xs ml-2 flex-shrink-0">
                   {{ getStatutLabel(vendeur.statut) }}
                 </span>
               </div>
 
-              <div class="space-y-2 text-sm mb-3">
-                <div>
+              <div class="space-y-1 sm:space-y-2 text-xs sm:text-sm mb-3">
+                <div class="flex justify-between">
                   <span class="text-muted-foreground">Boutique:</span>
-                  <span class="ml-2">{{ vendeur.nomBoutique || '-' }}</span>
+                  <span class="font-medium truncate ml-2">{{ vendeur.nomBoutique || '-' }}</span>
                 </div>
-                <div>
+                <div class="flex justify-between">
                   <span class="text-muted-foreground">Localisation:</span>
-                  <span class="ml-2">{{ vendeur.quartier }}, {{ vendeur.commune }}</span>
+                  <span class="font-medium truncate ml-2">{{ vendeur.quartier }}, {{ vendeur.commune }}</span>
                 </div>
-                <div>
+                <div class="flex justify-between">
                   <span class="text-muted-foreground">Solde:</span>
-                  <span class="ml-2 font-semibold text-primary">{{ vendeur.soldeEnAttente | fcfa }}</span>
+                  <span class="font-semibold text-primary">{{ vendeur.soldeEnAttente | fcfa }}</span>
                 </div>
               </div>
 
               <div class="flex gap-2 flex-wrap">
-                <button (click)="openDetailModal(vendeur)" class="btn-outline text-sm flex-1">
+                <button (click)="openDetailModal(vendeur)" class="btn-outline text-xs sm:text-sm flex-1 py-2">
                   Détails
                 </button>
 
                 <button
                   *ngIf="vendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
                   (click)="openActionModal(vendeur, 'valider')"
-                  class="btn-primary text-sm flex-1"
+                  class="btn-primary text-xs sm:text-sm flex-1 py-2"
                 >
                   Valider
                 </button>
@@ -281,7 +280,7 @@
                 <button
                   *ngIf="vendeur.statut === StatutVendeur.ACTIF"
                   (click)="openActionModal(vendeur, 'suspendre')"
-                  class="btn-outline text-sm flex-1"
+                  class="btn-outline text-xs sm:text-sm flex-1 py-2"
                 >
                   Suspendre
                 </button>
@@ -289,7 +288,7 @@
                 <button
                   *ngIf="vendeur.statut === StatutVendeur.SUSPENDU"
                   (click)="openActionModal(vendeur, 'reactiver')"
-                  class="btn-primary text-sm flex-1"
+                  class="btn-primary text-xs sm:text-sm flex-1 py-2"
                 >
                   Réactiver
                 </button>
@@ -298,37 +297,39 @@
           </div>
 
           <!-- Empty State -->
-          <div *ngIf="vendeurs.length === 0" class="text-center py-12">
-            <div class="text-6xl mb-4">👥</div>
-            <h3 class="text-xl font-semibold text-foreground mb-2">
+          <div *ngIf="vendeurs.length === 0" class="text-center py-8 sm:py-12">
+            <div class="text-4xl sm:text-6xl mb-4">👥</div>
+            <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2">
               Aucun vendeur trouvé
             </h3>
-            <p class="text-muted-foreground">
+            <p class="text-sm sm:text-base text-muted-foreground">
               {{ activeTab === 'en-attente' ? 'Aucun vendeur en attente de validation' : 'Essayez de modifier vos filtres' }}
             </p>
           </div>
 
           <!-- Pagination -->
-          <div *ngIf="vendeurs.length > 0 && totalPages > 1" class="border-t p-4">
+          <div *ngIf="vendeurs.length > 0 && totalPages > 1" class="border-t p-3 sm:p-4">
             <div class="flex items-center justify-between">
-              <div class="text-sm text-muted-foreground">
-                Page {{ currentPage + 1 }} sur {{ totalPages }}
+              <div class="text-xs sm:text-sm text-muted-foreground">
+                Page {{ currentPage + 1 }} / {{ totalPages }}
               </div>
 
               <div class="flex gap-2">
                 <button
                   (click)="previousPage()"
                   [disabled]="currentPage === 0"
-                  class="btn-outline text-sm disabled:opacity-50"
+                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
                 >
-                  ← Précédent
+                  <span class="hidden sm:inline">← Précédent</span>
+                  <span class="sm:hidden">←</span>
                 </button>
                 <button
                   (click)="nextPage()"
                   [disabled]="currentPage >= totalPages - 1"
-                  class="btn-outline text-sm disabled:opacity-50"
+                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
                 >
-                  Suivant →
+                  <span class="hidden sm:inline">Suivant →</span>
+                  <span class="sm:hidden">→</span>
                 </button>
               </div>
             </div>
@@ -339,7 +340,7 @@
   </div>
 </div>
 
-<!-- Modal Détail Vendeur -->
+<!-- Modal Détail Vendeur (Responsive) -->
 <div
   *ngIf="showDetailModal"
   class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
@@ -354,60 +355,60 @@
     <!-- Content -->
     <div *ngIf="!loadingDetail && selectedVendeur">
       <!-- Header -->
-      <div class="flex items-start justify-between mb-6">
-        <div>
-          <h2 class="text-2xl font-bold text-foreground mb-2">
+      <div class="flex items-start justify-between mb-4 sm:mb-6">
+        <div class="flex-1 min-w-0 mr-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-2 truncate">
             {{ selectedVendeur.prenom }} {{ selectedVendeur.nom }}
           </h2>
-          <span [class]="getStatutBadgeClass(selectedVendeur.statut)">
+          <span [class]="getStatutBadgeClass(selectedVendeur.statut)" class="text-xs sm:text-sm">
             {{ getStatutLabel(selectedVendeur.statut) }}
           </span>
         </div>
-        <button (click)="closeDetailModal()" class="text-2xl text-muted-foreground hover:text-foreground">
+        <button (click)="closeDetailModal()" class="text-2xl text-muted-foreground hover:text-foreground flex-shrink-0">
           ×
         </button>
       </div>
 
-      <!-- Grid 2 colonnes -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Grid 2 colonnes (Responsive) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <!-- Info personnelles -->
-        <div class="space-y-4">
-          <h3 class="font-semibold text-foreground border-b pb-2">Informations personnelles</h3>
+        <div class="space-y-3 sm:space-y-4">
+          <h3 class="font-semibold text-foreground border-b pb-2 text-sm sm:text-base">Informations personnelles</h3>
           
           <div>
-            <div class="text-sm text-muted-foreground">Téléphone</div>
-            <div class="font-medium">{{ selectedVendeur.telephone }}</div>
+            <div class="text-xs sm:text-sm text-muted-foreground">Téléphone</div>
+            <div class="font-medium text-sm sm:text-base">{{ selectedVendeur.telephone }}</div>
           </div>
 
           <div *ngIf="selectedVendeur.email">
-            <div class="text-sm text-muted-foreground">Email</div>
-            <div class="font-medium">{{ selectedVendeur.email }}</div>
+            <div class="text-xs sm:text-sm text-muted-foreground">Email</div>
+            <div class="font-medium text-sm sm:text-base break-all">{{ selectedVendeur.email }}</div>
           </div>
 
           <div>
-            <div class="text-sm text-muted-foreground">Localisation</div>
-            <div class="font-medium">{{ selectedVendeur.quartier }}, {{ selectedVendeur.commune }}</div>
-            <div class="text-sm text-muted-foreground">{{ selectedVendeur.adresseComplete }}</div>
+            <div class="text-xs sm:text-sm text-muted-foreground">Localisation</div>
+            <div class="font-medium text-sm sm:text-base">{{ selectedVendeur.quartier }}, {{ selectedVendeur.commune }}</div>
+            <div class="text-xs sm:text-sm text-muted-foreground">{{ selectedVendeur.adresseComplete }}</div>
           </div>
         </div>
 
         <!-- Info boutique -->
-        <div class="space-y-4">
-          <h3 class="font-semibold text-foreground border-b pb-2">Boutique</h3>
+        <div class="space-y-3 sm:space-y-4">
+          <h3 class="font-semibold text-foreground border-b pb-2 text-sm sm:text-base">Boutique</h3>
           
           <div *ngIf="selectedVendeur.nomBoutique">
-            <div class="text-sm text-muted-foreground">Nom</div>
-            <div class="font-medium">{{ selectedVendeur.nomBoutique }}</div>
+            <div class="text-xs sm:text-sm text-muted-foreground">Nom</div>
+            <div class="font-medium text-sm sm:text-base">{{ selectedVendeur.nomBoutique }}</div>
           </div>
 
           <div *ngIf="selectedVendeur.categorieActivite">
-            <div class="text-sm text-muted-foreground">Catégorie</div>
-            <div class="font-medium">{{ selectedVendeur.categorieActivite }}</div>
+            <div class="text-xs sm:text-sm text-muted-foreground">Catégorie</div>
+            <div class="font-medium text-sm sm:text-base">{{ selectedVendeur.categorieActivite }}</div>
           </div>
 
           <div *ngIf="selectedVendeur.instagram || selectedVendeur.facebook">
-            <div class="text-sm text-muted-foreground">Réseaux sociaux</div>
-            <div class="space-y-1">
+            <div class="text-xs sm:text-sm text-muted-foreground">Réseaux sociaux</div>
+            <div class="space-y-1 text-xs sm:text-sm">
               <div *ngIf="selectedVendeur.instagram">📸 {{ selectedVendeur.instagram }}</div>
               <div *ngIf="selectedVendeur.facebook">👤 {{ selectedVendeur.facebook }}</div>
             </div>
@@ -415,35 +416,35 @@
         </div>
       </div>
 
-      <!-- Statistiques -->
-      <div class="mt-6">
-        <h3 class="font-semibold text-foreground border-b pb-2 mb-4">Statistiques</h3>
+      <!-- Statistiques (Responsive Grid) -->
+      <div class="mt-4 sm:mt-6">
+        <h3 class="font-semibold text-foreground border-b pb-2 mb-3 sm:mb-4 text-sm sm:text-base">Statistiques</h3>
         
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="text-center p-4 bg-muted/30 rounded-lg">
-            <div class="text-2xl font-bold text-primary">{{ selectedVendeur.statistiques.nombreLivraisons }}</div>
-            <div class="text-sm text-muted-foreground">Livraisons</div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          <div class="text-center p-3 sm:p-4 bg-muted/30 rounded-lg">
+            <div class="text-xl sm:text-2xl font-bold text-primary">{{ selectedVendeur.statistiques.nombreLivraisons }}</div>
+            <div class="text-xs sm:text-sm text-muted-foreground">Livraisons</div>
           </div>
 
-          <div class="text-center p-4 bg-green-50 rounded-lg">
-            <div class="text-2xl font-bold text-green-600">{{ selectedVendeur.statistiques.tauxReussite }}%</div>
-            <div class="text-sm text-muted-foreground">Taux réussite</div>
+          <div class="text-center p-3 sm:p-4 bg-green-50 rounded-lg">
+            <div class="text-xl sm:text-2xl font-bold text-green-600">{{ selectedVendeur.statistiques.tauxReussite }}%</div>
+            <div class="text-xs sm:text-sm text-muted-foreground">Taux réussite</div>
           </div>
 
-          <div class="text-center p-4 bg-muted/30 rounded-lg">
-            <div class="text-xl font-bold text-foreground">{{ selectedVendeur.statistiques.chiffreAffairesTotal | fcfa }}</div>
-            <div class="text-sm text-muted-foreground">CA total</div>
+          <div class="text-center p-3 sm:p-4 bg-muted/30 rounded-lg">
+            <div class="text-base sm:text-xl font-bold text-foreground">{{ selectedVendeur.statistiques.chiffreAffairesTotal | fcfa }}</div>
+            <div class="text-xs sm:text-sm text-muted-foreground">CA total</div>
           </div>
 
-          <div class="text-center p-4 bg-orange-50 rounded-lg">
-            <div class="text-xl font-bold text-orange-600">{{ selectedVendeur.soldeEnAttente | fcfa }}</div>
-            <div class="text-sm text-muted-foreground">Solde</div>
+          <div class="text-center p-3 sm:p-4 bg-orange-50 rounded-lg">
+            <div class="text-base sm:text-xl font-bold text-orange-600">{{ selectedVendeur.soldeEnAttente | fcfa }}</div>
+            <div class="text-xs sm:text-sm text-muted-foreground">Solde</div>
           </div>
         </div>
       </div>
 
       <!-- Historique -->
-      <div class="mt-6 space-y-2 text-sm">
+      <div class="mt-4 sm:mt-6 space-y-2 text-xs sm:text-sm">
         <div>
           <span class="text-muted-foreground">Inscrit le:</span>
           <span class="ml-2 font-medium">{{ formatDate(selectedVendeur.dateInscription) }}</span>
@@ -460,21 +461,21 @@
         </div>
 
         <div *ngIf="selectedVendeur.raisonSuspension" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <div class="text-sm font-semibold text-red-800 mb-1">Raison suspension/blocage:</div>
-          <div class="text-sm text-red-700">{{ selectedVendeur.raisonSuspension }}</div>
+          <div class="text-xs sm:text-sm font-semibold text-red-800 mb-1">Raison suspension/blocage:</div>
+          <div class="text-xs sm:text-sm text-red-700">{{ selectedVendeur.raisonSuspension }}</div>
         </div>
       </div>
 
       <!-- Actions -->
-      <div class="flex gap-3 mt-6 pt-6 border-t">
-        <button (click)="closeDetailModal()" class="btn-outline flex-1">
+      <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+        <button (click)="closeDetailModal()" class="btn-outline text-sm sm:text-base py-2 sm:py-3">
           Fermer
         </button>
 
         <button
           *ngIf="selectedVendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
           (click)="closeDetailModal(); openActionModal(selectedVendeur, 'valider')"
-          class="btn-primary flex-1"
+          class="btn-primary text-sm sm:text-base py-2 sm:py-3"
         >
           Valider ce vendeur
         </button>
@@ -482,7 +483,7 @@
         <button
           *ngIf="selectedVendeur.statut === StatutVendeur.SUSPENDU"
           (click)="closeDetailModal(); openActionModal(selectedVendeur, 'reactiver')"
-          class="btn-primary flex-1"
+          class="btn-primary text-sm sm:text-base py-2 sm:py-3"
         >
           Réactiver
         </button>
@@ -491,27 +492,27 @@
   </div>
 </div>
 
-<!-- Modal Action -->
+<!-- Modal Action (Responsive) -->
 <div
   *ngIf="showActionModal"
   class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
   (click)="closeActionModal()"
 >
-  <div class="card max-w-lg w-full" (click)="$event.stopPropagation()">
-    <h2 class="text-2xl font-bold text-foreground mb-4">
+  <div class="card max-w-lg w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">
       {{ actionType === 'valider' ? 'Valider' : actionType === 'suspendre' ? 'Suspendre' : actionType === 'bloquer' ? 'Bloquer' : 'Réactiver' }} le vendeur
     </h2>
 
-    <p class="text-muted-foreground mb-6">
+    <p class="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
       {{ selectedVendeur?.prenom }} {{ selectedVendeur?.nom }}
     </p>
 
-    <!-- Champ raison (pour suspendre/bloquer) -->
-    <div *ngIf="actionType === 'suspendre' || actionType === 'bloquer'" class="mb-6">
-      <label class="form-label">Raison *</label>
+    <!-- Champ raison -->
+    <div *ngIf="actionType === 'suspendre' || actionType === 'bloquer'" class="mb-4 sm:mb-6">
+      <label class="form-label text-xs sm:text-sm">Raison *</label>
       <textarea
         [(ngModel)]="raisonAction"
-        class="form-textarea"
+        class="form-textarea text-sm"
         rows="4"
         placeholder="Expliquez la raison..."
         required
@@ -519,13 +520,13 @@
     </div>
 
     <!-- Confirmation message -->
-    <div class="p-4 rounded-lg mb-6"
+    <div class="p-3 sm:p-4 rounded-lg mb-4 sm:mb-6"
          [class.bg-green-50]="actionType === 'valider' || actionType === 'reactiver'"
          [class.border-green-200]="actionType === 'valider' || actionType === 'reactiver'"
          [class.bg-red-50]="actionType === 'suspendre' || actionType === 'bloquer'"
          [class.border-red-200]="actionType === 'suspendre' || actionType === 'bloquer'"
          [class.border]="true">
-      <p class="text-sm">
+      <p class="text-xs sm:text-sm">
         <span *ngIf="actionType === 'valider'">
           ✅ Le vendeur pourra accéder à la plateforme et créer des livraisons.
         </span>
@@ -542,17 +543,17 @@
     </div>
 
     <!-- Buttons -->
-    <div class="flex gap-3">
+    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
       <button
         (click)="closeActionModal()"
-        class="btn-outline flex-1"
+        class="btn-outline text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
         [disabled]="submittingAction"
       >
         Annuler
       </button>
       <button
         (click)="executeAction()"
-        class="flex-1"
+        class="text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
         [class.btn-primary]="actionType === 'valider' || actionType === 'reactiver'"
         [class.btn-destructive]="actionType === 'suspendre' || actionType === 'bloquer'"
         [disabled]="submittingAction"

@@ -1,0 +1,34 @@
+/* Sidebar Base */
+.sidebar {
+  @apply bg-card border-r h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto;
+  width: 256px;
+  transition: transform 0.3s ease;
+}
+
+/* Desktop: Always visible */
+@media (min-width: 1024px) {
+  .sidebar {
+    @apply block;
+  }
+}
+
+/* Mobile: Slide in from left */
+@media (max-width: 1023px) {
+  .sidebar {
+    @apply fixed left-0 top-16 z-40 shadow-xl;
+    transform: translateX(-100%);
+  }
+  
+  .sidebar-open {
+    transform: translateX(0);
+  }
+}
+
+/* Nav Items */
+.nav-item {
+  @apply flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer;
+}
+
+.nav-item-active {
+  @apply bg-primary/10 text-primary font-medium;
+}
