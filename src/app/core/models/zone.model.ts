@@ -81,3 +81,53 @@ export interface ToggleResponse {
     actif: boolean;
   };
 }
+
+// ========== QUARTIER MODELS ==========
+
+export interface CreateQuartierRequest {
+  nom: string;
+  commune: string;
+  zoneId: number;
+  actif?: boolean;
+}
+
+export interface UpdateQuartierRequest {
+  nom: string;
+  commune: string;
+  zoneId: number;
+  actif?: boolean;
+}
+
+export interface QuartierDTO {
+  id: number;
+  nom: string;
+  commune: string;
+  actif: boolean;
+  zone: {
+    id: number;
+    nom: string;
+  };
+}
+
+export interface CreateQuartierResponse {
+  message: string;
+  quartier: QuartierDTO;
+}
+
+export interface UpdateQuartierResponse {
+  message: string;
+  quartier: QuartierDTO;
+}
+
+export interface DeleteQuartierResponse {
+  message: string;
+}
+
+export interface ToggleQuartierResponse {
+  message: string;
+  quartier: {
+    id: number;
+    nom: string;
+    actif: boolean;
+  };
+}

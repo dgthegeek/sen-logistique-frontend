@@ -13,13 +13,21 @@ import {
   ToggleResponse
 } from '../models/zone.model';
 
+
+import {
+  CreateQuartierRequest, UpdateQuartierRequest, CreateQuartierResponse,
+  UpdateQuartierResponse, DeleteQuartierResponse, ToggleQuartierResponse
+} from '../models/zone.model';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ZoneService {
   private apiUrl = `${environment.apiUrl}/admin/zones`;
+  private quartierUrl = `${environment.apiUrl}`;
 
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) { }
 
   /**
    * Liste paginée des zones avec filtres
@@ -79,5 +87,26 @@ export class ZoneService {
    */
   deleteZone(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  }
+
+
+  // Créer quartier
+  createQuartier(request: CreateQuartierRequest): Observable<CreateQuartierResponse> {
+    return this.http.post<CreateQuartierResponse>(`${this.quartierUrl}/admin/quartiers`, request);
+  }
+
+  // Modifier quartier
+  updateQuartier(id: number, request: UpdateQuartierRequest): Observable<UpdateQuartierResponse> {
+    return this.http.put<UpdateQuartierResponse>(`${this.quartierUrl}/admin/quartiers/${id}`, request);
+  }
+
+  // Supprimer quartier
+  deleteQuartier(id: number): Observable<DeleteQuartierResponse> {
+    return this.http.delete<DeleteQuartierResponse>(`${this.quartierUrl}/admin/quartiers/${id}`);
+  }
+
+  // Toggle quartier
+  toggleQuartier(id: number): Observable<ToggleQuartierResponse> {
+    return this.http.patch<ToggleQuartierResponse>(`${this.quartierUrl}/admin/quartiers/${id}/toggle`, {});
   }
 }

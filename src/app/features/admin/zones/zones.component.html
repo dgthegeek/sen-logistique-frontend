@@ -23,13 +23,8 @@
           <div class="flex flex-col md:flex-row gap-4 justify-between">
             <!-- Search -->
             <div class="flex-1">
-              <input
-                type="text"
-                [(ngModel)]="searchTerm"
-                (keyup.enter)="onSearch()"
-                placeholder="Rechercher une zone..."
-                class="form-input"
-              />
+              <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
+                placeholder="Rechercher une zone..." class="form-input" />
             </div>
 
             <!-- Filter -->
@@ -49,7 +44,8 @@
         <!-- Loading -->
         <div *ngIf="loading" class="card">
           <div class="flex items-center justify-center py-12">
-            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin">
+            </div>
           </div>
         </div>
 
@@ -91,16 +87,21 @@
                   </td>
                   <td class="px-4 py-3">
                     <div class="flex justify-center gap-2">
-                      <button (click)="openDetailModal(zone)" class="text-primary hover:text-primary/80 text-sm font-medium" title="Voir détails">
+                      <button (click)="openDetailModal(zone)"
+                        class="text-primary hover:text-primary/80 text-sm font-medium" title="Voir détails">
                         Détails
                       </button>
-                      <button (click)="openEditModal(zone)" class="text-blue-600 hover:text-blue-700 text-sm font-medium" title="Modifier">
+                      <button (click)="openEditModal(zone)"
+                        class="text-blue-600 hover:text-blue-700 text-sm font-medium" title="Modifier">
                         Modifier
                       </button>
-                      <button (click)="toggleZone(zone)" [class]="zone.actif ? 'text-orange-600 hover:text-orange-700' : 'text-green-600 hover:text-green-700'" class="text-sm font-medium">
+                      <button (click)="toggleZone(zone)"
+                        [class]="zone.actif ? 'text-orange-600 hover:text-orange-700' : 'text-green-600 hover:text-green-700'"
+                        class="text-sm font-medium">
                         {{ zone.actif ? 'Désactiver' : 'Activer' }}
                       </button>
-                      <button (click)="deleteZone(zone)" class="text-red-600 hover:text-red-700 text-sm font-medium" title="Supprimer">
+                      <button (click)="deleteZone(zone)" class="text-red-600 hover:text-red-700 text-sm font-medium"
+                        title="Supprimer">
                         Supprimer
                       </button>
                     </div>
@@ -126,10 +127,7 @@
 
           <!-- Cards Mobile/Tablet -->
           <div class="lg:hidden space-y-3 sm:space-y-4 p-3 sm:p-4">
-            <div
-              *ngFor="let zone of zones"
-              class="border rounded-lg p-3 sm:p-4"
-            >
+            <div *ngFor="let zone of zones" class="border rounded-lg p-3 sm:p-4">
               <div class="flex items-start justify-between mb-3">
                 <div class="flex-1 min-w-0">
                   <div class="font-semibold text-foreground text-sm sm:text-base">
@@ -159,23 +157,15 @@
               </div>
 
               <div class="flex flex-wrap gap-2">
-                <button
-                  (click)="openDetailModal(zone)"
-                  class="btn-outline text-xs sm:text-sm py-2 flex-1"
-                >
+                <button (click)="openDetailModal(zone)" class="btn-outline text-xs sm:text-sm py-2 flex-1">
                   Détails
                 </button>
-                <button
-                  (click)="openEditModal(zone)"
-                  class="btn-primary text-xs sm:text-sm py-2 flex-1"
-                >
+                <button (click)="openEditModal(zone)" class="btn-primary text-xs sm:text-sm py-2 flex-1">
                   Modifier
                 </button>
-                <button
-                  (click)="toggleZone(zone)"
+                <button (click)="toggleZone(zone)"
                   [class]="zone.actif ? 'text-orange-600 hover:text-orange-700' : 'text-green-600 hover:text-green-700'"
-                  class="text-xs sm:text-sm font-medium underline"
-                >
+                  class="text-xs sm:text-sm font-medium underline">
                   {{ zone.actif ? 'Désactiver' : 'Activer' }}
                 </button>
               </div>
@@ -203,19 +193,13 @@
                 Page {{ currentPage + 1 }} / {{ totalPages }}
               </div>
               <div class="flex gap-2">
-                <button
-                  (click)="previousPage()"
-                  [disabled]="currentPage === 0"
-                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
-                >
+                <button (click)="previousPage()" [disabled]="currentPage === 0"
+                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50">
                   <span class="hidden sm:inline">← Précédent</span>
                   <span class="sm:hidden">←</span>
                 </button>
-                <button
-                  (click)="nextPage()"
-                  [disabled]="currentPage >= totalPages - 1"
-                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
-                >
+                <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1"
+                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50">
                   <span class="hidden sm:inline">Suivant →</span>
                   <span class="sm:hidden">→</span>
                 </button>
@@ -229,7 +213,8 @@
 </div>
 
 <!-- MODAL CREATE/EDIT -->
-<div *ngIf="showModal && (modalMode === 'create' || modalMode === 'edit')" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" (click)="closeModal()">
+<div *ngIf="showModal && (modalMode === 'create' || modalMode === 'edit')"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" (click)="closeModal()">
   <div class="card max-w-lg w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
     <div class="flex items-center justify-between mb-4 sm:mb-6">
       <h2 class="text-xl sm:text-2xl font-bold">
@@ -250,17 +235,20 @@
 
         <div>
           <label class="form-label text-xs sm:text-sm">Description</label>
-          <textarea formControlName="description" class="form-textarea text-sm sm:text-base" rows="3" placeholder="Plateau, Ponty, Médina..."></textarea>
+          <textarea formControlName="description" class="form-textarea text-sm sm:text-base" rows="3"
+            placeholder="Plateau, Ponty, Médina..."></textarea>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="form-label text-xs sm:text-sm">Tarif Standard (FCFA) *</label>
-            <input formControlName="tarifStandard" type="number" class="form-input text-sm sm:text-base" placeholder="1000" />
+            <input formControlName="tarifStandard" type="number" class="form-input text-sm sm:text-base"
+              placeholder="1000" />
           </div>
           <div>
             <label class="form-label text-xs sm:text-sm">Tarif Express (FCFA) *</label>
-            <input formControlName="tarifExpress" type="number" class="form-input text-sm sm:text-base" placeholder="1500" />
+            <input formControlName="tarifExpress" type="number" class="form-input text-sm sm:text-base"
+              placeholder="1500" />
           </div>
         </div>
 
@@ -271,8 +259,10 @@
       </div>
 
       <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-        <button type="button" (click)="closeModal()" class="btn-outline text-sm sm:text-base py-2 sm:py-3">Annuler</button>
-        <button type="submit" class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1" [disabled]="zoneForm.invalid || loading">
+        <button type="button" (click)="closeModal()"
+          class="btn-outline text-sm sm:text-base py-2 sm:py-3">Annuler</button>
+        <button type="submit" class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
+          [disabled]="zoneForm.invalid || loading">
           {{ loading ? 'Enregistrement...' : (modalMode === 'create' ? 'Créer' : 'Modifier') }}
         </button>
       </div>
@@ -280,8 +270,10 @@
   </div>
 </div>
 
-<!-- MODAL DETAIL -->
-<div *ngIf="showModal && modalMode === 'detail'" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" (click)="closeModal()">
+
+<!-- MODAL DETAIL --->
+<div *ngIf="showModal && modalMode === 'detail'"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" (click)="closeModal()">
   <div class="card max-w-3xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
     <div class="flex items-center justify-between mb-4 sm:mb-6">
       <h2 class="text-xl sm:text-2xl font-bold">Détails de la zone</h2>
@@ -311,7 +303,13 @@
 
       <!-- Quartiers -->
       <div>
-        <h4 class="font-semibold mb-3 text-sm sm:text-base">Quartiers ({{ zoneDetail.quartiers.length }})</h4>
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold text-sm sm:text-base">Quartiers ({{ zoneDetail.quartiers.length }})</h4>
+          <button (click)="openCreateQuartierModal()" class="btn-primary text-xs sm:text-sm py-1.5 px-3">
+            Ajouter quartier
+          </button>
+        </div>
+
         <div class="max-h-96 overflow-y-auto border rounded-lg">
           <table class="w-full">
             <thead class="bg-muted sticky top-0">
@@ -319,19 +317,45 @@
                 <th class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm font-semibold">Quartier</th>
                 <th class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm font-semibold">Commune</th>
                 <th class="px-3 sm:px-4 py-2 text-center text-xs sm:text-sm font-semibold">Statut</th>
+                <th class="px-3 sm:px-4 py-2 text-center text-xs sm:text-sm font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let quartier of zoneDetail.quartiers" class="border-b">
+              <tr *ngFor="let quartier of zoneDetail.quartiers" class="border-b hover:bg-muted/30">
                 <td class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium">{{ quartier.nom }}</td>
                 <td class="px-3 sm:px-4 py-2 text-xs sm:text-sm text-muted-foreground">{{ quartier.commune }}</td>
                 <td class="px-3 sm:px-4 py-2 text-center">
                   <span *ngIf="quartier.actif" class="text-xs text-green-600 font-medium">Actif</span>
                   <span *ngIf="!quartier.actif" class="text-xs text-muted-foreground">Inactif</span>
                 </td>
+                <td class="px-3 sm:px-4 py-2">
+                  <div class="flex justify-center gap-2">
+                    <button (click)="openEditQuartierModal(quartier)"
+                      class="text-blue-600 hover:text-blue-700 text-xs font-medium">
+                      Modifier
+                    </button>
+                    <button (click)="toggleQuartier(quartier)"
+                      [class]="quartier.actif ? 'text-orange-600 hover:text-orange-700' : 'text-green-600 hover:text-green-700'"
+                      class="text-xs font-medium">
+                      {{ quartier.actif ? 'Désactiver' : 'Activer' }}
+                    </button>
+                    <button (click)="deleteQuartier(quartier)"
+                      class="text-red-600 hover:text-red-700 text-xs font-medium">
+                      Supprimer
+                    </button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
+
+          <!-- Empty state quartiers -->
+          <div *ngIf="zoneDetail.quartiers.length === 0" class="text-center py-8">
+            <p class="text-sm text-muted-foreground mb-3">Aucun quartier dans cette zone</p>
+            <button (click)="openCreateQuartierModal()" class="btn-primary text-sm">
+              Ajouter le premier quartier
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -339,5 +363,52 @@
     <div class="mt-6">
       <button (click)="closeModal()" class="btn-primary w-full text-sm sm:text-base py-2 sm:py-3">Fermer</button>
     </div>
+  </div>
+</div>
+
+<div *ngIf="showQuartierModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[60]"
+  (click)="closeQuartierModal()">
+  <div class="card max-w-md w-full" (click)="$event.stopPropagation()">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-bold">
+        {{ quartierModalMode === 'create' ? 'Ajouter un quartier' : 'Modifier le quartier' }}
+      </h2>
+      <button (click)="closeQuartierModal()" class="text-muted-foreground hover:text-foreground text-2xl">✕</button>
+    </div>
+
+    <form [formGroup]="quartierForm" (ngSubmit)="onQuartierSubmit()">
+      <div class="space-y-4 mb-6">
+        <div>
+          <label class="form-label">Nom du quartier *</label>
+          <input formControlName="nom" type="text" class="form-input" placeholder="Sacré-Coeur 3" />
+          <p *ngIf="quartierForm.get('nom')?.invalid && quartierForm.get('nom')?.touched" class="form-error text-xs">
+            Le nom est requis (2-100 caractères)
+          </p>
+        </div>
+
+        <div>
+          <label class="form-label">Commune *</label>
+          <input formControlName="commune" type="text" class="form-input" placeholder="Dakar" />
+          <p *ngIf="quartierForm.get('commune')?.invalid && quartierForm.get('commune')?.touched"
+            class="form-error text-xs">
+            La commune est requise (2-100 caractères)
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input formControlName="actif" type="checkbox" id="quartierActif" class="form-checkbox" />
+          <label for="quartierActif" class="form-label mb-0 cursor-pointer">Quartier actif</label>
+        </div>
+
+        <input formControlName="zoneId" type="hidden" />
+      </div>
+
+      <div class="flex gap-3">
+        <button type="button" (click)="closeQuartierModal()" class="btn-outline flex-1">Annuler</button>
+        <button type="submit" class="btn-primary flex-1" [disabled]="quartierForm.invalid || loading">
+          {{ loading ? 'Enregistrement...' : (quartierModalMode === 'create' ? 'Créer' : 'Modifier') }}
+        </button>
+      </div>
+    </form>
   </div>
 </div>
