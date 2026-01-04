@@ -13,6 +13,7 @@
               Ramassages à effectuer
             </h1>
             <p class="text-sm sm:text-base text-muted-foreground" *ngIf="ramassages">
+              <i class="fa-solid fa-box mr-1"></i>
               {{ ramassages.totalColis }} colis en attente de ramassage
             </p>
           </div>
@@ -25,8 +26,14 @@
               class="btn-outline text-sm sm:text-base py-2 sm:py-3" 
               [class.opacity-50]="selectedColis.size === 0 || generatingQR"
             >
-              <span *ngIf="!generatingQR">📄 <span class="hidden sm:inline">Imprimer</span> QR ({{ selectedColis.size }})</span>
-              <span *ngIf="generatingQR">Génération...</span>
+              <span *ngIf="!generatingQR">
+                <i class="fa-solid fa-qrcode mr-2"></i>
+                <span class="hidden sm:inline">Imprimer</span> QR ({{ selectedColis.size }})
+              </span>
+              <span *ngIf="generatingQR">
+                <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                Génération...
+              </span>
             </button>
 
             <button 
@@ -36,11 +43,15 @@
               [class.opacity-50]="selectedColis.size === 0 || processingRamassage"
             >
               <span *ngIf="!processingRamassage">
+                <i class="fa-solid fa-check-circle mr-2"></i>
                 <span class="hidden sm:inline">Marquer ramassé</span>
                 <span class="sm:hidden">Ramassé</span>
                 ({{ selectedColis.size }})
               </span>
-              <span *ngIf="processingRamassage">Traitement...</span>
+              <span *ngIf="processingRamassage">
+                <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                Traitement...
+              </span>
             </button>
           </div>
         </div>
@@ -56,6 +67,7 @@
         <!-- Error -->
         <div *ngIf="errorMessage && !loading" class="card">
           <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+            <i class="fa-solid fa-circle-exclamation mr-2"></i>
             {{ errorMessage }}
           </div>
         </div>
@@ -64,7 +76,7 @@
         <div *ngIf="ramassages && !loading" class="space-y-3 sm:space-y-4">
           <!-- Empty State -->
           <div *ngIf="ramassages.zones.length === 0" class="card text-center py-8 sm:py-12">
-            <div class="text-4xl sm:text-6xl mb-4">✅</div>
+            <i class="fa-solid fa-circle-check text-5xl sm:text-6xl text-green-600 mb-4"></i>
             <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2">
               Tous les ramassages sont effectués !
             </h3>
@@ -81,15 +93,14 @@
               (click)="toggleZone(zone.zone)"
             >
               <div class="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
-                <div class="text-xl sm:text-2xl flex-shrink-0">
-                  {{ isZoneExpanded(zone.zone) ? '📂' : '📁' }}
-                </div>
+                <i [class]="isZoneExpanded(zone.zone) ? 'fa-solid fa-folder-open' : 'fa-solid fa-folder'" class="text-xl sm:text-2xl text-primary flex-shrink-0"></i>
                 <div class="flex-1 min-w-0">
                   <h2 class="text-base sm:text-xl font-bold text-foreground truncate">
                     {{ zone.zone }}
                   </h2>
                   <p class="text-xs sm:text-sm text-muted-foreground">
-                    {{ zone.nombreColis }} colis • {{ zone.vendeurs.length }} vendeur{{ zone.vendeurs.length > 1 ? 's' : '' }}
+                    <i class="fa-solid fa-box mr-1"></i>{{ zone.nombreColis }} colis • 
+                    <i class="fa-solid fa-users ml-2 mr-1"></i>{{ zone.vendeurs.length }} vendeur{{ zone.vendeurs.length > 1 ? 's' : '' }}
                   </p>
                 </div>
               </div>
@@ -99,12 +110,11 @@
                   (click)="selectAllColisZone(zone); $event.stopPropagation()" 
                   class="btn-outline text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2 whitespace-nowrap"
                 >
+                  <i class="fa-solid fa-check-double mr-1"></i>
                   <span class="hidden sm:inline">Tout sélectionner</span>
                   <span class="sm:hidden">Tout</span>
                 </button>
-                <span class="text-lg sm:text-2xl">
-                  {{ isZoneExpanded(zone.zone) ? '▼' : '▶' }}
-                </span>
+                <i [class]="isZoneExpanded(zone.zone) ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-right'" class="text-lg sm:text-xl text-muted-foreground"></i>
               </div>
             </div>
 
@@ -118,18 +128,16 @@
                   (click)="toggleVendeur(vendeur.id)"
                 >
                   <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                    <div class="text-lg sm:text-xl flex-shrink-0">
-                      {{ isVendeurExpanded(vendeur.id) ? '📦' : '📋' }}
-                    </div>
+                    <i [class]="isVendeurExpanded(vendeur.id) ? 'fa-solid fa-box-open' : 'fa-solid fa-box'" class="text-lg sm:text-xl text-primary flex-shrink-0"></i>
                     <div class="flex-1 min-w-0">
                       <div class="font-semibold text-foreground text-sm sm:text-base truncate">
                         {{ vendeur.prenom }} {{ vendeur.nom }}
                       </div>
                       <div class="text-xs sm:text-sm text-muted-foreground">
-                        {{ vendeur.telephone }}
+                        <i class="fa-solid fa-phone mr-1"></i>{{ vendeur.telephone }}
                       </div>
                       <div class="text-xs sm:text-sm text-muted-foreground mt-1">
-                        {{ vendeur.nombreColis }} colis
+                        <i class="fa-solid fa-boxes-stacked mr-1"></i>{{ vendeur.nombreColis }} colis
                       </div>
                     </div>
 
@@ -137,14 +145,16 @@
                       <button 
                         (click)="callVendeur(vendeur.telephone); $event.stopPropagation()"
                         class="btn-outline text-sm px-2 sm:px-3 py-1 sm:py-2"
+                        title="Appeler"
                       >
-                        📞
+                        <i class="fa-solid fa-phone"></i>
                       </button>
                       <button 
                         (click)="openMaps(vendeur.adresse); $event.stopPropagation()" 
                         class="btn-outline text-sm px-2 sm:px-3 py-1 sm:py-2"
+                        title="Localiser"
                       >
-                        🗺️
+                        <i class="fa-solid fa-map-location-dot"></i>
                       </button>
                     </div>
                   </div>
@@ -154,23 +164,26 @@
                       (click)="selectAllColisVendeur(vendeur); $event.stopPropagation()"
                       class="btn-outline text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2 whitespace-nowrap"
                     >
+                      <i class="fa-solid fa-check-double mr-1"></i>
                       <span class="hidden sm:inline">Tout sélectionner</span>
                       <span class="sm:hidden">Tout</span>
                     </button>
-                    <span class="text-lg sm:text-xl">
-                      {{ isVendeurExpanded(vendeur.id) ? '▼' : '▶' }}
-                    </span>
+                    <i [class]="isVendeurExpanded(vendeur.id) ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-right'" class="text-lg sm:text-xl text-muted-foreground"></i>
                   </div>
                 </div>
 
                 <!-- Adresse vendeur (ramassage) - Responsive -->
                 <div *ngIf="isVendeurExpanded(vendeur.id)" class="px-3 sm:px-4 pt-2 pb-3 sm:pb-4 bg-blue-50 border-t border-blue-200">
                   <div class="flex items-start gap-2">
-                    <span class="text-blue-600 text-base sm:text-lg flex-shrink-0">📍</span>
+                    <i class="fa-solid fa-location-dot text-blue-600 text-base sm:text-lg flex-shrink-0"></i>
                     <div class="flex-1 min-w-0">
-                      <div class="text-xs sm:text-sm text-blue-800 font-semibold mb-1">Adresse de ramassage</div>
+                      <div class="text-xs sm:text-sm text-blue-800 font-semibold mb-1">
+                        <i class="fa-solid fa-warehouse mr-1"></i>
+                        Adresse de ramassage
+                      </div>
                       <div class="font-medium text-foreground text-sm sm:text-base">{{ vendeur.adresse }}</div>
                       <div class="text-xs text-muted-foreground mt-1">
+                        <i class="fa-solid fa-info-circle mr-1"></i>
                         Colis à récupérer chez ce vendeur
                       </div>
                     </div>
@@ -199,30 +212,39 @@
                       <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
                         <div class="flex-1 min-w-0">
                           <div class="font-mono font-semibold text-primary text-sm sm:text-base break-all">
+                            <i class="fa-solid fa-barcode mr-1"></i>
                             {{ colis.numeroTracking }}
                           </div>
                           <div class="text-xs sm:text-sm text-foreground" *ngIf="colis.descriptionProduit">
+                            <i class="fa-solid fa-tag mr-1 text-muted-foreground"></i>
                             {{ colis.descriptionProduit }}
                           </div>
                         </div>
                         <div class="flex gap-2 flex-wrap">
-                          <span *ngIf="colis.fragile" class="badge badge-failed text-xs">⚠️ Fragile</span>
-                          <span *ngIf="colis.urgence === 'EXPRESS'" class="badge badge-transit text-xs">⚡ Express</span>
+                          <span *ngIf="colis.fragile" class="badge badge-failed text-xs">
+                            <i class="fa-solid fa-triangle-exclamation mr-1"></i>Fragile
+                          </span>
+                          <span *ngIf="colis.urgence === 'EXPRESS'" class="badge badge-transit text-xs">
+                            <i class="fa-solid fa-bolt mr-1"></i>Express
+                          </span>
                         </div>
                       </div>
 
                       <!-- Infos client (Responsive) -->
                       <div class="space-y-1 text-xs sm:text-sm">
                         <div class="text-muted-foreground">
+                          <i class="fa-solid fa-user mr-1"></i>
                           <span class="font-semibold">Client destinataire:</span> {{ colis.nomClient }}
                         </div>
 
                         <!-- Note explicative (Responsive) -->
                         <div class="text-xs bg-muted/30 p-2 rounded">
-                          <span class="text-muted-foreground">
-                            ℹ️ À ramasser chez <span class="font-medium">{{ vendeur.prenom }} {{ vendeur.nom }}</span>
-                          </span>
+                          <div class="text-muted-foreground">
+                            <i class="fa-solid fa-info-circle mr-1"></i>
+                            À ramasser chez <span class="font-medium">{{ vendeur.prenom }} {{ vendeur.nom }}</span>
+                          </div>
                           <div class="text-muted-foreground mt-1 break-words">
+                            <i class="fa-solid fa-location-dot mr-1"></i>
                             {{ vendeur.adresse }}
                           </div>
                         </div>

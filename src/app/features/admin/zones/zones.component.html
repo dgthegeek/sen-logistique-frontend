@@ -1,0 +1,343 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 p-4 sm:p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+              Zones de livraison
+            </h1>
+            <p class="text-sm sm:text-base text-muted-foreground">
+              Gérez les zones et leurs tarifs
+            </p>
+          </div>
+        </div>
+
+        <!-- Filters & Actions -->
+        <div class="card mb-4 sm:mb-6">
+          <div class="flex flex-col md:flex-row gap-4 justify-between">
+            <!-- Search -->
+            <div class="flex-1">
+              <input
+                type="text"
+                [(ngModel)]="searchTerm"
+                (keyup.enter)="onSearch()"
+                placeholder="Rechercher une zone..."
+                class="form-input"
+              />
+            </div>
+
+            <!-- Filter -->
+            <select [(ngModel)]="filterActif" (change)="onFilterChange(filterActif)" class="form-select md:w-48">
+              <option [ngValue]="undefined">Toutes les zones</option>
+              <option [ngValue]="true">Zones actives</option>
+              <option [ngValue]="false">Zones inactives</option>
+            </select>
+
+            <!-- Add Button -->
+            <button (click)="openCreateModal()" class="btn-primary whitespace-nowrap">
+              Nouvelle zone
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="loading" class="card">
+          <div class="flex items-center justify-center py-12">
+            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        </div>
+
+        <!-- Table Desktop -->
+        <div *ngIf="!loading" class="card overflow-hidden">
+          <div class="hidden lg:block overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-muted border-b">
+                <tr>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-foreground">Zone</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-foreground">Description</th>
+                  <th class="px-4 py-3 text-center text-sm font-semibold text-foreground">Quartiers</th>
+                  <th class="px-4 py-3 text-right text-sm font-semibold text-foreground">Tarif Standard</th>
+                  <th class="px-4 py-3 text-right text-sm font-semibold text-foreground">Tarif Express</th>
+                  <th class="px-4 py-3 text-center text-sm font-semibold text-foreground">Statut</th>
+                  <th class="px-4 py-3 text-center text-sm font-semibold text-foreground">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let zone of zones" class="border-b hover:bg-muted/50 transition-colors">
+                  <td class="px-4 py-3">
+                    <span class="font-medium text-foreground">{{ zone.nom }}</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="text-sm text-muted-foreground">{{ zone.description || '-' }}</span>
+                  </td>
+                  <td class="px-4 py-3 text-center">
+                    <span class="text-sm">{{ zone.nombreQuartiers }}</span>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <span class="text-sm font-medium">{{ zone.tarifStandard }} FCFA</span>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <span class="text-sm font-medium">{{ zone.tarifExpress }} FCFA</span>
+                  </td>
+                  <td class="px-4 py-3 text-center">
+                    <span *ngIf="zone.actif" class="badge-success">Actif</span>
+                    <span *ngIf="!zone.actif" class="badge-warning">Inactif</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="flex justify-center gap-2">
+                      <button (click)="openDetailModal(zone)" class="text-primary hover:text-primary/80 text-sm font-medium" title="Voir détails">
+                        Détails
+                      </button>
+                      <button (click)="openEditModal(zone)" class="text-blue-600 hover:text-blue-700 text-sm font-medium" title="Modifier">
+                        Modifier
+                      </button>
+                      <button (click)="toggleZone(zone)" [class]="zone.actif ? 'text-orange-600 hover:text-orange-700' : 'text-green-600 hover:text-green-700'" class="text-sm font-medium">
+                        {{ zone.actif ? 'Désactiver' : 'Activer' }}
+                      </button>
+                      <button (click)="deleteZone(zone)" class="text-red-600 hover:text-red-700 text-sm font-medium" title="Supprimer">
+                        Supprimer
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div *ngIf="zones.length === 0" class="text-center py-12">
+              <div class="text-4xl sm:text-6xl mb-4">📍</div>
+              <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2">
+                Aucune zone trouvée
+              </h3>
+              <p class="text-sm sm:text-base text-muted-foreground mb-4">
+                Créez votre première zone de livraison
+              </p>
+              <button (click)="openCreateModal()" class="btn-primary">
+                Créer la première zone
+              </button>
+            </div>
+          </div>
+
+          <!-- Cards Mobile/Tablet -->
+          <div class="lg:hidden space-y-3 sm:space-y-4 p-3 sm:p-4">
+            <div
+              *ngFor="let zone of zones"
+              class="border rounded-lg p-3 sm:p-4"
+            >
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex-1 min-w-0">
+                  <div class="font-semibold text-foreground text-sm sm:text-base">
+                    {{ zone.nom }}
+                  </div>
+                  <div class="text-xs text-muted-foreground mt-1">
+                    {{ zone.description || '-' }}
+                  </div>
+                </div>
+                <span *ngIf="zone.actif" class="badge-success text-xs ml-2 flex-shrink-0">Actif</span>
+                <span *ngIf="!zone.actif" class="badge-warning text-xs ml-2 flex-shrink-0">Inactif</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm mb-3">
+                <div>
+                  <div class="text-muted-foreground">Tarif Standard</div>
+                  <div class="font-semibold text-foreground">{{ zone.tarifStandard }} FCFA</div>
+                </div>
+                <div>
+                  <div class="text-muted-foreground">Tarif Express</div>
+                  <div class="font-semibold text-foreground">{{ zone.tarifExpress }} FCFA</div>
+                </div>
+                <div class="col-span-2">
+                  <div class="text-muted-foreground">Quartiers</div>
+                  <div class="font-medium text-foreground">{{ zone.nombreQuartiers }} quartier(s)</div>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <button
+                  (click)="openDetailModal(zone)"
+                  class="btn-outline text-xs sm:text-sm py-2 flex-1"
+                >
+                  Détails
+                </button>
+                <button
+                  (click)="openEditModal(zone)"
+                  class="btn-primary text-xs sm:text-sm py-2 flex-1"
+                >
+                  Modifier
+                </button>
+                <button
+                  (click)="toggleZone(zone)"
+                  [class]="zone.actif ? 'text-orange-600 hover:text-orange-700' : 'text-green-600 hover:text-green-700'"
+                  class="text-xs sm:text-sm font-medium underline"
+                >
+                  {{ zone.actif ? 'Désactiver' : 'Activer' }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Empty State Mobile -->
+            <div *ngIf="zones.length === 0" class="text-center py-8 sm:py-12">
+              <div class="text-4xl sm:text-6xl mb-4">📍</div>
+              <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2">
+                Aucune zone trouvée
+              </h3>
+              <p class="text-sm sm:text-base text-muted-foreground mb-4">
+                Créez votre première zone de livraison
+              </p>
+              <button (click)="openCreateModal()" class="btn-primary text-sm">
+                Créer la première zone
+              </button>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div *ngIf="!loading && totalPages > 1" class="border-t p-3 sm:p-4">
+            <div class="flex items-center justify-between">
+              <div class="text-xs sm:text-sm text-muted-foreground">
+                Page {{ currentPage + 1 }} / {{ totalPages }}
+              </div>
+              <div class="flex gap-2">
+                <button
+                  (click)="previousPage()"
+                  [disabled]="currentPage === 0"
+                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
+                >
+                  <span class="hidden sm:inline">← Précédent</span>
+                  <span class="sm:hidden">←</span>
+                </button>
+                <button
+                  (click)="nextPage()"
+                  [disabled]="currentPage >= totalPages - 1"
+                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
+                >
+                  <span class="hidden sm:inline">Suivant →</span>
+                  <span class="sm:hidden">→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL CREATE/EDIT -->
+<div *ngIf="showModal && (modalMode === 'create' || modalMode === 'edit')" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" (click)="closeModal()">
+  <div class="card max-w-lg w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <div class="flex items-center justify-between mb-4 sm:mb-6">
+      <h2 class="text-xl sm:text-2xl font-bold">
+        {{ modalMode === 'create' ? 'Créer une zone' : 'Modifier la zone' }}
+      </h2>
+      <button (click)="closeModal()" class="text-muted-foreground hover:text-foreground text-2xl">✕</button>
+    </div>
+
+    <form [formGroup]="zoneForm" (ngSubmit)="onSubmit()">
+      <div class="space-y-4 mb-6">
+        <div>
+          <label class="form-label text-xs sm:text-sm">Nom de la zone *</label>
+          <input formControlName="nom" type="text" class="form-input text-sm sm:text-base" placeholder="Zone 1" />
+          <p *ngIf="zoneForm.get('nom')?.invalid && zoneForm.get('nom')?.touched" class="form-error text-xs sm:text-sm">
+            Le nom est requis (3-100 caractères)
+          </p>
+        </div>
+
+        <div>
+          <label class="form-label text-xs sm:text-sm">Description</label>
+          <textarea formControlName="description" class="form-textarea text-sm sm:text-base" rows="3" placeholder="Plateau, Ponty, Médina..."></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="form-label text-xs sm:text-sm">Tarif Standard (FCFA) *</label>
+            <input formControlName="tarifStandard" type="number" class="form-input text-sm sm:text-base" placeholder="1000" />
+          </div>
+          <div>
+            <label class="form-label text-xs sm:text-sm">Tarif Express (FCFA) *</label>
+            <input formControlName="tarifExpress" type="number" class="form-input text-sm sm:text-base" placeholder="1500" />
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input formControlName="actif" type="checkbox" id="actif" class="form-checkbox w-4 h-4 sm:w-5 sm:h-5" />
+          <label for="actif" class="form-label mb-0 text-xs sm:text-sm cursor-pointer">Zone active</label>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+        <button type="button" (click)="closeModal()" class="btn-outline text-sm sm:text-base py-2 sm:py-3">Annuler</button>
+        <button type="submit" class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1" [disabled]="zoneForm.invalid || loading">
+          {{ loading ? 'Enregistrement...' : (modalMode === 'create' ? 'Créer' : 'Modifier') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL DETAIL -->
+<div *ngIf="showModal && modalMode === 'detail'" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" (click)="closeModal()">
+  <div class="card max-w-3xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <div class="flex items-center justify-between mb-4 sm:mb-6">
+      <h2 class="text-xl sm:text-2xl font-bold">Détails de la zone</h2>
+      <button (click)="closeModal()" class="text-muted-foreground hover:text-foreground text-2xl">✕</button>
+    </div>
+
+    <div *ngIf="zoneDetail" class="space-y-6">
+      <!-- Info générale -->
+      <div>
+        <h3 class="font-semibold text-lg sm:text-xl mb-1">{{ zoneDetail.nom }}</h3>
+        <p class="text-sm text-muted-foreground mb-2">{{ zoneDetail.description || 'Aucune description' }}</p>
+        <span *ngIf="zoneDetail.actif" class="badge-success text-xs">Active</span>
+        <span *ngIf="!zoneDetail.actif" class="badge-warning text-xs">Inactive</span>
+      </div>
+
+      <!-- Tarifs -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-muted rounded-lg">
+        <div>
+          <p class="text-sm text-muted-foreground mb-1">Tarif Standard</p>
+          <p class="text-2xl font-bold text-primary">{{ zoneDetail.tarifStandard }} FCFA</p>
+        </div>
+        <div>
+          <p class="text-sm text-muted-foreground mb-1">Tarif Express</p>
+          <p class="text-2xl font-bold text-primary">{{ zoneDetail.tarifExpress }} FCFA</p>
+        </div>
+      </div>
+
+      <!-- Quartiers -->
+      <div>
+        <h4 class="font-semibold mb-3 text-sm sm:text-base">Quartiers ({{ zoneDetail.quartiers.length }})</h4>
+        <div class="max-h-96 overflow-y-auto border rounded-lg">
+          <table class="w-full">
+            <thead class="bg-muted sticky top-0">
+              <tr>
+                <th class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm font-semibold">Quartier</th>
+                <th class="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm font-semibold">Commune</th>
+                <th class="px-3 sm:px-4 py-2 text-center text-xs sm:text-sm font-semibold">Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let quartier of zoneDetail.quartiers" class="border-b">
+                <td class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium">{{ quartier.nom }}</td>
+                <td class="px-3 sm:px-4 py-2 text-xs sm:text-sm text-muted-foreground">{{ quartier.commune }}</td>
+                <td class="px-3 sm:px-4 py-2 text-center">
+                  <span *ngIf="quartier.actif" class="text-xs text-green-600 font-medium">Actif</span>
+                  <span *ngIf="!quartier.actif" class="text-xs text-muted-foreground">Inactif</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <button (click)="closeModal()" class="btn-primary w-full text-sm sm:text-base py-2 sm:py-3">Fermer</button>
+    </div>
+  </div>
+</div>

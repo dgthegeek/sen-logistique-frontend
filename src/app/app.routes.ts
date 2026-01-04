@@ -26,6 +26,9 @@ import { TrackingHomeComponent } from './pages/tracking-home/tracking-home.compo
 import { TrackingDetailComponent } from './pages/tracking-detail/tracking-detail.component';
 import { DeliveryConfirmComponent } from './pages/delivery-confirm/delivery-confirm.component';
 import { StatutCompteComponent } from './pages/statut-compte/statut-compte.component';
+import { ZonesComponent } from './features/admin/zones/zones.component';
+import { ProfilComponent } from './shared/components/profil/profil.component';
+import { CreerLivraisonVendeurComponent } from './features/admin/creer-livraison-vendeur/creer-livraison-vendeur.component';
 
 export const routes: Routes = [
   // Landing page comme page par défaut
@@ -62,6 +65,7 @@ export const routes: Routes = [
       { path: 'livraisons', component: LivraisonsComponent },
       { path: 'livraisons/:id', component: LivraisonDetailComponent },
       { path: 'finances', component: VendeurFinancesComponent },
+      { path: 'profil', component: ProfilComponent },
     ]
   },
 
@@ -76,6 +80,9 @@ export const routes: Routes = [
       { path: 'livraisons', component: AdminLivraisonsComponent },
       { path: 'finances', component: AdminFinancesComponent },
       { path: 'vendeurs', component: GestionVendeursComponent },
+      { path: 'zones', component: ZonesComponent },      // ← NOUVEAU
+      { path: 'profil', component: ProfilComponent }, 
+      { path: 'creer-livraison-vendeur', component: CreerLivraisonVendeurComponent }
     ]
   },
 

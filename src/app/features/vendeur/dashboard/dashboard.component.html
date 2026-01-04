@@ -8,167 +8,226 @@
     <app-sidebar></app-sidebar>
 
     <!-- Main Content -->
-    <main class="flex-1 p-6">
-      <!-- Loading State -->
-      <div *ngIf="loading" class="flex items-center justify-center h-64">
-        <div class="text-center">
-          <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2">
-          </div>
-          <p class="text-muted-foreground">Chargement...</p>
-        </div>
-      </div>
-
-      <!-- Error State -->
-      <div *ngIf="errorMessage && !loading" class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
-        {{ errorMessage }}
-      </div>
-
-      <!-- Dashboard Content -->
-      <div *ngIf="dashboard && !loading">
-        <!-- Welcome -->
-        <div class="mb-8">
-          <h1 class="text-3xl font-bold text-foreground mb-2">
-            Bonjour 👋
-          </h1>
-          <p class="text-muted-foreground">
-            Voici un aperçu de votre activité des 30 derniers jours
-          </p>
-        </div>
-
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <!-- Total Colis -->
-          <div class="stat-card">
-            <div class="stat-card-icon bg-primary/10 text-primary">
-              📦
+    <main class="flex-1 p-4 sm:p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Loading State -->
+        <div *ngIf="loading" class="flex items-center justify-center h-64">
+          <div class="text-center">
+            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2">
             </div>
-            <div class="stat-card-value">
-              {{ dashboard.statistiquesJour.totalColis }}
-            </div>
-            <div class="stat-card-label">
-              Total colis
-            </div>
-          </div>
-
-          <!-- Livrés -->
-          <div class="stat-card">
-            <div class="stat-card-icon bg-green-100 text-green-600">
-              ✅
-            </div>
-            <div class="stat-card-value">
-              {{ dashboard.statistiquesJour.colisLivres }}
-            </div>
-            <div class="stat-card-label">
-              Livrés
-            </div>
-          </div>
-
-          <!-- En cours -->
-          <div class="stat-card">
-            <div class="stat-card-icon bg-orange-100 text-orange-600">
-              🚚
-            </div>
-            <div class="stat-card-value">
-              {{ dashboard.statistiquesJour.colisEnCours }}
-            </div>
-            <div class="stat-card-label">
-              En cours
-            </div>
-          </div>
-
-          <!-- Échecs -->
-          <div class="stat-card">
-            <div class="stat-card-icon bg-red-100 text-red-600">
-              ❌
-            </div>
-            <div class="stat-card-value">
-              {{ dashboard.statistiquesJour.colisEchec }}
-            </div>
-            <div class="stat-card-label">
-              Échecs
-            </div>
+            <p class="text-sm sm:text-base text-muted-foreground">Chargement...</p>
           </div>
         </div>
 
-        <!-- Finances Card -->
-        <div class="card mb-8">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-muted-foreground mb-1">Solde en attente</p>
-              <p class="text-3xl font-bold text-green-600">
-                {{ dashboard.finances.soldeEnAttente | fcfa }} 
-              </p>
-              <p class="text-sm text-muted-foreground mt-1">
-                Paiement : {{ dashboard.finances.prochainPaiement }}
-              </p>
+        <!-- Error State -->
+        <div *ngIf="errorMessage && !loading" class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+          <i class="fa-solid fa-circle-exclamation mr-2"></i>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Dashboard Content -->
+        <div *ngIf="dashboard && !loading">
+          <!-- Welcome -->
+          <div class="mb-6 sm:mb-8">
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+              <i class="fa-solid fa-hand-wave text-yellow-500"></i> Bonjour
+            </h1>
+            <p class="text-sm sm:text-base text-muted-foreground">
+              Voici un aperçu de votre activité des 30 derniers jours
+            </p>
+          </div>
+
+          <!-- Stats Cards (Responsive) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <!-- Total Colis -->
+            <div class="stat-card">
+              <div class="stat-card-icon bg-primary/10 text-primary">
+                <i class="fa-solid fa-box"></i>
+              </div>
+              <div class="stat-card-value text-xl sm:text-2xl">
+                {{ dashboard.statistiquesJour.totalColis }}
+              </div>
+              <div class="stat-card-label text-xs sm:text-sm">
+                Total colis
+              </div>
             </div>
-          
+
+            <!-- Livrés -->
+            <div class="stat-card">
+              <div class="stat-card-icon bg-green-100 text-green-600">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+              <div class="stat-card-value text-xl sm:text-2xl">
+                {{ dashboard.statistiquesJour.colisLivres }}
+              </div>
+              <div class="stat-card-label text-xs sm:text-sm">
+                Livrés
+              </div>
+            </div>
+
+            <!-- En cours -->
+            <div class="stat-card">
+              <div class="stat-card-icon bg-orange-100 text-orange-600">
+                <i class="fa-solid fa-truck"></i>
+              </div>
+              <div class="stat-card-value text-xl sm:text-2xl">
+                {{ dashboard.statistiquesJour.colisEnCours }}
+              </div>
+              <div class="stat-card-label text-xs sm:text-sm">
+                En cours
+              </div>
+            </div>
+
+            <!-- Échecs -->
+            <div class="stat-card">
+              <div class="stat-card-icon bg-red-100 text-red-600">
+                <i class="fa-solid fa-circle-xmark"></i>
+              </div>
+              <div class="stat-card-value text-xl sm:text-2xl">
+                {{ dashboard.statistiquesJour.colisEchec }}
+              </div>
+              <div class="stat-card-label text-xs sm:text-sm">
+                Échecs
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- Action Button -->
-        <div class="mb-6">
-          <button routerLink="/vendeur/creer-livraison" class="btn-primary text-lg px-8 py-4">
-            ➕ Nouvelle livraison
-          </button>
-        </div>
-
-        <!-- Recent Orders -->
-        <div class="card">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-foreground">
-              Dernières livraisons
-            </h2>
-            <a routerLink="/vendeur/livraisons" class="text-primary hover:underline text-sm font-medium">
-              Voir tout →
-            </a>
+          <!-- Finances Card (Responsive) -->
+          <div class="card mb-6 sm:mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <p class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center gap-2">
+                  <i class="fa-solid fa-wallet"></i>
+                  <span>Solde en attente</span>
+                </p>
+                <p class="text-2xl sm:text-3xl font-bold text-green-600">
+                  {{ dashboard.finances.soldeEnAttente | fcfa }} 
+                </p>
+                <p class="text-xs sm:text-sm text-muted-foreground mt-1 flex items-center gap-2">
+                  <i class="fa-solid fa-calendar-days"></i>
+                  <span>Paiement : {{ dashboard.finances.prochainPaiement }}</span>
+                </p>
+              </div>
+            </div>
           </div>
 
-          <!-- Table -->
-          <div class="overflow-x-auto">
-            <table class="table" *ngIf="dashboard.dernieresLivraisons && dashboard.dernieresLivraisons.length > 0">
-              <thead class="table-header">
-                <tr>
-                  <th class="table-header-cell">Numéro</th>
-                  <th class="table-header-cell">Client</th>
-                  <th class="table-header-cell">Destination</th>
-                  <th class="table-header-cell">Montant</th>
-                  <th class="table-header-cell">Statut</th>
-                  <th class="table-header-cell">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let livraison of dashboard.dernieresLivraisons" class="table-row cursor-pointer"
-                  [routerLink]="['/vendeur/livraisons', livraison.id]">
-                  <td class="table-cell font-medium">
-                    {{ livraison.numeroTracking }}
-                  </td>
-                  <td class="table-cell">
-                    {{ livraison.nomClient }}
-                  </td>
-                  <td class="table-cell">
-                    {{ livraison.destination }}
-                  </td>
-                  <td class="table-cell">
-                    {{ formatCurrency(livraison.montantCOD) }}
-                  </td>
-                  <td class="table-cell">
-                    <span [class]="getStatusBadgeClass(livraison.statut)">
-                      {{ getStatusLabel(livraison.statut) }}
-                    </span>
-                  </td>
-                  <td class="table-cell text-muted-foreground text-sm">
-                    {{ formatDate(livraison.dateCreation) }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- Action Button (Responsive) -->
+          <div class="mb-4 sm:mb-6">
+            <button routerLink="/vendeur/creer-livraison" class="btn-primary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto">
+              <i class="fa-solid fa-circle-plus mr-2"></i>
+              Nouvelle livraison
+            </button>
+          </div>
+
+          <!-- Recent Orders -->
+          <div class="card">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <h2 class="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>Dernières livraisons</span>
+              </h2>
+              <a routerLink="/vendeur/livraisons" class="text-primary hover:underline text-sm font-medium inline-flex items-center gap-1">
+                <span>Voir tout</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </div>
+
+            <!-- Table Desktop -->
+            <div class="hidden lg:block overflow-x-auto">
+              <table class="table" *ngIf="dashboard.dernieresLivraisons && dashboard.dernieresLivraisons.length > 0">
+                <thead class="table-header">
+                  <tr>
+                    <th class="table-header-cell">Numéro</th>
+                    <th class="table-header-cell">Client</th>
+                    <th class="table-header-cell">Destination</th>
+                    <th class="table-header-cell">Montant</th>
+                    <th class="table-header-cell">Statut</th>
+                    <th class="table-header-cell">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let livraison of dashboard.dernieresLivraisons" class="table-row cursor-pointer"
+                    [routerLink]="['/vendeur/livraisons', livraison.id]">
+                    <td class="table-cell font-medium font-mono text-sm">
+                      <i class="fa-solid fa-barcode mr-1 text-muted-foreground"></i>
+                      {{ livraison.numeroTracking }}
+                    </td>
+                    <td class="table-cell">
+                      <i class="fa-solid fa-user mr-1 text-muted-foreground"></i>
+                      {{ livraison.nomClient }}
+                    </td>
+                    <td class="table-cell">
+                      <i class="fa-solid fa-location-dot mr-1 text-muted-foreground"></i>
+                      {{ livraison.destination }}
+                    </td>
+                    <td class="table-cell font-semibold">
+                      {{ formatCurrency(livraison.montantCOD) }}
+                    </td>
+                    <td class="table-cell">
+                      <span [class]="getStatusBadgeClass(livraison.statut)">
+                        {{ getStatusLabel(livraison.statut) }}
+                      </span>
+                    </td>
+                    <td class="table-cell text-muted-foreground text-sm">
+                      <i class="fa-solid fa-calendar mr-1"></i>
+                      {{ formatDate(livraison.dateCreation) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Cards Mobile/Tablet -->
+            <div class="lg:hidden space-y-3" *ngIf="dashboard.dernieresLivraisons && dashboard.dernieresLivraisons.length > 0">
+              <div *ngFor="let livraison of dashboard.dernieresLivraisons" 
+                   class="border rounded-lg p-3 cursor-pointer hover:bg-muted/30 transition-colors"
+                   [routerLink]="['/vendeur/livraisons', livraison.id]">
+                <div class="flex items-start justify-between mb-2">
+                  <div class="flex-1 min-w-0">
+                    <div class="font-mono font-semibold text-primary text-sm truncate">
+                      <i class="fa-solid fa-barcode mr-1"></i>
+                      {{ livraison.numeroTracking }}
+                    </div>
+                    <div class="text-xs text-muted-foreground mt-1">
+                      <i class="fa-solid fa-calendar mr-1"></i>
+                      {{ formatDate(livraison.dateCreation) }}
+                    </div>
+                  </div>
+                  <span [class]="getStatusBadgeClass(livraison.statut) + ' text-xs ml-2 flex-shrink-0'">
+                    {{ getStatusLabel(livraison.statut) }}
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <div class="text-muted-foreground flex items-center gap-1">
+                      <i class="fa-solid fa-user"></i>
+                      <span>Client</span>
+                    </div>
+                    <div class="font-medium truncate">{{ livraison.nomClient }}</div>
+                  </div>
+                  <div>
+                    <div class="text-muted-foreground flex items-center gap-1">
+                      <i class="fa-solid fa-location-dot"></i>
+                      <span>Destination</span>
+                    </div>
+                    <div class="font-medium truncate">{{ livraison.destination }}</div>
+                  </div>
+                  <div class="col-span-2">
+                    <div class="text-muted-foreground">Montant</div>
+                    <div class="font-bold text-primary text-base">{{ formatCurrency(livraison.montantCOD) }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <!-- Empty State -->
             <div *ngIf="!dashboard.dernieresLivraisons || dashboard.dernieresLivraisons.length === 0"
-              class="text-center py-12">
-              <p class="text-muted-foreground mb-4">Aucune livraison pour le moment</p>
-              <button routerLink="/vendeur/creer-livraison" class="btn-primary">
+              class="text-center py-8 sm:py-12">
+              <i class="fa-solid fa-box-open text-5xl sm:text-6xl text-muted-foreground mb-4"></i>
+              <p class="text-sm sm:text-base text-muted-foreground mb-4">Aucune livraison pour le moment</p>
+              <button routerLink="/vendeur/creer-livraison" class="btn-primary text-sm sm:text-base py-2 sm:py-3">
+                <i class="fa-solid fa-circle-plus mr-2"></i>
                 Créer ma première livraison
               </button>
             </div>

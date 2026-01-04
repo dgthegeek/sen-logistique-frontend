@@ -90,7 +90,7 @@
               <button (click)="callClient()" class="btn-primary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3">
                 📞 <span class="hidden sm:inline">Appeler le</span> client
               </button>
-              <button (click)="openMaps()" class="btn-secondary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3">
+              <!-- <button (click)="openMaps()" class="btn-secondary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3">
                 🗺️ <span class="hidden sm:inline">Ouvrir</span> Maps
               </button>
               <button
@@ -99,7 +99,7 @@
                 class="btn-outline flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3"
               >
                 📄 <span class="hidden sm:inline">Télécharger</span> QR
-              </button>
+              </button> -->
             </div>
           </div>
 
@@ -250,9 +250,9 @@
           </div>
 
           <!-- QR Code Preview (Responsive) -->
-          <div *ngIf="livraison.qrCodeUrl" class="card text-center">
+          <!-- <div *ngIf="livraison.qrCodeUrl" class="card text-center">
             <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">
-              QR Code de suivi
+              Code de suivi
             </h2>
             <img
               [src]="livraison.qrCodeUrl"
@@ -262,7 +262,7 @@
             <p class="text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4">
               Ce QR code permet au livreur de confirmer la livraison
             </p>
-          </div>
+          </div> -->
         </div>
       </div>
     </main>

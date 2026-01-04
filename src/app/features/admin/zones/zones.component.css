@@ -1,0 +1,67 @@
+.badge-success {
+  @apply px-3 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full;
+}
+
+.badge-warning {
+  @apply px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-700 rounded-full;
+}
+
+/* Modal Overlay - Fond sombre centré */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Modal Content - Popup centré */
+.modal-content {
+  @apply bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Modal Header */
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+/* Modal Body - Scrollable */
+.modal-body {
+  @apply p-6 overflow-y-auto;
+  max-height: calc(90vh - 140px);
+}
+
+/* Modal Footer */
+.modal-footer {
+  @apply flex items-center justify-end gap-3 p-6 border-t bg-muted/30;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .modal-content {
+    @apply max-w-full m-4;
+  }
+  
+  .modal-body {
+    max-height: calc(90vh - 180px);
+  }
+}

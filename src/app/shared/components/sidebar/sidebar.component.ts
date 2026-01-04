@@ -19,27 +19,31 @@ interface MenuItem {
 export class SidebarComponent implements OnInit {
   menuItems: MenuItem[] = [];
   isAdmin = false;
-  isMobileMenuOpen = false; 
+  isMobileMenuOpen = false;
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
-    
+
     if (this.isAdmin) {
       this.menuItems = [
-        { label: 'Dashboard', route: '/admin/dashboard', icon: '📊' },
-        { label: 'Ramassages', route: '/admin/ramassages', icon: '📦' },
-        { label: 'Livraisons', route: '/admin/livraisons', icon: '🚚' },
-        { label: 'Finances', route: '/admin/finances', icon: '💰' },
-        { label: 'Gestion vendeurs', route: '/admin/vendeurs', icon: '👥' }, 
+        { label: 'Dashboard', route: '/admin/dashboard', icon: 'fa-solid fa-chart-line' },
+        { label: 'Ramassages', route: '/admin/ramassages', icon: 'fa-solid fa-box' },
+        { label: 'Créer livraison vendeur', route: '/admin/creer-livraison-vendeur', icon: 'fa-solid fa-truck-fast' },
+        { label: 'Livraisons', route: '/admin/livraisons', icon: 'fa-solid fa-truck' },
+        { label: 'Finances', route: '/admin/finances', icon: 'fa-solid fa-money-bill-trend-up' },
+        { label: 'Gestion vendeurs', route: '/admin/vendeurs', icon: 'fa-solid fa-users-gear' },
+        { label: 'Zones de livraison', route: '/admin/zones', icon: 'fa-solid fa-map-location-dot' },
+        { label: 'Mon compte', route: '/admin/profil', icon: 'fa-solid fa-user-gear' },
       ];
     } else {
       this.menuItems = [
-        { label: 'Dashboard', route: '/vendeur/dashboard', icon: '📊' },
-        { label: 'Nouvelle livraison', route: '/vendeur/creer-livraison', icon: '➕' },
-        { label: 'Mes livraisons', route: '/vendeur/livraisons', icon: '📦' },
-        { label: 'Mes finances', route: '/vendeur/finances', icon: '💰' },
+        { label: 'Dashboard', route: '/vendeur/dashboard', icon: 'fa-solid fa-chart-pie' },
+        { label: 'Nouvelle livraison', route: '/vendeur/creer-livraison', icon: 'fa-solid fa-circle-plus' },
+        { label: 'Mes livraisons', route: '/vendeur/livraisons', icon: 'fa-solid fa-boxes-stacked' },
+        { label: 'Mes finances', route: '/vendeur/finances', icon: 'fa-solid fa-wallet' },
+        { label: 'Mon compte', route: '/vendeur/profil', icon: 'fa-solid fa-user-circle' },
       ];
     }
   }

@@ -231,8 +231,8 @@ export class CreerLivraisonComponent implements OnInit {
     
     this.apiService.calculerTarif({
       zoneId: zoneId,
-      communeDepart: currentUser.commune || 'Dakar',
-      quartierDepart: currentUser.quartier || 'Plateau',
+      communeDepart: currentUser.commune,
+      quartierDepart: currentUser.quartier,
       communeDestination: formValue.commune,
       quartierDestination: formValue.quartier,
       montantCOD: 0, // Juste pour récupérer les frais
@@ -270,6 +270,7 @@ export class CreerLivraisonComponent implements OnInit {
     const montantCOD = this.montantCODTotal;
 
     const request: CreateLivraisonRequest = {
+      
       nomClient: formValue.nomClient,
       telephoneClient: formValue.telephoneClient,
       commune: formValue.commune,

@@ -1,0 +1,256 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 p-4 sm:p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+              Mon compte
+            </h1>
+            <p class="text-sm sm:text-base text-muted-foreground">
+              Gérez vos informations personnelles
+            </p>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="loading && !profil" class="card">
+          <div class="flex items-center justify-center py-12">
+            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div *ngIf="profil" class="max-w-4xl">
+          <!-- Info Card (Vendeur only) -->
+          <div *ngIf="isVendeur" class="card mb-4 sm:mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div class="flex-1">
+                <div class="flex items-start gap-3 mb-2">
+                  <i class="fa-solid fa-user-circle text-3xl text-primary flex-shrink-0"></i>
+                  <div class="min-w-0">
+                    <h2 class="text-lg font-semibold text-foreground break-words">{{ profil.prenom }} {{ profil.nom }}</h2>
+                    <p class="text-sm text-muted-foreground">
+                      <i class="fa-solid fa-phone mr-1"></i>{{ profil.telephone }}
+                    </p>
+                  </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 sm:ml-12">
+                  <span [class]="getStatutBadgeClass()">{{ getStatutLabel() }}</span>
+                  <span *ngIf="profil.nomBoutique" class="text-sm text-muted-foreground">
+                    <i class="fa-solid fa-store mr-1"></i>{{ profil.nomBoutique }}
+                  </span>
+                </div>
+              </div>
+              <div *ngIf="profil.soldeEnAttente !== undefined" class="text-left sm:text-right">
+                <p class="text-sm text-muted-foreground mb-1">
+                  <i class="fa-solid fa-wallet mr-1"></i>Solde en attente
+                </p>
+                <p class="text-2xl font-bold text-primary">{{ profil.soldeEnAttente }} FCFA</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Form -->
+          <div class="card mb-4 sm:mb-6">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <i class="fa-solid fa-user-pen"></i>Informations personnelles
+              </h3>
+              <button (click)="openPasswordModal()" class="btn-outline text-sm py-2 w-full sm:w-auto">
+                <i class="fa-solid fa-lock mr-2"></i>Changer le mot de passe
+              </button>
+            </div>
+
+            <form [formGroup]="profilForm" (ngSubmit)="updateProfil()">
+              <div class="space-y-4">
+                <!-- Nom & Prénom -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="form-label text-xs sm:text-sm">Prénom *</label>
+                    <input formControlName="prenom" type="text" class="form-input text-sm sm:text-base" />
+                    <p *ngIf="profilForm.get('prenom')?.invalid && profilForm.get('prenom')?.touched" class="form-error text-xs sm:text-sm">
+                      Le prénom est requis (2-100 caractères)
+                    </p>
+                  </div>
+                  <div>
+                    <label class="form-label text-xs sm:text-sm">Nom *</label>
+                    <input formControlName="nom" type="text" class="form-input text-sm sm:text-base" />
+                    <p *ngIf="profilForm.get('nom')?.invalid && profilForm.get('nom')?.touched" class="form-error text-xs sm:text-sm">
+                      Le nom est requis (2-100 caractères)
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Téléphone (read-only) & Email -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="form-label text-xs sm:text-sm">
+                      <i class="fa-solid fa-phone mr-1"></i>Téléphone
+                    </label>
+                    <input [value]="profil.telephone" type="text" class="form-input bg-muted cursor-not-allowed text-sm sm:text-base" disabled />
+                    <p class="text-xs text-muted-foreground mt-1">Le numéro de téléphone ne peut pas être modifié</p>
+                  </div>
+                  <div>
+                    <label class="form-label text-xs sm:text-sm">
+                      <i class="fa-solid fa-envelope mr-1"></i>Email *
+                    </label>
+                    <input formControlName="email" type="email" class="form-input text-sm sm:text-base" />
+                    <p *ngIf="profilForm.get('email')?.invalid && profilForm.get('email')?.touched" class="form-error text-xs sm:text-sm">
+                      Email invalide
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Vendeur-specific fields -->
+                <div *ngIf="isVendeur">
+                  <hr class="my-6" />
+                  <h4 class="font-semibold mb-4 flex items-center gap-2 text-sm sm:text-base">
+                    <i class="fa-solid fa-store"></i>Informations boutique
+                  </h4>
+
+                  <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label class="form-label text-xs sm:text-sm">Nom de la boutique</label>
+                        <input formControlName="nomBoutique" type="text" class="form-input text-sm sm:text-base" />
+                      </div>
+                      <div>
+                        <label class="form-label text-xs sm:text-sm">Catégorie d'activité</label>
+                        <input formControlName="categorieActivite" type="text" class="form-input text-sm sm:text-base" />
+                      </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label class="form-label text-xs sm:text-sm">
+                          <i class="fa-brands fa-instagram mr-1"></i>Instagram
+                        </label>
+                        <input formControlName="instagram" type="text" class="form-input text-sm sm:text-base" placeholder="@votreboutique" />
+                      </div>
+                      <div>
+                        <label class="form-label text-xs sm:text-sm">
+                          <i class="fa-brands fa-facebook mr-1"></i>Facebook
+                        </label>
+                        <input formControlName="facebook" type="text" class="form-input text-sm sm:text-base" placeholder="Nom de votre page" />
+                      </div>
+                    </div>
+
+                    <hr class="my-6" />
+                    <h4 class="font-semibold mb-4 flex items-center gap-2 text-sm sm:text-base">
+                      <i class="fa-solid fa-location-dot"></i>Adresse de ramassage
+                    </h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label class="form-label text-xs sm:text-sm">Commune</label>
+                        <input formControlName="commune" type="text" class="form-input text-sm sm:text-base" />
+                      </div>
+                      <div>
+                        <label class="form-label text-xs sm:text-sm">Quartier</label>
+                        <input formControlName="quartier" type="text" class="form-input text-sm sm:text-base" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label class="form-label text-xs sm:text-sm">Adresse complète</label>
+                      <textarea formControlName="adresseComplete" class="form-textarea text-sm sm:text-base" rows="3"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="flex justify-end pt-4">
+                  <button type="submit" class="btn-primary text-sm sm:text-base py-2 sm:py-3 w-full sm:w-auto" [disabled]="profilForm.invalid || loading">
+                    <i [class]="loading ? 'fa-solid fa-spinner fa-spin mr-2' : 'fa-solid fa-floppy-disk mr-2'"></i>
+                    <span class="hidden sm:inline">{{ loading ? 'Enregistrement...' : 'Enregistrer les modifications' }}</span>
+                    <span class="sm:hidden">{{ loading ? 'Enregistrement...' : 'Enregistrer' }}</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Account Info -->
+          <div class="card">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-circle-info"></i>Informations du compte
+            </h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between items-center py-2 border-b">
+                <span class="text-muted-foreground flex items-center gap-2">
+                  <i class="fa-solid fa-shield-halved"></i>Rôle
+                </span>
+                <span class="font-medium">{{ profil.role }}</span>
+              </div>
+              <div class="flex justify-between items-center py-2">
+                <span class="text-muted-foreground flex items-center gap-2">
+                  <i class="fa-solid fa-calendar-days"></i>Membre depuis
+                </span>
+                <span class="font-medium">{{ profil.dateInscription | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Password Modal -->
+<div *ngIf="showPasswordModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" (click)="closePasswordModal()">
+  <div class="card max-w-lg w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <div class="flex items-center justify-between mb-4 sm:mb-6">
+      <h2 class="text-xl sm:text-2xl font-bold">
+        <i class="fa-solid fa-lock mr-2"></i>Changer le mot de passe
+      </h2>
+      <button (click)="closePasswordModal()" class="text-muted-foreground hover:text-foreground">
+        <i class="fa-solid fa-xmark text-xl sm:text-2xl"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+      <div class="space-y-4 mb-6">
+        <div>
+          <label class="form-label text-xs sm:text-sm">Ancien mot de passe *</label>
+          <input formControlName="ancienPassword" type="password" class="form-input text-sm sm:text-base" />
+          <p *ngIf="passwordForm.get('ancienPassword')?.invalid && passwordForm.get('ancienPassword')?.touched" class="form-error text-xs sm:text-sm">
+            L'ancien mot de passe est requis (min. 6 caractères)
+          </p>
+        </div>
+
+        <div>
+          <label class="form-label text-xs sm:text-sm">Nouveau mot de passe *</label>
+          <input formControlName="nouveauPassword" type="password" class="form-input text-sm sm:text-base" />
+          <p *ngIf="passwordForm.get('nouveauPassword')?.invalid && passwordForm.get('nouveauPassword')?.touched" class="form-error text-xs sm:text-sm">
+            Le nouveau mot de passe doit contenir au moins 6 caractères
+          </p>
+        </div>
+
+        <div>
+          <label class="form-label text-xs sm:text-sm">Confirmer le nouveau mot de passe *</label>
+          <input formControlName="confirmPassword" type="password" class="form-input text-sm sm:text-base" />
+          <p *ngIf="passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched" class="form-error text-xs sm:text-sm">
+            Les mots de passe ne correspondent pas
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+        <button type="button" (click)="closePasswordModal()" class="btn-outline text-sm sm:text-base py-2 sm:py-3">
+          <i class="fa-solid fa-xmark mr-2"></i>Annuler
+        </button>
+        <button type="submit" class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1" [disabled]="passwordForm.invalid || loading">
+          <i [class]="loading ? 'fa-solid fa-spinner fa-spin mr-2' : 'fa-solid fa-check mr-2'"></i>
+          <span class="hidden sm:inline">{{ loading ? 'Modification...' : 'Changer le mot de passe' }}</span>
+          <span class="sm:hidden">{{ loading ? 'Modification...' : 'Changer' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

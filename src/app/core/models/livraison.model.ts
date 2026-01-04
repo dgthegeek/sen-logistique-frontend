@@ -34,6 +34,7 @@ export interface CalculTarifResponse {
 }
 
 export interface CreateLivraisonRequest {
+  telephoneVendeur?: string;  
   // Infos client
   nomClient: string;
   telephoneClient: string;
