@@ -29,6 +29,7 @@
         <!-- Error -->
         <div *ngIf="errorMessage && !loading" class="mb-4 sm:mb-6">
           <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+            <i class="fa-solid fa-circle-exclamation mr-2"></i>
             {{ errorMessage }}
           </div>
         </div>
@@ -42,7 +43,7 @@
               <div class="flex sm:block items-center justify-between sm:justify-start">
                 <div class="sm:mb-3">
                   <div class="stat-card-icon bg-orange-100 text-orange-600 inline-flex">
-                    ⏳
+                    <i class="fa-solid fa-hourglass-half"></i>
                   </div>
                 </div>
                 <div>
@@ -61,7 +62,7 @@
               <div class="flex sm:block items-center justify-between sm:justify-start">
                 <div class="sm:mb-3">
                   <div class="stat-card-icon bg-muted text-foreground inline-flex">
-                    📦
+                    <i class="fa-solid fa-box"></i>
                   </div>
                 </div>
                 <div>
@@ -80,7 +81,7 @@
               <div class="flex sm:block items-center justify-between sm:justify-start">
                 <div class="sm:mb-3">
                   <div class="stat-card-icon bg-primary/10 text-primary inline-flex">
-                    💰
+                    <i class="fa-solid fa-chart-line"></i>
                   </div>
                 </div>
                 <div>
@@ -99,7 +100,7 @@
               <div class="flex sm:block items-center justify-between sm:justify-start">
                 <div class="sm:mb-3">
                   <div class="stat-card-icon bg-red-100 text-red-600 inline-flex">
-                    💳
+                    <i class="fa-solid fa-receipt"></i>
                   </div>
                 </div>
                 <div>
@@ -118,8 +119,9 @@
           <div class="card bg-primary/5 border-primary/20">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
               <div class="flex-1">
-                <h3 class="text-base sm:text-lg font-semibold text-foreground mb-1">
-                  Demander un paiement
+                <h3 class="text-base sm:text-lg font-semibold text-foreground mb-1 flex items-center gap-2">
+                  <i class="fa-solid fa-money-bill-wave text-primary"></i>
+                  <span>Demander un paiement</span>
                 </h3>
                 <p class="text-xs sm:text-sm text-muted-foreground">
                   Récupérez votre solde en attente
@@ -132,20 +134,23 @@
                 [class.opacity-50]="finances.soldeEnAttente < 5000"
                 [class.cursor-not-allowed]="finances.soldeEnAttente < 5000"
               >
+                <i class="fa-solid fa-paper-plane mr-2"></i>
                 <span class="hidden sm:inline">Demander un paiement</span>
                 <span class="sm:hidden">Demander</span>
               </button>
             </div>
-            <p *ngIf="finances.soldeEnAttente < 5000" class="text-xs sm:text-sm text-destructive mt-2">
-              ⚠️ Solde minimum requis: 5,000 FCFA
+            <p *ngIf="finances.soldeEnAttente < 5000" class="text-xs sm:text-sm text-destructive mt-2 flex items-center gap-2">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>Solde minimum requis: 5,000 FCFA</span>
             </p>
           </div>
 
           <!-- Historique Paiements -->
           <div class="card">
             <div class="flex items-center justify-between mb-4 sm:mb-6">
-              <h2 class="text-lg sm:text-xl font-bold text-foreground">
-                Historique<span class="hidden sm:inline"> des paiements</span>
+              <h2 class="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-primary"></i>
+                <span>Historique<span class="hidden sm:inline"> des paiements</span></span>
               </h2>
               <span class="text-xs sm:text-sm text-muted-foreground">
                 {{ finances.historiquePaiements.length }} paiement{{ finances.historiquePaiements.length > 1 ? 's' : '' }}
@@ -159,13 +164,15 @@
                 class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 sm:p-4 border rounded-lg hover:bg-muted/50 transition-colors"
               >
                 <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                  <div class="text-xl sm:text-2xl flex-shrink-0">💰</div>
+                  <i class="fa-solid fa-money-bill-wave text-xl sm:text-2xl text-green-600 flex-shrink-0"></i>
                   <div class="flex-1 min-w-0">
-                    <div class="font-medium text-foreground text-sm sm:text-base truncate">
-                      {{ paiement.reference }}
+                    <div class="font-medium text-foreground text-sm sm:text-base truncate flex items-center gap-2">
+                      <i class="fa-solid fa-hashtag text-xs text-muted-foreground"></i>
+                      <span>{{ paiement.reference }}</span>
                     </div>
-                    <div class="text-xs sm:text-sm text-muted-foreground">
-                      {{ formatDate(paiement.date) }}
+                    <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+                      <i class="fa-solid fa-calendar"></i>
+                      <span>{{ formatDate(paiement.date) }}</span>
                     </div>
                   </div>
                 </div>
@@ -183,7 +190,7 @@
 
             <!-- Empty State -->
             <div *ngIf="finances.historiquePaiements.length === 0" class="text-center py-8 sm:py-12">
-              <div class="text-4xl sm:text-6xl mb-4">💳</div>
+              <i class="fa-solid fa-receipt text-5xl sm:text-6xl text-muted-foreground mb-4"></i>
               <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2">
                 Aucun paiement effectué
               </h3>
@@ -205,31 +212,37 @@
   (click)="closeDemandeModal()"
 >
   <div class="card max-w-lg w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-    <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">
-      💸 Demander un paiement
+    <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center flex items-center justify-center gap-2">
+      <i class="fa-solid fa-money-bill-wave text-primary"></i>
+      <span>Demander un paiement</span>
     </h2>
 
     <!-- Success Message -->
     <div *ngIf="demandeSuccess" class="text-center py-4 sm:py-6">
       <div class="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <span class="text-3xl sm:text-4xl">✅</span>
+        <i class="fa-solid fa-circle-check text-3xl sm:text-4xl text-green-600"></i>
       </div>
       <p class="text-base sm:text-lg text-green-600 font-semibold mb-2">{{ demandeMessage }}</p>
     </div>
 
     <!-- Error Message -->
     <div *ngIf="!demandeSuccess && demandeMessage" class="mb-4 p-3 sm:p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+      <i class="fa-solid fa-circle-exclamation mr-2"></i>
       {{ demandeMessage }}
     </div>
 
     <!-- Confirmation -->
     <div *ngIf="!demandeSuccess" class="text-center py-4 sm:py-6">
-      <p class="text-base sm:text-lg mb-4">
-        Demander le paiement de votre solde ?
+      <p class="text-base sm:text-lg mb-4 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-question-circle text-primary"></i>
+        <span>Demander le paiement de votre solde ?</span>
       </p>
-      <p class="text-3xl sm:text-4xl font-bold text-primary mb-6 sm:mb-8">
-        {{ finances?.soldeEnAttente | fcfa }}
-      </p>
+      <div class="bg-primary/10 border-2 border-primary/20 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
+        <div class="text-sm text-muted-foreground mb-1">Montant à recevoir</div>
+        <p class="text-3xl sm:text-4xl font-bold text-primary">
+          {{ finances?.soldeEnAttente | fcfa }}
+        </p>
+      </div>
       
       <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <button
@@ -237,6 +250,7 @@
           class="btn-outline text-sm sm:text-base py-2 sm:py-3"
           [disabled]="submittingDemande"
         >
+          <i class="fa-solid fa-xmark mr-2"></i>
           Annuler
         </button>
         <button
@@ -244,8 +258,14 @@
           class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
           [disabled]="submittingDemande"
         >
-          <span *ngIf="!submittingDemande">Confirmer</span>
-          <span *ngIf="submittingDemande">Envoi...</span>
+          <span *ngIf="!submittingDemande">
+            <i class="fa-solid fa-check mr-2"></i>
+            Confirmer
+          </span>
+          <span *ngIf="submittingDemande">
+            <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+            Envoi...
+          </span>
         </button>
       </div>
     </div>

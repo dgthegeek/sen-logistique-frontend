@@ -45,7 +45,7 @@ export class ProfilComponent implements OnInit {
     this.profilForm = this.fb.group({
       nom: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       prenom: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
+      email: ['', [Validators.email, Validators.maxLength(150)]],
       // Champs vendeur
       nomBoutique: ['', Validators.maxLength(200)],
       categorieActivite: ['', Validators.maxLength(100)],

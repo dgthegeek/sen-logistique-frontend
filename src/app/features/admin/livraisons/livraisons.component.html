@@ -12,13 +12,15 @@
             <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
               Livraisons
             </h1>
-            <p class="text-sm sm:text-base text-muted-foreground">
-              {{ totalElements }} livraison{{ totalElements > 1 ? 's' : '' }}
+            <p class="text-sm sm:text-base text-muted-foreground flex items-center gap-2">
+              <i class="fa-solid fa-box"></i>
+              <span>{{ totalElements }} livraison{{ totalElements > 1 ? 's' : '' }}</span>
             </p>
           </div>
 
           <!-- <button (click)="openScannerModal()" class="btn-primary text-sm sm:text-base">
-            📱 Scanner QR Code
+            <i class="fa-solid fa-qrcode mr-2"></i>
+            Scanner QR Code
           </button> -->
         </div>
 
@@ -26,7 +28,10 @@
         <div class="card mb-4 sm:mb-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="form-label text-xs sm:text-sm">Statut</label>
+              <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+                <i class="fa-solid fa-filter text-muted-foreground"></i>
+                <span>Statut</span>
+              </label>
               <select [(ngModel)]="selectedStatut" (change)="onFilterChange()" class="form-select text-sm">
                 <option *ngFor="let s of statuts" [value]="s.value">{{ s.label }}</option>
               </select>
@@ -44,6 +49,7 @@
         <!-- Error -->
         <div *ngIf="errorMessage && !loading" class="card">
           <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+            <i class="fa-solid fa-circle-exclamation mr-2"></i>
             {{ errorMessage }}
           </div>
         </div>
@@ -66,8 +72,9 @@
               <tbody>
                 <tr *ngFor="let livraison of livraisons" class="table-row">
                   <td class="table-cell">
-                    <div class="font-mono font-semibold text-primary">
-                      {{ livraison.numeroTracking }}
+                    <div class="font-mono font-semibold text-primary flex items-center gap-1">
+                      <i class="fa-solid fa-barcode text-sm"></i>
+                      <span>{{ livraison.numeroTracking }}</span>
                     </div>
                     <div class="text-xs text-muted-foreground">
                       ID: {{ livraison.id }}
@@ -88,6 +95,7 @@
                     {{ livraison.montantARecevoir | fcfa }}
                   </td>
                   <td class="table-cell text-sm text-muted-foreground">
+                    <i class="fa-solid fa-calendar mr-1"></i>
                     {{ formatDate(livraison.dateCreation) }}
                   </td>
                   <td class="table-cell">
@@ -96,7 +104,8 @@
                       class="btn-outline text-sm"
                       *ngIf="livraison.statut === 'RAMASSE'"
                     >
-                      🚚 Livrer
+                      <i class="fa-solid fa-truck mr-1"></i>
+                      Livrer
                     </button>
                     <span *ngIf="livraison.statut !== 'RAMASSE'" class="text-xs text-muted-foreground">
                       {{ livraison.message }}
@@ -115,11 +124,13 @@
             >
               <div class="flex items-start justify-between mb-3">
                 <div class="flex-1 min-w-0">
-                  <div class="font-mono font-semibold text-primary text-sm sm:text-base truncate">
-                    {{ livraison.numeroTracking }}
+                  <div class="font-mono font-semibold text-primary text-sm sm:text-base truncate flex items-center gap-1">
+                    <i class="fa-solid fa-barcode"></i>
+                    <span>{{ livraison.numeroTracking }}</span>
                   </div>
-                  <div class="text-xs text-muted-foreground">
-                    {{ formatDate(livraison.dateCreation) }}
+                  <div class="text-xs text-muted-foreground flex items-center gap-1">
+                    <i class="fa-solid fa-calendar"></i>
+                    <span>{{ formatDate(livraison.dateCreation) }}</span>
                   </div>
                 </div>
                 <span [class]="getStatusLabel(livraison.statut)" class="text-xs ml-2 flex-shrink-0">
@@ -150,7 +161,8 @@
                   (click)="openScannerModalWithTracking(livraison.numeroTracking)"
                   class="btn-primary text-xs sm:text-sm flex-1 py-2"
                 >
-                  🚚 Livrer
+                  <i class="fa-solid fa-truck mr-1"></i>
+                  Livrer
                 </button>
                 <div *ngIf="livraison.statut !== 'RAMASSE'" class="text-xs text-muted-foreground flex-1 flex items-center">
                   {{ livraison.message }}
@@ -161,7 +173,7 @@
 
           <!-- Empty State -->
           <div *ngIf="livraisons.length === 0" class="text-center py-8 sm:py-12">
-            <div class="text-4xl sm:text-6xl mb-4">📦</div>
+            <i class="fa-solid fa-box-open text-5xl sm:text-6xl text-muted-foreground mb-4"></i>
             <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2">
               Aucune livraison trouvée
             </h3>
@@ -182,16 +194,16 @@
                   [disabled]="currentPage === 0"
                   class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
                 >
-                  <span class="hidden sm:inline">← Précédent</span>
-                  <span class="sm:hidden">←</span>
+                  <i class="fa-solid fa-chevron-left mr-1"></i>
+                  <span class="hidden sm:inline">Précédent</span>
                 </button>
                 <button
                   (click)="nextPage()"
                   [disabled]="currentPage >= totalPages - 1"
                   class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
                 >
-                  <span class="hidden sm:inline">Suivant →</span>
-                  <span class="sm:hidden">→</span>
+                  <span class="hidden sm:inline">Suivant</span>
+                  <i class="fa-solid fa-chevron-right ml-1"></i>
                 </button>
               </div>
             </div>
@@ -209,10 +221,16 @@
   (click)="closeScannerModal()"
 >
   <div class="card max-w-md w-full" (click)="$event.stopPropagation()">
-    <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Scanner QR Code</h2>
+    <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-2">
+      <i class="fa-solid fa-qrcode text-primary"></i>
+      <span>Scanner QR Code</span>
+    </h2>
     
     <div class="mb-4 sm:mb-6">
-      <label class="form-label text-xs sm:text-sm">Numéro de tracking</label>
+      <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+        <i class="fa-solid fa-barcode text-muted-foreground"></i>
+        <span>Numéro de tracking</span>
+      </label>
       <input
         [(ngModel)]="searchQuery"
         (keyup.enter)="scanQRCode()"
@@ -225,9 +243,11 @@
 
     <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
       <button (click)="closeScannerModal()" class="btn-outline text-sm sm:text-base py-2 sm:py-3">
+        <i class="fa-solid fa-xmark mr-2"></i>
         Annuler
       </button>
       <button (click)="scanQRCode()" class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1">
+        <i class="fa-solid fa-magnifying-glass mr-2"></i>
         Rechercher
       </button>
     </div>
@@ -241,26 +261,37 @@
   (click)="closeConfirmModal()"
 >
   <div class="card max-w-2xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-    <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Confirmer la livraison</h2>
+    <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-2">
+      <i class="fa-solid fa-clipboard-check text-primary"></i>
+      <span>Confirmer la livraison</span>
+    </h2>
 
     <!-- Info Livraison -->
     <div class="bg-muted/30 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
-      <div class="font-mono text-xl sm:text-2xl font-bold text-primary mb-3 sm:mb-4 break-all">
-        {{ selectedLivraison.numeroTracking }}
+      <div class="font-mono text-xl sm:text-2xl font-bold text-primary mb-3 sm:mb-4 break-all flex items-center gap-2">
+        <i class="fa-solid fa-hashtag"></i>
+        <span>{{ selectedLivraison.numeroTracking }}</span>
       </div>
 
       <div class="space-y-3">
         <!-- Client -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
           <div>
-            <div class="text-muted-foreground">Client</div>
+            <div class="text-muted-foreground flex items-center gap-1">
+              <i class="fa-solid fa-user"></i>
+              <span>Client</span>
+            </div>
             <div class="font-medium text-foreground">{{ selectedLivraison.client.nom }}</div>
           </div>
           <div>
-            <div class="text-muted-foreground">Téléphone</div>
+            <div class="text-muted-foreground flex items-center gap-1">
+              <i class="fa-solid fa-phone"></i>
+              <span>Téléphone</span>
+            </div>
             <div class="font-medium text-foreground">
-              <a [href]="'tel:' + selectedLivraison.client.telephone" class="text-primary hover:underline">
-                {{ selectedLivraison.client.telephone }}
+              <a [href]="'tel:' + selectedLivraison.client.telephone" class="text-primary hover:underline flex items-center gap-1">
+                <i class="fa-solid fa-phone-volume"></i>
+                <span>{{ selectedLivraison.client.telephone }}</span>
               </a>
             </div>
           </div>
@@ -268,20 +299,32 @@
 
         <!-- Adresse -->
         <div>
-          <div class="text-muted-foreground text-xs sm:text-sm">Adresse</div>
+          <div class="text-muted-foreground text-xs sm:text-sm flex items-center gap-1">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Adresse</span>
+          </div>
           <div class="font-medium text-foreground text-sm sm:text-base">{{ selectedLivraison.client.adresse }}</div>
         </div>
 
         <!-- Produit -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
           <div>
-            <div class="text-muted-foreground">Produit</div>
+            <div class="text-muted-foreground flex items-center gap-1">
+              <i class="fa-solid fa-box"></i>
+              <span>Produit</span>
+            </div>
             <div class="font-medium text-foreground">{{ selectedLivraison.produit.description }}</div>
           </div>
           <div>
-            <div class="text-muted-foreground">Fragile</div>
+            <div class="text-muted-foreground flex items-center gap-1">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>Fragile</span>
+            </div>
             <div class="font-medium">
-              <span *ngIf="selectedLivraison.produit.fragile" class="badge badge-failed text-xs">⚠️ Fragile</span>
+              <span *ngIf="selectedLivraison.produit.fragile" class="badge badge-failed text-xs">
+                <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                Fragile
+              </span>
               <span *ngIf="!selectedLivraison.produit.fragile" class="text-muted-foreground">Non</span>
             </div>
           </div>
@@ -291,11 +334,17 @@
         <div class="border-t pt-3 mt-3">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
             <div>
-              <div class="text-muted-foreground">Vendeur</div>
+              <div class="text-muted-foreground flex items-center gap-1">
+                <i class="fa-solid fa-store"></i>
+                <span>Vendeur</span>
+              </div>
               <div class="font-medium text-foreground">{{ selectedLivraison.vendeur.nom }}</div>
             </div>
             <div>
-              <div class="text-muted-foreground">Montant à collecter</div>
+              <div class="text-muted-foreground flex items-center gap-1">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <span>Montant à collecter</span>
+              </div>
               <div class="font-bold text-lg sm:text-xl text-primary">{{ selectedLivraison.montantACollecter | fcfa }}</div>
             </div>
           </div>
@@ -306,7 +355,10 @@
     <!-- Form -->
     <div class="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
       <div>
-        <label class="form-label text-xs sm:text-sm">Cash collecté *</label>
+        <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+          <i class="fa-solid fa-money-bill-wave text-green-600"></i>
+          <span>Cash collecté *</span>
+        </label>
         <div class="relative">
           <input
             [(ngModel)]="cashCollecte"
@@ -318,8 +370,9 @@
             FCFA
           </span>
         </div>
-        <p class="form-helper text-xs">
-          Montant attendu: {{ selectedLivraison.montantACollecter | fcfa }}
+        <p class="form-helper text-xs flex items-center gap-1">
+          <i class="fa-solid fa-info-circle"></i>
+          <span>Montant attendu: {{ selectedLivraison.montantACollecter | fcfa }}</span>
         </p>
       </div>
 
@@ -330,13 +383,17 @@
           id="colisRemis"
           class="w-4 h-4 sm:w-5 sm:h-5"
         />
-        <label for="colisRemis" class="font-medium cursor-pointer text-sm sm:text-base">
-          ✓ Le colis a été remis au client
+        <label for="colisRemis" class="font-medium cursor-pointer text-sm sm:text-base flex items-center gap-2">
+          <i class="fa-solid fa-circle-check text-green-600"></i>
+          <span>Le colis a été remis au client</span>
         </label>
       </div>
 
       <div>
-        <label class="form-label text-xs sm:text-sm">Commentaire (optionnel)</label>
+        <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+          <i class="fa-solid fa-comment-dots text-muted-foreground"></i>
+          <span>Commentaire (optionnel)</span>
+        </label>
         <textarea
           [(ngModel)]="commentaire"
           class="form-textarea text-sm"
@@ -348,7 +405,7 @@
       <!-- Warning si pas remis -->
       <div *ngIf="!colisRemis" class="p-3 sm:p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
         <div class="flex items-start gap-2">
-          <span class="text-lg sm:text-xl flex-shrink-0">⚠️</span>
+          <i class="fa-solid fa-triangle-exclamation text-lg sm:text-xl flex-shrink-0"></i>
           <div>
             <div class="font-semibold text-sm sm:text-base">Attention</div>
             <div class="text-xs sm:text-sm">Le colis n'a pas été marqué comme remis. Voulez-vous continuer ?</div>
@@ -364,6 +421,7 @@
         class="btn-outline text-sm sm:text-base py-2 sm:py-3"
         [disabled]="submittingConfirmation"
       >
+        <i class="fa-solid fa-xmark mr-2"></i>
         Annuler
       </button>
       <button
@@ -371,9 +429,15 @@
         class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
         [disabled]="submittingConfirmation"
       >
-        <span *ngIf="!submittingConfirmation" class="hidden sm:inline">Confirmer la livraison</span>
-        <span *ngIf="!submittingConfirmation" class="sm:hidden">Confirmer</span>
-        <span *ngIf="submittingConfirmation">Confirmation...</span>
+        <span *ngIf="!submittingConfirmation">
+          <i class="fa-solid fa-check-circle mr-2"></i>
+          <span class="hidden sm:inline">Confirmer la livraison</span>
+          <span class="sm:hidden">Confirmer</span>
+        </span>
+        <span *ngIf="submittingConfirmation">
+          <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+          Confirmation...
+        </span>
       </button>
     </div>
   </div>

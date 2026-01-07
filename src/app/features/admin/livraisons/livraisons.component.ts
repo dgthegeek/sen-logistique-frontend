@@ -43,10 +43,8 @@ export class AdminLivraisonsComponent implements OnInit {
   statuts = [
     { value: '', label: 'Tous les statuts' },
     { value: 'RAMASSE', label: 'Ramassé' },
-    { value: 'EN_ROUTE', label: 'En route' },
     { value: 'LIVREE', label: 'Livré' },
-    { value: 'ECHEC_ABSENT', label: 'Échec (Absent)' },
-    { value: 'ECHEC_REFUSE', label: 'Échec (Refusé)' }
+    { value: 'EN_ATTENTE_RAMASSAGE', label: 'En attente de ramassage' },
   ];
 
   constructor(

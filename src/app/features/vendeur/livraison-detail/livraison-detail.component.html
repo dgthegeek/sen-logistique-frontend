@@ -8,7 +8,8 @@
       <div class="max-w-5xl mx-auto">
         <!-- Back Button -->
         <button routerLink="/vendeur/livraisons" class="btn-ghost mb-4 sm:mb-6 text-xs sm:text-sm">
-          ← Retour à mes livraisons
+          <i class="fa-solid fa-arrow-left mr-2"></i>
+          Retour à mes livraisons
         </button>
 
         <!-- Loading -->
@@ -24,6 +25,7 @@
         <!-- Error -->
         <div *ngIf="errorMessage && !loading" class="card">
           <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+            <i class="fa-solid fa-circle-exclamation mr-2"></i>
             {{ errorMessage }}
           </div>
         </div>
@@ -34,12 +36,16 @@
           <div class="card">
             <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4 sm:mb-6">
               <div class="flex-1 min-w-0">
-                <div class="text-xs sm:text-sm text-muted-foreground mb-1">Numéro de suivi</div>
+                <div class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center gap-2">
+                  <i class="fa-solid fa-hashtag"></i>
+                  <span>Numéro de suivi</span>
+                </div>
                 <h1 class="text-2xl sm:text-3xl font-bold font-mono text-primary mb-2 break-all">
                   {{ livraison.numeroTracking }}
                 </h1>
-                <div class="text-xs sm:text-sm text-muted-foreground">
-                  Créé le {{ formatDate(livraison.dateCreation) }}
+                <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-2">
+                  <i class="fa-solid fa-calendar-plus"></i>
+                  <span>Créé le {{ formatDate(livraison.dateCreation) }}</span>
                 </div>
               </div>
               <div class="text-left sm:text-right">
@@ -72,8 +78,8 @@
                     [class.ring-4]="step.active"
                     [class]="step.active ? 'ring-primary/20' : ''"
                   >
-                    <span *ngIf="step.completed" class="text-xs sm:text-sm">✓</span>
-                    <span *ngIf="!step.completed" class="text-xs sm:text-sm">•</span>
+                    <i *ngIf="step.completed" class="fa-solid fa-check text-xs sm:text-sm"></i>
+                    <i *ngIf="!step.completed" class="fa-solid fa-circle text-xs"></i>
                   </div>
                   <div class="text-xs font-medium text-center whitespace-nowrap" [class.text-primary]="step.active">
                     {{ step.label }}
@@ -88,17 +94,20 @@
             <!-- Quick Actions (Responsive) -->
             <div class="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
               <button (click)="callClient()" class="btn-primary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3">
-                📞 <span class="hidden sm:inline">Appeler le</span> client
+                <i class="fa-solid fa-phone"></i>
+                <span class="hidden sm:inline">Appeler le</span> client
               </button>
               <!-- <button (click)="openMaps()" class="btn-secondary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3">
-                🗺️ <span class="hidden sm:inline">Ouvrir</span> Maps
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span class="hidden sm:inline">Ouvrir</span> Maps
               </button>
               <button
                 *ngIf="livraison.qrCodeUrl"
                 (click)="downloadQRCode()"
                 class="btn-outline flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3"
               >
-                📄 <span class="hidden sm:inline">Télécharger</span> QR
+                <i class="fa-solid fa-qrcode"></i>
+                <span class="hidden sm:inline">Télécharger</span> QR
               </button> -->
             </div>
           </div>
@@ -108,30 +117,44 @@
             <!-- Informations Client -->
             <div class="card">
               <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
-                👤 <span class="hidden sm:inline">Informations</span> Client
+                <i class="fa-solid fa-user-circle text-primary"></i>
+                <span class="hidden sm:inline">Informations</span> Client
               </h2>
 
               <div class="space-y-2.5 sm:space-y-3">
                 <div>
-                  <div class="text-xs sm:text-sm text-muted-foreground">Nom complet</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Nom complet</span>
+                  </div>
                   <div class="font-medium text-foreground text-sm sm:text-base">{{ livraison.client.nom }}</div>
                 </div>
 
                 <div>
-                  <div class="text-xs sm:text-sm text-muted-foreground">Téléphone</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>Téléphone</span>
+                  </div>
                   <div class="font-medium text-foreground text-sm sm:text-base">{{ livraison.client.telephone }}</div>
                 </div>
 
                 <div class="border-t pt-2.5 sm:pt-3">
-                  <div class="text-xs sm:text-sm text-muted-foreground mb-1">Adresse de livraison</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center gap-1">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Adresse de livraison</span>
+                  </div>
                   <div class="font-medium text-foreground text-sm sm:text-base break-words">{{ livraison.client.adresse }}</div>
-                  <div class="text-xs sm:text-sm text-muted-foreground mt-1">
-                    {{ livraison.zone }}
+                  <div class="text-xs sm:text-sm text-muted-foreground mt-1 flex items-center gap-1">
+                    <i class="fa-solid fa-map-pin"></i>
+                    <span>{{ livraison.zone }}</span>
                   </div>
                 </div>
 
                 <div *ngIf="livraison.client.pointRepere">
-                  <div class="text-xs sm:text-sm text-muted-foreground">Point de repère</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+                    <i class="fa-solid fa-map-marker-alt"></i>
+                    <span>Point de repère</span>
+                  </div>
                   <div class="text-foreground text-sm sm:text-base">{{ livraison.client.pointRepere }}</div>
                 </div>
               </div>
@@ -140,38 +163,56 @@
             <!-- Détails Colis -->
             <div class="card">
               <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
-                📦 Détails<span class="hidden sm:inline"> du colis</span>
+                <i class="fa-solid fa-box text-primary"></i>
+                Détails<span class="hidden sm:inline"> du colis</span>
               </h2>
 
               <div class="space-y-2.5 sm:space-y-3">
                 <div>
-                  <div class="text-xs sm:text-sm text-muted-foreground">Description</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+                    <i class="fa-solid fa-tag"></i>
+                    <span>Description</span>
+                  </div>
                   <div class="font-medium text-foreground text-sm sm:text-base">{{ livraison.produit.description }}</div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <div class="text-xs sm:text-sm text-muted-foreground">Type</div>
+                    <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+                      <i class="fa-solid fa-truck-fast"></i>
+                      <span>Type</span>
+                    </div>
                     <div class="font-medium text-foreground text-sm sm:text-base">
-                      {{ livraison.urgence === 'EXPRESS' ? 'Express ⚡' : 'Normal' }}
+                      {{ livraison.urgence === 'EXPRESS' ? 'Express' : 'Normal' }}
+                      <i *ngIf="livraison.urgence === 'EXPRESS'" class="fa-solid fa-bolt text-orange-500 ml-1"></i>
                     </div>
                   </div>
 
                   <div>
-                    <div class="text-xs sm:text-sm text-muted-foreground">Fragile</div>
+                    <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+                      <i class="fa-solid fa-shield-halved"></i>
+                      <span>Fragile</span>
+                    </div>
                     <div class="font-medium text-foreground text-sm sm:text-base">
-                      {{ livraison.produit.fragile ? 'Oui ⚠️' : 'Non' }}
+                      {{ livraison.produit.fragile ? 'Oui' : 'Non' }}
+                      <i *ngIf="livraison.produit.fragile" class="fa-solid fa-triangle-exclamation text-red-500 ml-1"></i>
                     </div>
                   </div>
                 </div>
 
                 <div *ngIf="livraison.produit.poids">
-                  <div class="text-xs sm:text-sm text-muted-foreground">Poids estimé</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+                    <i class="fa-solid fa-weight-hanging"></i>
+                    <span>Poids estimé</span>
+                  </div>
                   <div class="font-medium text-foreground text-sm sm:text-base">{{ livraison.produit.poids }} kg</div>
                 </div>
 
                 <div *ngIf="livraison.commentaireLivraison" class="border-t pt-2.5 sm:pt-3">
-                  <div class="text-xs sm:text-sm text-muted-foreground mb-1">Commentaire du livreur</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center gap-1">
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <span>Commentaire du livreur</span>
+                  </div>
                   <div class="text-foreground bg-yellow-50 border border-yellow-200 p-2.5 sm:p-3 rounded-lg text-xs sm:text-sm">
                     {{ livraison.commentaireLivraison }}
                   </div>
@@ -183,26 +224,36 @@
           <!-- Détails Financiers (Responsive) -->
           <div class="card bg-primary/5 border-primary/20">
             <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
-              💰 Détails financiers
+              <i class="fa-solid fa-wallet text-primary"></i>
+              Détails financiers
             </h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
               <div class="text-center sm:text-left">
-                <div class="text-xs sm:text-sm text-muted-foreground mb-1">Montant à collecter (COD)</div>
+                <div class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center justify-center sm:justify-start gap-1">
+                  <i class="fa-solid fa-hand-holding-dollar"></i>
+                  <span>Montant à collecter (COD)</span>
+                </div>
                 <div class="text-xl sm:text-2xl font-bold text-foreground">
                   {{ livraison.financier.montantCOD | fcfa }}
                 </div>
               </div>
 
               <div class="text-center sm:text-left">
-                <div class="text-xs sm:text-sm text-muted-foreground mb-1">Frais de livraison</div>
+                <div class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center justify-center sm:justify-start gap-1">
+                  <i class="fa-solid fa-truck"></i>
+                  <span>Frais de livraison</span>
+                </div>
                 <div class="text-xl sm:text-2xl font-bold text-destructive">
                   - {{ livraison.financier.fraisLivraison | fcfa }}
                 </div>
               </div>
 
               <div class="text-center sm:text-left">
-                <div class="text-xs sm:text-sm text-muted-foreground mb-1">Vous recevrez</div>
+                <div class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center justify-center sm:justify-start gap-1">
+                  <i class="fa-solid fa-money-bill-wave"></i>
+                  <span>Vous recevrez</span>
+                </div>
                 <div class="text-2xl sm:text-3xl font-bold text-green-600">
                   {{ (livraison.financier.montantCOD - livraison.financier.fraisLivraison) | fcfa }}
                 </div>
@@ -210,8 +261,9 @@
             </div>
 
             <div *ngIf="livraison.financier.cashCollecte !== null" class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-primary/20">
-              <div class="text-xs sm:text-sm text-muted-foreground text-center sm:text-left">
-                Cash collecté: {{ livraison.financier.cashCollecte | fcfa }}
+              <div class="text-xs sm:text-sm text-muted-foreground text-center sm:text-left flex items-center justify-center sm:justify-start gap-2">
+                <i class="fa-solid fa-sack-dollar"></i>
+                <span>Cash collecté: {{ livraison.financier.cashCollecte | fcfa }}</span>
               </div>
             </div>
           </div>
@@ -219,30 +271,40 @@
           <!-- Dates importantes (Responsive) -->
           <div class="card">
             <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
-              📅 Historique
+              <i class="fa-solid fa-clock-rotate-left text-primary"></i>
+              Historique
             </h2>
 
             <div class="space-y-2.5 sm:space-y-3">
               <div class="flex items-start gap-3 sm:gap-4">
-                <div class="w-2 h-2 bg-primary rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                <i class="fa-solid fa-circle text-primary text-xs mt-1.5 flex-shrink-0"></i>
                 <div class="flex-1 min-w-0">
-                  <div class="font-medium text-foreground text-sm sm:text-base">Livraison créée</div>
+                  <div class="font-medium text-foreground text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle text-primary"></i>
+                    <span>Livraison créée</span>
+                  </div>
                   <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.dateCreation) }}</div>
                 </div>
               </div>
 
               <div *ngIf="livraison.dateRamassage" class="flex items-start gap-3 sm:gap-4">
-                <div class="w-2 h-2 bg-primary rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                <i class="fa-solid fa-circle text-primary text-xs mt-1.5 flex-shrink-0"></i>
                 <div class="flex-1 min-w-0">
-                  <div class="font-medium text-foreground text-sm sm:text-base">Colis ramassé</div>
+                  <div class="font-medium text-foreground text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-box-open text-primary"></i>
+                    <span>Colis ramassé</span>
+                  </div>
                   <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.dateRamassage) }}</div>
                 </div>
               </div>
 
               <div *ngIf="livraison.dateLivraison" class="flex items-start gap-3 sm:gap-4">
-                <div class="w-2 h-2 bg-green-600 rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                <i class="fa-solid fa-circle text-green-600 text-xs mt-1.5 flex-shrink-0"></i>
                 <div class="flex-1 min-w-0">
-                  <div class="font-medium text-foreground text-sm sm:text-base">Colis livré</div>
+                  <div class="font-medium text-foreground text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-green-600"></i>
+                    <span>Colis livré</span>
+                  </div>
                   <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.dateLivraison) }}</div>
                 </div>
               </div>
@@ -251,16 +313,18 @@
 
           <!-- QR Code Preview (Responsive) -->
           <!-- <div *ngIf="livraison.qrCodeUrl" class="card text-center">
-            <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">
-              Code de suivi
+            <h2 class="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-qrcode text-primary"></i>
+              <span>Code de suivi</span>
             </h2>
             <img
               [src]="livraison.qrCodeUrl"
               [alt]="'QR Code ' + livraison.numeroTracking"
               class="mx-auto max-w-[200px] sm:max-w-xs w-full border rounded-lg shadow-sm"
             />
-            <p class="text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4">
-              Ce QR code permet au livreur de confirmer la livraison
+            <p class="text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-info-circle"></i>
+              <span>Ce QR code permet au livreur de confirmer la livraison</span>
             </p>
           </div> -->
         </div>
