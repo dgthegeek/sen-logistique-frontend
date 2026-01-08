@@ -7,11 +7,13 @@ import { FcfaPipe } from '../../shared/pipes/fcfa.pipe';
 import { DeliveryInfo, ConfirmLivraisonRequest } from '../../core/models/delivery.model';
 import { ToastService } from '../../core/services/toast.service';
 import { ConfirmationService } from '../../core/services/confirmation.service';
+import { PublicHeaderComponent } from "../../shared/components/public-header/public-header.component";
+import { AuthHeaderComponent } from "../../shared/components/auth-header/auth-header.component";
 
 @Component({
   selector: 'app-delivery-confirm',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, FcfaPipe],
+  imports: [CommonModule, FormsModule, RouterModule, FcfaPipe, PublicHeaderComponent, AuthHeaderComponent],
   templateUrl: './delivery-confirm.component.html',
   styleUrls: ['./delivery-confirm.component.css']
 })

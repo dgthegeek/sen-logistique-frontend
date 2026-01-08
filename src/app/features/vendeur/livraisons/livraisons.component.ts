@@ -7,6 +7,8 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
 import { LivraisonResume, LivraisonsResponse, StatutLivraison, LivraisonFilters } from '../../../core/models/livraison.model';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-livraisons',
@@ -139,6 +141,83 @@ export class LivraisonsComponent implements OnInit {
       minute: '2-digit'
     });
   }
+
+  exporterExcel(): void {
+  if (this.livraisons.length === 0) {
+    this.errorMessage = 'Aucune donnée à exporter';
+    setTimeout(() => this.errorMessage = '', 3000);
+    return;
+  }
+
+  const exportData = this.livraisons.map(livraison => ({
+    'Numéro Tracking': livraison.numeroTracking,
+    'Statut': this.getStatusLabel(livraison.statut),
+    'Date Création': this.formatDateForExcel(livraison.dateCreation),
+    'Montant COD': livraison.montantCOD,
+    'Frais Livraison': livraison.fraisLivraison,
+    'Montant à Recevoir': livraison.montantARecevoir
+  }));
+
+  // Créer le worksheet
+  const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+
+  // Ajuster la largeur des colonnes
+  const columnWidths = [
+    { wch: 20 }, // Numéro Tracking
+    { wch: 20 }, // Statut
+    { wch: 18 }, // Date Création
+    { wch: 12 }, // Montant COD
+    { wch: 12 }, // Frais Livraison
+    { wch: 15 }, // Montant à Recevoir
+  ];
+  worksheet['!cols'] = columnWidths;
+
+  // Créer le workbook
+  const workbook: XLSX.WorkBook = {
+    Sheets: { 'Mes Livraisons': worksheet },
+    SheetNames: ['Mes Livraisons']
+  };
+
+  // Générer le fichier
+  const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  
+  // Sauvegarder
+  const data: Blob = new Blob([excelBuffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+  });
+  
+  const fileName = `mes_livraisons_${this.formatDateForFile(new Date())}.xlsx`;
+  FileSaver.saveAs(data, fileName);
+
+  // Message de succès temporaire
+  const originalError = this.errorMessage;
+  this.errorMessage = `✅ ${this.livraisons.length} livraison(s) exportée(s) avec succès`;
+  setTimeout(() => {
+    this.errorMessage = originalError;
+  }, 3000);
+}
+
+private formatDateForExcel(date: string): string {
+  if (!date) return 'N/A';
+  
+  const dateObj = new Date(date);
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  const hours = String(dateObj.getHours()).padStart(2, '0');
+  const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+  
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+private formatDateForFile(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${year}${month}${day}_${hours}${minutes}`;
+}
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i);

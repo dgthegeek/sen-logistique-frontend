@@ -23,17 +23,12 @@
 
         <!-- Filtres -->
         <div class="card mb-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label class="form-label">Rechercher</label>
               <div class="flex gap-2">
-                <input
-                  [(ngModel)]="searchQuery"
-                  (keyup.enter)="onSearch()"
-                  type="text"
-                  class="form-input flex-1"
-                  placeholder="Numéro de tracking..."
-                />
+                <input [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" type="text" class="form-input flex-1"
+                  placeholder="Numéro de tracking..." />
                 <button (click)="onSearch()" class="btn-primary">🔍</button>
               </div>
             </div>
@@ -44,6 +39,15 @@
                 <option *ngFor="let s of statuts" [value]="s.value">{{ s.label }}</option>
               </select>
             </div>
+
+            <!-- Bouton Export Excel -->
+            <div class="flex items-end">
+              <button (click)="exporterExcel()" class="btn-primary w-full"
+                [disabled]="loading || livraisons.length === 0" title="Exporter en Excel">
+                <i class="fa-solid fa-file-excel mr-2"></i>
+                <span>Exporter Excel</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -51,7 +55,9 @@
         <div *ngIf="loading" class="card">
           <div class="flex items-center justify-center py-12">
             <div class="text-center">
-              <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+              <div
+                class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2">
+              </div>
               <p class="text-muted-foreground">Chargement...</p>
             </div>
           </div>
@@ -102,10 +108,8 @@
                     {{ formatDate(livraison.dateCreation) }}
                   </td>
                   <td class="table-cell">
-                    <button
-                      [routerLink]="['/vendeur/livraisons', livraison.id]"
-                      class="text-primary hover:underline text-sm font-medium"
-                    >
+                    <button [routerLink]="['/vendeur/livraisons', livraison.id]"
+                      class="text-primary hover:underline text-sm font-medium">
                       Voir détails →
                     </button>
                   </td>
@@ -116,11 +120,8 @@
 
           <!-- Mobile Cards -->
           <div class="md:hidden space-y-4 p-4">
-            <div
-              *ngFor="let livraison of livraisons"
-              class="border rounded-lg p-4 hover:bg-muted/50 transition-colors"
-              [routerLink]="['/vendeur/livraisons', livraison.id]"
-            >
+            <div *ngFor="let livraison of livraisons" class="border rounded-lg p-4 hover:bg-muted/50 transition-colors"
+              [routerLink]="['/vendeur/livraisons', livraison.id]">
               <div class="flex items-start justify-between mb-3">
                 <div class="font-mono font-medium text-primary text-sm">
                   {{ livraison.numeroTracking }}
@@ -160,11 +161,7 @@
             <p class="text-muted-foreground mb-6">
               {{ searchQuery || selectedStatut ? 'Essayez de modifier vos filtres' : 'Créez votre première livraison' }}
             </p>
-            <button
-              *ngIf="!searchQuery && !selectedStatut"
-              routerLink="/vendeur/creer-livraison"
-              class="btn-primary"
-            >
+            <button *ngIf="!searchQuery && !selectedStatut" routerLink="/vendeur/creer-livraison" class="btn-primary">
               Créer ma première livraison
             </button>
           </div>
@@ -177,32 +174,22 @@
               </div>
 
               <div class="flex items-center gap-2">
-                <button
-                  (click)="previousPage()"
-                  [disabled]="currentPage === 0"
-                  class="btn-outline py-2 px-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+                <button (click)="previousPage()" [disabled]="currentPage === 0"
+                  class="btn-outline py-2 px-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                   ← Précédent
                 </button>
 
                 <div class="hidden md:flex items-center gap-1">
-                  <button
-                    *ngFor="let page of pages"
-                    (click)="goToPage(page)"
+                  <button *ngFor="let page of pages" (click)="goToPage(page)"
                     class="w-8 h-8 rounded text-sm font-medium transition-colors"
-                    [class.bg-primary]="page === currentPage"
-                    [class.text-primary-foreground]="page === currentPage"
-                    [class.hover:bg-muted]="page !== currentPage"
-                  >
+                    [class.bg-primary]="page === currentPage" [class.text-primary-foreground]="page === currentPage"
+                    [class.hover:bg-muted]="page !== currentPage">
                     {{ page + 1 }}
                   </button>
                 </div>
 
-                <button
-                  (click)="nextPage()"
-                  [disabled]="currentPage >= totalPages - 1"
-                  class="btn-outline py-2 px-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+                <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1"
+                  class="btn-outline py-2 px-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                   Suivant →
                 </button>
               </div>

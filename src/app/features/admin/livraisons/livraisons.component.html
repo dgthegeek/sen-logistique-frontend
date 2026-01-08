@@ -4,11 +4,12 @@
   <div class="flex">
     <app-sidebar></app-sidebar>
 
-    <main class="flex-1 p-4 sm:p-6">
+    <!-- Ajoutez min-w-0 et overflow-x-hidden ici -->
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
       <div class="max-w-7xl mx-auto">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
-          <div>
+          <div class="min-w-0">
             <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
               Livraisons
             </h1>
@@ -17,11 +18,6 @@
               <span>{{ totalElements }} livraison{{ totalElements > 1 ? 's' : '' }}</span>
             </p>
           </div>
-
-          <!-- <button (click)="openScannerModal()" class="btn-primary text-sm sm:text-base">
-            <i class="fa-solid fa-qrcode mr-2"></i>
-            Scanner QR Code
-          </button> -->
         </div>
 
         <!-- Filtres -->
@@ -36,13 +32,23 @@
                 <option *ngFor="let s of statuts" [value]="s.value">{{ s.label }}</option>
               </select>
             </div>
+
+            <!-- Bouton Export Excel -->
+            <div class="flex items-end">
+              <button (click)="exporterExcel()" class="btn-primary w-full sm:w-auto text-sm py-2 px-4"
+                [disabled]="loading || livraisons.length === 0" title="Exporter en Excel">
+                <i class="fa-solid fa-file-excel mr-2"></i>
+                <span>Exporter Excel</span>
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- Loading -->
         <div *ngIf="loading" class="card">
           <div class="flex items-center justify-center py-12">
-            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin">
+            </div>
           </div>
         </div>
 
@@ -81,7 +87,7 @@
                     </div>
                   </td>
                   <td class="table-cell">
-                    <span [class]="getStatusLabel(livraison.statut)">
+                    <span [class]="getStatusBadgeClass(livraison.statut)">
                       {{ getStatusLabel(livraison.statut) }}
                     </span>
                   </td>
@@ -99,14 +105,18 @@
                     {{ formatDate(livraison.dateCreation) }}
                   </td>
                   <td class="table-cell">
-                    <button
-                      (click)="openScannerModalWithTracking(livraison.numeroTracking)"
-                      class="btn-outline text-sm"
-                      *ngIf="livraison.statut === 'RAMASSE'"
-                    >
-                      <i class="fa-solid fa-truck mr-1"></i>
-                      Livrer
-                    </button>
+                    <div class="flex gap-2">
+                      <button (click)="openDetailModal(livraison.id)" class="btn-outline text-xs px-2 py-1"
+                        title="Voir les détails">
+                        <i class="fa-solid fa-eye mr-1"></i>
+                        Détails
+                      </button>
+                      <button (click)="openScannerModalWithTracking(livraison.numeroTracking)"
+                        class="btn-outline text-xs px-2 py-1" *ngIf="livraison.statut === 'RAMASSE'">
+                        <i class="fa-solid fa-truck mr-1"></i>
+                        Livrer
+                      </button>
+                    </div>
                     <span *ngIf="livraison.statut !== 'RAMASSE'" class="text-xs text-muted-foreground">
                       {{ livraison.message }}
                     </span>
@@ -116,24 +126,23 @@
             </table>
           </div>
 
-          <!-- Cards Mobile/Tablet -->
+          <!-- Cards Mobile/Tablet - Ajoutez break-words et overflow-hidden -->
           <div class="lg:hidden space-y-3 sm:space-y-4 p-3 sm:p-4">
-            <div
-              *ngFor="let livraison of livraisons"
-              class="border rounded-lg p-3 sm:p-4"
-            >
-              <div class="flex items-start justify-between mb-3">
+            <div *ngFor="let livraison of livraisons" class="border rounded-lg p-3 sm:p-4 overflow-hidden">
+              <div class="flex items-start justify-between mb-3 gap-2">
                 <div class="flex-1 min-w-0">
-                  <div class="font-mono font-semibold text-primary text-sm sm:text-base truncate flex items-center gap-1">
-                    <i class="fa-solid fa-barcode"></i>
-                    <span>{{ livraison.numeroTracking }}</span>
+                  <div
+                    class="font-mono font-semibold text-primary text-sm sm:text-base break-all flex items-center gap-1">
+                    <i class="fa-solid fa-barcode flex-shrink-0"></i>
+                    <span class="break-all">{{ livraison.numeroTracking }}</span>
                   </div>
                   <div class="text-xs text-muted-foreground flex items-center gap-1">
-                    <i class="fa-solid fa-calendar"></i>
+                    <i class="fa-solid fa-calendar flex-shrink-0"></i>
                     <span>{{ formatDate(livraison.dateCreation) }}</span>
                   </div>
                 </div>
-                <span [class]="getStatusLabel(livraison.statut)" class="text-xs ml-2 flex-shrink-0">
+                <span [class]="getStatusBadgeClass(livraison.statut)"
+                  class="text-xs ml-2 flex-shrink-0 whitespace-nowrap">
                   {{ getStatusLabel(livraison.statut) }}
                 </span>
               </div>
@@ -141,30 +150,33 @@
               <div class="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm mb-3">
                 <div>
                   <div class="text-muted-foreground">COD Total</div>
-                  <div class="font-semibold text-foreground">{{ livraison.montantCOD | fcfa }}</div>
+                  <div class="font-semibold text-foreground break-words">{{ livraison.montantCOD | fcfa }}</div>
                 </div>
                 <div>
                   <div class="text-muted-foreground">Frais</div>
-                  <div class="text-muted-foreground">{{ livraison.fraisLivraison | fcfa }}</div>
+                  <div class="text-muted-foreground break-words">{{ livraison.fraisLivraison | fcfa }}</div>
                 </div>
                 <div class="col-span-2">
                   <div class="text-muted-foreground">Vendeur reçoit</div>
-                  <div class="font-semibold text-green-600 text-base sm:text-lg">
+                  <div class="font-semibold text-green-600 text-base sm:text-lg break-words">
                     {{ livraison.montantARecevoir | fcfa }}
                   </div>
                 </div>
               </div>
 
-              <div class="flex gap-2">
-                <button
-                  *ngIf="livraison.statut === 'RAMASSE'"
+              <div class="flex flex-col gap-2">
+                <button (click)="openDetailModal(livraison.id)" class="btn-outline text-xs sm:text-sm w-full py-2">
+                  <i class="fa-solid fa-eye mr-1"></i>
+                  Détails
+                </button>
+                <button *ngIf="livraison.statut === 'RAMASSE'"
                   (click)="openScannerModalWithTracking(livraison.numeroTracking)"
-                  class="btn-primary text-xs sm:text-sm flex-1 py-2"
-                >
+                  class="btn-primary text-xs sm:text-sm w-full py-2">
                   <i class="fa-solid fa-truck mr-1"></i>
                   Livrer
                 </button>
-                <div *ngIf="livraison.statut !== 'RAMASSE'" class="text-xs text-muted-foreground flex-1 flex items-center">
+                <div *ngIf="livraison.statut !== 'RAMASSE'"
+                  class="text-xs text-muted-foreground text-center break-words">
                   {{ livraison.message }}
                 </div>
               </div>
@@ -189,19 +201,13 @@
                 Page {{ currentPage + 1 }} / {{ totalPages }}
               </div>
               <div class="flex gap-2">
-                <button
-                  (click)="previousPage()"
-                  [disabled]="currentPage === 0"
-                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
-                >
+                <button (click)="previousPage()" [disabled]="currentPage === 0"
+                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50">
                   <i class="fa-solid fa-chevron-left mr-1"></i>
                   <span class="hidden sm:inline">Précédent</span>
                 </button>
-                <button
-                  (click)="nextPage()"
-                  [disabled]="currentPage >= totalPages - 1"
-                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
-                >
+                <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1"
+                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50">
                   <span class="hidden sm:inline">Suivant</span>
                   <i class="fa-solid fa-chevron-right ml-1"></i>
                 </button>
@@ -215,30 +221,21 @@
 </div>
 
 <!-- Scanner Modal (Responsive) -->
-<div
-  *ngIf="showScannerModal"
-  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-  (click)="closeScannerModal()"
->
+<div *ngIf="showScannerModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+  (click)="closeScannerModal()">
   <div class="card max-w-md w-full" (click)="$event.stopPropagation()">
     <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-2">
       <i class="fa-solid fa-qrcode text-primary"></i>
       <span>Scanner QR Code</span>
     </h2>
-    
+
     <div class="mb-4 sm:mb-6">
       <label class="form-label text-xs sm:text-sm flex items-center gap-1">
         <i class="fa-solid fa-barcode text-muted-foreground"></i>
         <span>Numéro de tracking</span>
       </label>
-      <input
-        [(ngModel)]="searchQuery"
-        (keyup.enter)="scanQRCode()"
-        type="text"
-        class="form-input text-sm sm:text-base"
-        placeholder="Ex: DKR-20251209-00002"
-        autofocus
-      />
+      <input [(ngModel)]="searchQuery" (keyup.enter)="scanQRCode()" type="text" class="form-input text-sm sm:text-base"
+        placeholder="Ex: DKR-20251209-00002" autofocus />
     </div>
 
     <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
@@ -255,11 +252,8 @@
 </div>
 
 <!-- Confirm Modal (Responsive) -->
-<div
-  *ngIf="showConfirmModal && selectedLivraison"
-  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-  (click)="closeConfirmModal()"
->
+<div *ngIf="showConfirmModal && selectedLivraison"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" (click)="closeConfirmModal()">
   <div class="card max-w-2xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
     <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-2">
       <i class="fa-solid fa-clipboard-check text-primary"></i>
@@ -289,7 +283,8 @@
               <span>Téléphone</span>
             </div>
             <div class="font-medium text-foreground">
-              <a [href]="'tel:' + selectedLivraison.client.telephone" class="text-primary hover:underline flex items-center gap-1">
+              <a [href]="'tel:' + selectedLivraison.client.telephone"
+                class="text-primary hover:underline flex items-center gap-1">
                 <i class="fa-solid fa-phone-volume"></i>
                 <span>{{ selectedLivraison.client.telephone }}</span>
               </a>
@@ -345,7 +340,8 @@
                 <i class="fa-solid fa-hand-holding-dollar"></i>
                 <span>Montant à collecter</span>
               </div>
-              <div class="font-bold text-lg sm:text-xl text-primary">{{ selectedLivraison.montantACollecter | fcfa }}</div>
+              <div class="font-bold text-lg sm:text-xl text-primary">{{ selectedLivraison.montantACollecter | fcfa }}
+              </div>
             </div>
           </div>
         </div>
@@ -360,12 +356,8 @@
           <span>Cash collecté *</span>
         </label>
         <div class="relative">
-          <input
-            [(ngModel)]="cashCollecte"
-            type="number"
-            class="form-input pr-16 text-lg sm:text-xl font-bold"
-            min="0"
-          />
+          <input [(ngModel)]="cashCollecte" type="number" class="form-input pr-16 text-lg sm:text-xl font-bold"
+            min="0" />
           <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-muted-foreground">
             FCFA
           </span>
@@ -377,12 +369,7 @@
       </div>
 
       <div class="flex items-center gap-2 p-3 sm:p-4 border rounded-lg">
-        <input
-          [(ngModel)]="colisRemis"
-          type="checkbox"
-          id="colisRemis"
-          class="w-4 h-4 sm:w-5 sm:h-5"
-        />
+        <input [(ngModel)]="colisRemis" type="checkbox" id="colisRemis" class="w-4 h-4 sm:w-5 sm:h-5" />
         <label for="colisRemis" class="font-medium cursor-pointer text-sm sm:text-base flex items-center gap-2">
           <i class="fa-solid fa-circle-check text-green-600"></i>
           <span>Le colis a été remis au client</span>
@@ -394,12 +381,8 @@
           <i class="fa-solid fa-comment-dots text-muted-foreground"></i>
           <span>Commentaire (optionnel)</span>
         </label>
-        <textarea
-          [(ngModel)]="commentaire"
-          class="form-textarea text-sm"
-          rows="3"
-          placeholder="Ex: Client très satisfait, livraison rapide"
-        ></textarea>
+        <textarea [(ngModel)]="commentaire" class="form-textarea text-sm" rows="3"
+          placeholder="Ex: Client très satisfait, livraison rapide"></textarea>
       </div>
 
       <!-- Warning si pas remis -->
@@ -416,19 +399,13 @@
 
     <!-- Actions -->
     <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-      <button
-        (click)="closeConfirmModal()"
-        class="btn-outline text-sm sm:text-base py-2 sm:py-3"
-        [disabled]="submittingConfirmation"
-      >
+      <button (click)="closeConfirmModal()" class="btn-outline text-sm sm:text-base py-2 sm:py-3"
+        [disabled]="submittingConfirmation">
         <i class="fa-solid fa-xmark mr-2"></i>
         Annuler
       </button>
-      <button
-        (click)="confirmerLivraison()"
-        class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
-        [disabled]="submittingConfirmation"
-      >
+      <button (click)="confirmerLivraison()" class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
+        [disabled]="submittingConfirmation">
         <span *ngIf="!submittingConfirmation">
           <i class="fa-solid fa-check-circle mr-2"></i>
           <span class="hidden sm:inline">Confirmer la livraison</span>
@@ -439,6 +416,196 @@
           Confirmation...
         </span>
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal (Responsive) -->
+<div *ngIf="showDetailModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto"
+  (click)="closeDetailModal()">
+  <div class="card max-w-4xl w-full my-8" (click)="$event.stopPropagation()">
+    <!-- Loading -->
+    <div *ngIf="loading && !livraison" class="flex items-center justify-center py-12">
+      <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="livraison && !loading">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl sm:text-2xl font-bold flex items-center gap-2">
+          <i class="fa-solid fa-file-lines text-primary"></i>
+          <span>Détails de la livraison</span>
+        </h2>
+        <button (click)="closeDetailModal()" class="text-muted-foreground hover:text-foreground">
+          <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+      </div>
+
+      <!-- Tracking & QR Code -->
+      <div class="bg-muted/30 rounded-lg p-4 mb-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex-1">
+            <div class="text-sm text-muted-foreground mb-1">Numéro de tracking</div>
+            <div class="font-mono text-xl sm:text-2xl font-bold text-primary flex items-center gap-2">
+              <i class="fa-solid fa-barcode"></i>
+              <span>{{ livraison.numeroTracking }}</span>
+            </div>
+            <div class="mt-2">
+              <span [class]="getStatusBadgeClass(livraison.statut)">
+                {{ getStatusLabel(livraison.statut) }}
+              </span>
+              <span *ngIf="livraison.urgence === 'EXPRESS'" class="badge badge-failed ml-2">
+                <i class="fa-solid fa-bolt mr-1"></i>
+                Express
+              </span>
+            </div>
+          </div>
+          <!-- <div *ngIf="livraison.qrCodeUrl" class="flex-shrink-0">
+            <img [src]="livraison.qrCodeUrl" alt="QR Code" class="w-24 h-24 sm:w-32 sm:h-32 border-2 border-primary rounded-lg">
+          </div> -->
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Vendeur -->
+        <div class="border rounded-lg p-4">
+          <h3 class="font-semibold text-lg mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-store text-primary"></i>
+            <span>Vendeur</span>
+          </h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Nom:</span>
+              <span class="font-medium">{{ livraison.vendeur.nom }} {{ livraison.vendeur.prenom }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Boutique:</span>
+              <span class="font-medium">{{ livraison.vendeur.nomBoutique }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Téléphone:</span>
+              <a [href]="'tel:' + livraison.vendeur.telephone" class="font-medium text-primary hover:underline">
+                {{ livraison.vendeur.telephone }}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Client -->
+        <div class="border rounded-lg p-4">
+          <h3 class="font-semibold text-lg mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-user text-primary"></i>
+            <span>Client</span>
+          </h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Nom:</span>
+              <span class="font-medium">{{ livraison.client.nom }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Téléphone:</span>
+              <a [href]="'tel:' + livraison.client.telephone" class="font-medium text-primary hover:underline">
+                {{ livraison.client.telephone }}
+              </a>
+            </div>
+            <div>
+              <div class="text-muted-foreground mb-1">Adresse:</div>
+              <div class="font-medium">{{ livraison.client.adresse }}</div>
+              <div *ngIf="livraison.client.pointRepere" class="text-xs text-muted-foreground mt-1">
+                <i class="fa-solid fa-location-dot mr-1"></i>
+                {{ livraison.client.pointRepere }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Produit -->
+        <div class="border rounded-lg p-4">
+          <h3 class="font-semibold text-lg mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-box text-primary"></i>
+            <span>Produit</span>
+          </h3>
+          <div class="space-y-2 text-sm">
+            <div>
+              <div class="text-muted-foreground mb-1">Description:</div>
+              <div class="font-medium">{{ livraison.produit.description }}</div>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Fragile:</span>
+              <span *ngIf="livraison.produit.fragile" class="badge badge-failed text-xs">
+                <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                Oui
+              </span>
+              <span *ngIf="!livraison.produit.fragile" class="text-muted-foreground">Non</span>
+            </div>
+            <div class="flex justify-between" *ngIf="livraison.produit.poids">
+              <span class="text-muted-foreground">Poids:</span>
+              <span class="font-medium">{{ livraison.produit.poids }} kg</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financier -->
+        <div class="border rounded-lg p-4 bg-green-50">
+          <h3 class="font-semibold text-lg mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-hand-holding-dollar text-green-600"></i>
+            <span>Informations financières</span>
+          </h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Montant COD:</span>
+              <span class="font-bold text-lg">{{ livraison.financier.montantCOD | fcfa }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Frais de livraison:</span>
+              <span class="font-medium">{{ livraison.financier.fraisLivraison | fcfa }}</span>
+            </div>
+            <div *ngIf="livraison.financier.cashCollecte !== null" class="flex justify-between pt-2 border-t">
+              <span class="text-muted-foreground">Cash collecté:</span>
+              <span class="font-bold text-green-600 text-lg">{{ livraison.financier.cashCollecte | fcfa }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informations supplémentaires -->
+      <div class="mt-6 border rounded-lg p-4">
+        <h3 class="font-semibold text-lg mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-info-circle text-primary"></i>
+          <span>Informations supplémentaires</span>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <div>
+            <div class="text-muted-foreground mb-1">Zone:</div>
+            <div class="font-medium">{{ livraison.zone }}</div>
+          </div>
+          <div>
+            <div class="text-muted-foreground mb-1">Date de création:</div>
+            <div class="font-medium">{{ formatDate(livraison.dateCreation) }}</div>
+          </div>
+          <div *ngIf="livraison.dateRamassage">
+            <div class="text-muted-foreground mb-1">Date de ramassage:</div>
+            <div class="font-medium">{{ formatDate(livraison.dateRamassage) }}</div>
+          </div>
+          <div *ngIf="livraison.dateLivraison">
+            <div class="text-muted-foreground mb-1">Date de livraison:</div>
+            <div class="font-medium">{{ formatDate(livraison.dateLivraison) }}</div>
+          </div>
+        </div>
+        <div *ngIf="livraison.commentaireLivraison" class="mt-4">
+          <div class="text-muted-foreground mb-1">Commentaire:</div>
+          <div class="font-medium bg-muted/30 p-3 rounded">{{ livraison.commentaireLivraison }}</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-6 flex justify-end">
+        <button (click)="closeDetailModal()" class="btn-primary">
+          <i class="fa-solid fa-xmark mr-2"></i>
+          Fermer
+        </button>
+      </div>
     </div>
   </div>
 </div>

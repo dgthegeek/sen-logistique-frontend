@@ -16,14 +16,16 @@
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
                         <a routerLink="/register" class="btn-primary text-lg px-8 py-4 text-center">
-                            🚀 Commencer maintenant
+                            <i class="fa-solid fa-rocket mr-2"></i>Commencer maintenant
                         </a>
                         <a routerLink="/tracking" class="btn-outline text-lg px-8 py-4 text-center">
-                            📦 Suivre un colis
+                            <i class="fa-solid fa-box mr-2"></i>Suivre un colis
                         </a>
                     </div>
                     <p class="text-sm text-muted-foreground mt-6">
-                        ✓ Sans engagement • ✓ Gratuit à l'inscription • ✓ Support inclus
+                        <i class="fa-solid fa-check text-green-600 mr-1"></i>Sans engagement • 
+                        <i class="fa-solid fa-check text-green-600 mr-1"></i>Gratuit à l'inscription • 
+                        <i class="fa-solid fa-check text-green-600 mr-1"></i>Support inclus
                     </p>
                 </div>
                 <div class="hidden lg:block">
@@ -59,11 +61,7 @@
                                             <div class="relative">
                                                 <div
                                                     class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M5 13l4 4L19 7" />
-                                                    </svg>
+                                                    <i class="fa-solid fa-check text-white text-xl"></i>
                                                 </div>
                                                 <div
                                                     class="absolute top-12 left-1/2 w-0.5 h-12 bg-gradient-to-b from-green-500 to-blue-500 -translate-x-1/2">
@@ -79,12 +77,7 @@
                                             <div class="relative">
                                                 <div
                                                     class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                                                    </svg>
+                                                    <i class="fa-solid fa-box text-white text-xl"></i>
                                                 </div>
                                                 <div
                                                     class="absolute top-12 left-1/2 w-0.5 h-12 bg-gradient-to-b from-blue-500 to-purple-500 -translate-x-1/2">
@@ -99,12 +92,7 @@
                                         <div class="flex items-start gap-4">
                                             <div
                                                 class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center shadow-lg">
-                                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-                                                </svg>
+                                                <i class="fa-solid fa-truck text-white text-xl"></i>
                                             </div>
                                             <div class="flex-1 pt-2">
                                                 <p class="font-semibold text-foreground">Livraison</p>
@@ -116,11 +104,7 @@
                                     <!-- Badge confiance -->
                                     <div
                                         class="mt-6 pt-6 border-t flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
+                                        <i class="fa-solid fa-shield-check text-green-500 text-xl"></i>
                                         <span>200+ vendeurs font confiance à Dioks</span>
                                     </div>
                                 </div>
@@ -146,7 +130,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div *ngFor="let service of services" class="card text-center hover:shadow-lg transition-shadow">
-                    <div class="text-5xl mb-4">{{ service.icon }}</div>
+                    <i [class]="service.icon + ' text-5xl text-primary mb-4'"></i>
                     <h3 class="text-xl font-bold text-foreground mb-3">{{ service.title }}</h3>
                     <p class="text-muted-foreground">{{ service.description }}</p>
                 </div>
@@ -169,7 +153,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div *ngFor="let advantage of advantages" class="text-center">
                     <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl text-primary">{{ advantage.icon }}</span>
+                        <i [class]="advantage.icon + ' text-3xl text-primary'"></i>
                     </div>
                     <h3 class="text-xl font-bold text-foreground mb-2">{{ advantage.title }}</h3>
                     <p class="text-muted-foreground">{{ advantage.description }}</p>
@@ -241,14 +225,16 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div *ngFor="let testimonial of testimonials" class="card">
                     <div class="flex items-center gap-4 mb-4">
-                        <div class="text-4xl">{{ testimonial.image }}</div>
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-user text-2xl text-primary"></i>
+                        </div>
                         <div>
                             <h4 class="font-bold text-foreground">{{ testimonial.name }}</h4>
                             <p class="text-sm text-muted-foreground">{{ testimonial.role }}</p>
                         </div>
                     </div>
                     <div class="flex gap-1 mb-3">
-                        <span *ngFor="let star of [1,2,3,4,5]" class="text-yellow-400">⭐</span>
+                        <i *ngFor="let star of [1,2,3,4,5]" class="fa-solid fa-star text-yellow-400"></i>
                     </div>
                     <p class="text-muted-foreground">{{ testimonial.text }}</p>
                 </div>
@@ -290,17 +276,17 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="card text-center">
-                    <div class="text-4xl mb-4">📍</div>
+                    <i class="fa-solid fa-location-dot text-4xl text-primary mb-4"></i>
                     <h3 class="font-bold text-foreground mb-2">Adresse</h3>
                     <p class="text-muted-foreground">Dakar, Sénégal</p>
                 </div>
                 <div class="card text-center">
-                    <div class="text-4xl mb-4">📞</div>
+                    <i class="fa-solid fa-phone text-4xl text-primary mb-4"></i>
                     <h3 class="font-bold text-foreground mb-2">Téléphone</h3>
                     <a href="tel:+221781082373" class="text-primary hover:underline">+221 78 108 23 73</a>
                 </div>
                 <div class="card text-center">
-                    <div class="text-4xl mb-4">📧</div>
+                    <i class="fa-solid fa-envelope text-4xl text-primary mb-4"></i>
                     <h3 class="font-bold text-foreground mb-2">Email</h3>
                     <a href="mailto:dioks&#64;gmail.com" class="text-primary hover:underline">dioks&#64;gmail.com</a>
                 </div>

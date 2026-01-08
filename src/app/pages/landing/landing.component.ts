@@ -14,22 +14,22 @@ import { PublicFooterComponent } from '../../shared/components/public-footer/pub
 export class LandingComponent {
   services = [
     {
-      icon: '🚚',
+      icon: 'fa-solid fa-truck-fast',
       title: 'Livraison Rapide',
       description: 'Livraison en 24-48h à Dakar. Service express disponible pour livraison le jour même.'
     },
     {
-      icon: '📱',
+      icon: 'fa-solid fa-mobile-screen-button',
       title: 'Suivi en Temps Réel',
       description: 'Suivez vos colis en temps réel avec notre système de tracking avancé.'
     },
     {
-      icon: '💰',
+      icon: 'fa-solid fa-money-bill-wave',
       title: 'Paiement COD',
       description: 'Collectez le paiement à la livraison. Recevez votre argent rapidement et en toute sécurité.'
     },
     {
-      icon: '📍',
+      icon: 'fa-solid fa-map-location-dot',
       title: 'Zones Couvertes',
       description: 'Nous couvrons toute la région de Dakar : Plateau, Mermoz, Pikine, Guédiawaye et plus.'
     }
@@ -37,22 +37,22 @@ export class LandingComponent {
 
   advantages = [
     {
-      icon: '✓',
+      icon: 'fa-solid fa-shield',
       title: 'Fiable',
       description: 'Plus de 95% de livraisons réussies'
     },
     {
-      icon: '⚡',
+      icon: 'fa-solid fa-bolt',
       title: 'Rapide',
       description: 'Livraison express a Dakar'
     },
     {
-      icon: '💎',
+      icon: 'fa-solid fa-gem',
       title: 'Transparent',
       description: 'Tarifs clairs et sans frais cachés'
     },
     {
-      icon: '🛟',
+      icon: 'fa-solid fa-headset',
       title: 'Support 24/7',
       description: 'Équipe disponible pour vous aider'
     }
@@ -85,21 +85,21 @@ export class LandingComponent {
     {
       name: 'Fatou Diop',
       role: 'Vendeuse de cosmétiques',
-      image: '👩🏾',
+      image: 'fa-solid fa-user-circle',
       text: 'Dioks a transformé mon business ! Mes clients reçoivent leurs commandes rapidement et je peux me concentrer sur mes ventes.',
       rating: 5
     },
     {
       name: 'Moussa Sall',
       role: 'Vendeur de vêtements',
-      image: '👨🏾',
+      image: 'fa-solid fa-user-circle',
       text: 'Service professionnel et fiable. Le suivi en temps réel me permet de rassurer mes clients. Je recommande à 100%!',
       rating: 5
     },
     {
       name: 'Aminata Ba',
       role: 'Vendeuse d\'accessoires',
-      image: '👩🏾‍🦱',
+      image: 'fa-solid fa-user-circle',
       text: 'Enfin une solution adaptée aux vendeurs sur les réseaux ! Les tarifs sont corrects et le service est excellent.',
       rating: 5
     }

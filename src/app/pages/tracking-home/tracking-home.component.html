@@ -3,10 +3,9 @@
 
 <div class="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-primary/5 via-background to-primary/10 flex items-center justify-center p-4">
   <div class="max-w-2xl w-full">
-    
     <!-- Header -->
     <div class="text-center mb-8">
-      <div class="text-6xl mb-4">📦</div>
+      <i class="fa-solid fa-box-open text-6xl text-primary mb-4"></i>
       <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-3">
         Suivre mon colis
       </h1>
@@ -20,19 +19,22 @@
       <form (submit)="onSearch($event)" class="space-y-6">
         <div>
           <label for="tracking" class="form-label text-lg">
-            Numéro de tracking
+            <i class="fa-solid fa-hashtag mr-2"></i>Numéro de tracking
           </label>
-          <input
-            id="tracking"
-            [(ngModel)]="trackingNumber"
-            name="trackingNumber"
-            type="text"
-            class="form-input text-xl font-mono text-center"
-            placeholder="DKR-20250101-00001"
-            required
-          />
+          <div class="relative">
+            <input
+              id="tracking"
+              [(ngModel)]="trackingNumber"
+              name="trackingNumber"
+              type="text"
+              class="form-input text-xl font-mono text-center pl-12"
+              placeholder="DKR-20250101-00001"
+              required
+            />
+            <i class="fa-solid fa-barcode absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-xl"></i>
+          </div>
           <p class="form-helper text-center">
-            Le numéro se trouve sur votre reçu de livraison
+            <i class="fa-solid fa-circle-info mr-1"></i>Le numéro se trouve sur votre reçu de livraison
           </p>
         </div>
 
@@ -41,24 +43,29 @@
           class="btn-primary w-full py-4 text-lg"
           [disabled]="!trackingNumber || loading"
         >
-          <span *ngIf="!loading">🔍 Rechercher</span>
+          <i *ngIf="!loading" class="fa-solid fa-magnifying-glass mr-2"></i>
+          <i *ngIf="loading" class="fa-solid fa-spinner fa-spin mr-2"></i>
+          <span *ngIf="!loading">Rechercher</span>
           <span *ngIf="loading">Recherche en cours...</span>
         </button>
       </form>
 
       <!-- Error Message -->
       <div *ngIf="errorMessage" class="mt-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
-        {{ errorMessage }}
+        <div class="flex items-start gap-2">
+          <i class="fa-solid fa-circle-exclamation text-lg flex-shrink-0 mt-0.5"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
       </div>
     </div>
 
     <!-- Help -->
     <div class="mt-8 text-center">
       <p class="text-sm text-muted-foreground mb-3">
-        Vous ne trouvez pas votre numéro de tracking ?
+        <i class="fa-solid fa-circle-question mr-1"></i>Vous ne trouvez pas votre numéro de tracking ?
       </p>
       <a href="mailto:contact@dioks.sn" class="text-primary hover:underline text-sm font-medium">
-        Contactez-nous
+        <i class="fa-solid fa-envelope mr-2"></i>Contactez-nous
       </a>
     </div>
   </div>
