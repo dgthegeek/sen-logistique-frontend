@@ -3,49 +3,59 @@
 <div class="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-primary/5 via-background to-primary/10 flex items-center justify-center p-4">
   <div class="card max-w-md w-full">
     <div class="text-center mb-6">
+      <i class="fa-solid fa-right-to-bracket text-5xl text-primary mb-4"></i>
       <h1 class="text-3xl font-bold text-foreground mb-2">Connexion</h1>
       <p class="text-muted-foreground">Accédez à votre espace vendeur</p>
     </div>
 
     <!-- Message d'erreur -->
     <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
-      {{ errorMessage }}
+      <div class="flex items-start gap-2">
+        <i class="fa-solid fa-circle-exclamation flex-shrink-0 mt-0.5"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <!-- Téléphone -->
       <div class="mb-4">
         <label for="telephone" class="form-label">
-          Numéro de téléphone *
+          <i class="fa-solid fa-phone mr-2"></i>Numéro de téléphone *
         </label>
-        <input
-          id="telephone"
-          type="tel"
-          formControlName="telephone"
-          class="form-input"
-          [class.border-destructive]="telephone?.invalid && telephone?.touched"
-          placeholder="77 123 45 67"
-        />
+        <div class="relative">
+          <input
+            id="telephone"
+            type="tel"
+            formControlName="telephone"
+            class="form-input pl-10"
+            [class.border-destructive]="telephone?.invalid && telephone?.touched"
+            placeholder="77 123 45 67"
+          />
+          <i class="fa-solid fa-mobile-screen-button absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+        </div>
         <p *ngIf="telephone?.invalid && telephone?.touched" class="form-error">
-          Numéro de téléphone invalide (ex: 77 123 45 67)
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>Numéro de téléphone invalide (ex: 77 123 45 67)
         </p>
       </div>
 
       <!-- Mot de passe -->
       <div class="mb-6">
         <label for="password" class="form-label">
-          Mot de passe *
+          <i class="fa-solid fa-lock mr-2"></i>Mot de passe *
         </label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          class="form-input"
-          [class.border-destructive]="password?.invalid && password?.touched"
-          placeholder="••••••••"
-        />
+        <div class="relative">
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            class="form-input pl-10"
+            [class.border-destructive]="password?.invalid && password?.touched"
+            placeholder="••••••••"
+          />
+          <i class="fa-solid fa-key absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+        </div>
         <p *ngIf="password?.invalid && password?.touched" class="form-error">
-          Le mot de passe doit contenir au moins 6 caractères
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>Le mot de passe doit contenir au moins 6 caractères
         </p>
       </div>
 
@@ -55,6 +65,8 @@
         class="btn-primary w-full py-3"
         [disabled]="loading || loginForm.invalid"
       >
+        <i *ngIf="!loading" class="fa-solid fa-right-to-bracket mr-2"></i>
+        <i *ngIf="loading" class="fa-solid fa-spinner fa-spin mr-2"></i>
         <span *ngIf="!loading">Se connecter</span>
         <span *ngIf="loading">Connexion en cours...</span>
       </button>
@@ -72,7 +84,7 @@
 
     <!-- Lien inscription -->
     <a routerLink="/register" class="btn-outline w-full text-center block py-3">
-      Créer un compte gratuitement
+      <i class="fa-solid fa-user-plus mr-2"></i>Créer un compte gratuitement
     </a>
   </div>
 </div>

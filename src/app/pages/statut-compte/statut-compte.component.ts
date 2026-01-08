@@ -56,10 +56,10 @@ export class StatutCompteComponent implements OnInit {
   }
 
   get icon(): string {
-    if (this.isEnAttente) return '⏳';
-    if (this.isSuspendu) return '🚫';
-    if (this.isBloque) return '⛔';
-    return '📋';
+    if (this.isEnAttente) return 'fa-solid fa-clock text-orange-600';
+    if (this.isSuspendu) return 'fa-solid fa-triangle-exclamation text-red-600';
+    if (this.isBloque) return 'fa-solid fa-ban text-gray-600';
+    return 'fa-solid fa-clipboard-list text-blue-600';
   }
 
   get bgClass(): string {

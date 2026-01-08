@@ -1,0 +1,36 @@
+/* src/app/features/admin/creer-livraison-vendeur/creer-livraison-vendeur.component.css */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Modal styles (si pas déjà globalement) */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-2xl w-full max-h-[90vh] overflow-y-auto;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

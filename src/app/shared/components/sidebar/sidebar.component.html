@@ -27,7 +27,7 @@
       routerLinkActive="bg-primary text-primary-foreground"
       class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted transition-colors text-sm font-medium"
     >
-      <span class="text-xl">{{ item.icon }}</span>
+      <i [class]="item.icon + ' text-lg'"></i>
       <span>{{ item.label }}</span>
     </a>
   </nav>
@@ -46,7 +46,7 @@
       (click)="closeMobileMenu()"
       class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted transition-colors text-sm font-medium"
     >
-      <span class="text-xl">{{ item.icon }}</span>
+      <i [class]="item.icon + ' text-lg'"></i>
       <span>{{ item.label }}</span>
     </a>
   </nav>

@@ -2,7 +2,7 @@
     <div class="card max-w-2xl w-full text-center">
         <!-- Icon -->
         <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" [ngClass]="iconBgClass">
-            <span class="text-6xl">{{ icon }}</span>
+            <i class="text-5xl" [class]="icon"></i>
         </div>
 
         <!-- Titre -->
@@ -26,21 +26,21 @@
         <!-- Contenu EN_ATTENTE_VALIDATION -->
         <div *ngIf="isEnAttente" class="border rounded-lg p-6 mb-8 text-left" [ngClass]="cardBorderClass">
             <div class="flex items-start gap-4">
-                <div class="text-3xl">📋</div>
+                <i class="fa-solid fa-clipboard-list text-3xl text-orange-600"></i>
                 <div>
                     <h3 class="font-semibold text-foreground mb-2">Prochaines étapes</h3>
                     <ul class="space-y-2 text-sm text-muted-foreground">
                         <li class="flex items-start gap-2">
-                            <span class="text-orange-600 mt-1">•</span>
+                            <i class="fa-solid fa-circle text-orange-600 text-xs mt-1.5"></i>
                             <span>Notre équipe va vérifier vos informations</span>
                         </li>
                         <li class="flex items-start gap-2">
-                            <span class="text-orange-600 mt-1">•</span>
+                            <i class="fa-solid fa-circle text-orange-600 text-xs mt-1.5"></i>
                             <span>Vous recevrez un <strong>SMS de confirmation</strong> dès que votre compte sera
                                 activé</span>
                         </li>
                         <li class="flex items-start gap-2">
-                            <span class="text-orange-600 mt-1">•</span>
+                            <i class="fa-solid fa-circle text-orange-600 text-xs mt-1.5"></i>
                             <span>Délai habituel : <strong>24 à 48 heures</strong></span>
                         </li>
                     </ul>
@@ -51,7 +51,7 @@
         <!-- Contenu SUSPENDU/BLOQUE -->
         <div *ngIf="isSuspendu || isBloque" class="border rounded-lg p-6 mb-6 text-left" [ngClass]="cardBorderClass">
             <div class="flex items-start gap-4">
-                <div class="text-3xl">ℹ️</div>
+                <i class="fa-solid fa-circle-info text-3xl text-blue-600"></i>
                 <div>
                     <h3 class="font-semibold text-foreground mb-2">
                         {{ isBloque ? 'Raison du blocage' : 'Raison de la suspension' }}
@@ -69,7 +69,7 @@
         <!-- Contact -->
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
             <div class="flex items-start gap-3">
-                <div class="text-2xl">{{ isEnAttente ? '💡' : '📞' }}</div>
+                <i class="text-2xl text-blue-600" [class]="isEnAttente ? 'fa-solid fa-lightbulb' : 'fa-solid fa-phone'"></i>
                 <div class="text-sm">
                     <p class="font-semibold text-foreground mb-1">
                         {{ isEnAttente ? 'Besoin d\'aide ?' : 'Contactez-nous' }}
@@ -82,9 +82,11 @@
                     </p>
                     <div class="space-y-1">
                         <p>
+                            <i class="fa-solid fa-phone mr-2 text-primary"></i>
                             <a href="tel:+221781082373" class="text-primary hover:underline">+221 78 108 23 73</a>
                         </p>
                         <p>
+                            <i class="fa-solid fa-envelope mr-2 text-primary"></i>
                             <a href="mailto:dioks&#64;gmail.com" class="text-primary hover:underline">
                                 dioks&#64;gmail.com
                             </a>
@@ -98,11 +100,11 @@
         <div class="flex gap-3">
             <button (click)="logout()" class="flex-1" [class.btn-outline]="isEnAttente"
                 [class.btn-primary]="!isEnAttente">
-                Se déconnecter
+                <i class="fa-solid fa-right-from-bracket mr-2"></i>Se déconnecter
             </button>
             <a routerLink="/tracking" class="flex-1" [class.btn-secondary]="isEnAttente"
                 [class.btn-outline]="!isEnAttente">
-                Suivre un colis
+                <i class="fa-solid fa-magnifying-glass mr-2"></i>Suivre un colis
             </a>
         </div>
     </div>

@@ -17,7 +17,7 @@
 
         <!-- Error -->
         <div *ngIf="errorMessage && !loading" class="card text-center py-12">
-            <div class="text-6xl mb-4">❌</div>
+            <i class="fa-solid fa-circle-xmark text-6xl text-red-500 mb-4"></i>
             <h2 class="text-2xl font-bold text-foreground mb-2">
                 Colis introuvable
             </h2>
@@ -25,7 +25,7 @@
                 {{ errorMessage }}
             </p>
             <button routerLink="/tracking" class="btn-primary">
-                ← Nouvelle recherche
+                <i class="fa-solid fa-arrow-left mr-2"></i>Nouvelle recherche
             </button>
         </div>
 
@@ -53,7 +53,7 @@
                     <div class="text-center p-4 bg-muted/30 rounded-lg">
                         <div class="text-sm text-muted-foreground mb-1">Destination</div>
                         <div class="text-xl font-semibold text-foreground">
-                            📍 {{ tracking.destination }}
+                            <i class="fa-solid fa-location-dot text-primary mr-2"></i>{{ tracking.destination }}
                         </div>
                     </div>
 
@@ -69,7 +69,7 @@
             <!-- Timeline -->
             <div class="card">
                 <h3 class="text-2xl font-bold text-foreground mb-6">
-                    📍 Suivi détaillé
+                    <i class="fa-solid fa-route text-primary mr-2"></i>Suivi détaillé
                 </h3>
 
                 <div class="space-y-6">
@@ -87,10 +87,8 @@
                                 [class.bg-white]="!step.effectue" [class.border-muted]="!step.effectue"
                                 [class.ring-4]="isLastCompletedStep(step, i)"
                                 [class]="isLastCompletedStep(step, i) ? 'ring-4 ring-primary/20' : ''">
-                                <span class="text-xl" [class.text-white]="step.effectue"
-                                    [class.text-muted-foreground]="!step.effectue">
-                                    {{ step.effectue ? '✓' : '○' }}
-                                </span>
+                                <i *ngIf="step.effectue" class="fa-solid fa-check text-xl text-white"></i>
+                                <i *ngIf="!step.effectue" class="fa-regular fa-circle text-xl text-muted-foreground"></i>
                             </div>
 
                             <!-- Content -->
@@ -111,7 +109,7 @@
             <!-- Help Card -->
             <div class="card bg-blue-50 border-blue-200">
                 <div class="flex items-start gap-4">
-                    <div class="text-3xl">💡</div>
+                    <i class="fa-solid fa-circle-info text-3xl text-blue-600"></i>
                     <div class="flex-1">
                         <h3 class="font-semibold text-foreground mb-2">
                             Besoin d'aide ?
@@ -121,10 +119,10 @@
                         </p>
                         <div class="flex flex-wrap gap-3">
                             <a href="tel:+221XXXXXXXXX" class="btn-outline text-sm">
-                                📞 Appeler
+                                <i class="fa-solid fa-phone mr-2"></i>Appeler
                             </a>
                             <a href="mailto:contact@dioks.sn" class="btn-outline text-sm">
-                                📧 Email
+                                <i class="fa-solid fa-envelope mr-2"></i>Email
                             </a>
                         </div>
                     </div>
@@ -134,7 +132,7 @@
             <!-- New Search -->
             <div class="text-center">
                 <button routerLink="/tracking" class="btn-ghost">
-                    ← Suivre un autre colis
+                    <i class="fa-solid fa-arrow-left mr-2"></i>Suivre un autre colis
                 </button>
             </div>
         </div>

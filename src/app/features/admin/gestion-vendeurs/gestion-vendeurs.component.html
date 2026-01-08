@@ -4,7 +4,7 @@
   <div class="flex">
     <app-sidebar></app-sidebar>
 
-    <main class="flex-1 p-4 sm:p-6">
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
       <div class="max-w-7xl mx-auto">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
@@ -12,65 +12,59 @@
             <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
               Gestion des vendeurs
             </h1>
-            <p class="text-sm sm:text-base text-muted-foreground">
-              {{ totalElements }} vendeur{{ totalElements > 1 ? 's' : '' }}
+            <p class="text-sm sm:text-base text-muted-foreground flex items-center gap-2">
+              <i class="fa-solid fa-users"></i>
+              <span>{{ totalElements }} vendeur{{ totalElements > 1 ? 's' : '' }}</span>
             </p>
           </div>
 
           <!-- Badge notification -->
-          <div *ngIf="nombreEnAttente > 0" class="flex items-center gap-2 bg-orange-50 border border-orange-200 px-3 sm:px-4 py-2 rounded-lg">
-            <span class="text-orange-600 font-semibold text-sm">⚠️ {{ nombreEnAttente }} en attente</span>
+          <div *ngIf="nombreEnAttente > 0"
+            class="flex items-center gap-2 bg-orange-50 border border-orange-200 px-3 sm:px-4 py-2 rounded-lg">
+            <i class="fa-solid fa-clock text-orange-600"></i>
+            <span class="text-orange-600 font-semibold text-sm">{{ nombreEnAttente }} en attente</span>
           </div>
         </div>
 
         <!-- Tabs (Responsive Scroll) -->
         <div class="card mb-4 sm:mb-6 overflow-x-auto">
           <div class="flex gap-1 sm:gap-2 border-b -mx-4 -mt-4 px-4 min-w-max">
-            <button
-              (click)="changeTab('en-attente')"
-              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap"
-              [class.border-primary]="activeTab === 'en-attente'"
-              [class.text-primary]="activeTab === 'en-attente'"
+            <button (click)="changeTab('en-attente')"
+              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap flex items-center gap-2"
+              [class.border-primary]="activeTab === 'en-attente'" [class.text-primary]="activeTab === 'en-attente'"
               [class.border-transparent]="activeTab !== 'en-attente'"
-              [class.text-muted-foreground]="activeTab !== 'en-attente'"
-            >
-              En attente
-              <span *ngIf="nombreEnAttente > 0" class="ml-1 sm:ml-2 badge badge-failed text-xs">
+              [class.text-muted-foreground]="activeTab !== 'en-attente'">
+              <i class="fa-solid fa-clock"></i>
+              <span>En attente</span>
+              <span *ngIf="nombreEnAttente > 0" class="ml-1 badge badge-failed text-xs">
                 {{ nombreEnAttente }}
               </span>
             </button>
 
-            <button
-              (click)="changeTab('tous')"
-              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap"
-              [class.border-primary]="activeTab === 'tous'"
-              [class.text-primary]="activeTab === 'tous'"
-              [class.border-transparent]="activeTab !== 'tous'"
-              [class.text-muted-foreground]="activeTab !== 'tous'"
-            >
-              Tous
+            <button (click)="changeTab('tous')"
+              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap flex items-center gap-2"
+              [class.border-primary]="activeTab === 'tous'" [class.text-primary]="activeTab === 'tous'"
+              [class.border-transparent]="activeTab !== 'tous'" [class.text-muted-foreground]="activeTab !== 'tous'">
+              <i class="fa-solid fa-users"></i>
+              <span>Tous</span>
             </button>
 
-            <button
-              (click)="changeTab('actifs')"
-              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap"
-              [class.border-primary]="activeTab === 'actifs'"
-              [class.text-primary]="activeTab === 'actifs'"
+            <button (click)="changeTab('actifs')"
+              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap flex items-center gap-2"
+              [class.border-primary]="activeTab === 'actifs'" [class.text-primary]="activeTab === 'actifs'"
               [class.border-transparent]="activeTab !== 'actifs'"
-              [class.text-muted-foreground]="activeTab !== 'actifs'"
-            >
-              Actifs
+              [class.text-muted-foreground]="activeTab !== 'actifs'">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Actifs</span>
             </button>
 
-            <button
-              (click)="changeTab('suspendus')"
-              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap"
-              [class.border-primary]="activeTab === 'suspendus'"
-              [class.text-primary]="activeTab === 'suspendus'"
+            <button (click)="changeTab('suspendus')"
+              class="px-3 sm:px-4 py-2 sm:py-3 font-medium border-b-2 transition-colors text-sm sm:text-base whitespace-nowrap flex items-center gap-2"
+              [class.border-primary]="activeTab === 'suspendus'" [class.text-primary]="activeTab === 'suspendus'"
               [class.border-transparent]="activeTab !== 'suspendus'"
-              [class.text-muted-foreground]="activeTab !== 'suspendus'"
-            >
-              Suspendus
+              [class.text-muted-foreground]="activeTab !== 'suspendus'">
+              <i class="fa-solid fa-ban"></i>
+              <span>Suspendus</span>
             </button>
           </div>
         </div>
@@ -79,40 +73,37 @@
         <div class="card mb-4 sm:mb-6" *ngIf="activeTab === 'tous'">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div>
-              <label class="form-label text-xs sm:text-sm">Recherche</label>
-              <input
-                [(ngModel)]="filters.search"
-                (keyup.enter)="onFilterChange()"
-                type="text"
-                class="form-input text-sm"
-                placeholder="Nom, téléphone..."
-              />
+              <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+                <i class="fa-solid fa-magnifying-glass text-muted-foreground"></i>
+                <span>Recherche</span>
+              </label>
+              <input [(ngModel)]="filters.search" (keyup.enter)="onFilterChange()" type="text"
+                class="form-input text-sm" placeholder="Nom, téléphone..." />
             </div>
 
             <div>
-              <label class="form-label text-xs sm:text-sm">Commune</label>
-              <input
-                [(ngModel)]="filters.commune"
-                (change)="onFilterChange()"
-                type="text"
-                class="form-input text-sm"
-                placeholder="Ex: Dakar"
-              />
+              <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+                <i class="fa-solid fa-map text-muted-foreground"></i>
+                <span>Commune</span>
+              </label>
+              <input [(ngModel)]="filters.commune" (change)="onFilterChange()" type="text" class="form-input text-sm"
+                placeholder="Ex: Dakar" />
             </div>
 
             <div>
-              <label class="form-label text-xs sm:text-sm">Quartier</label>
-              <input
-                [(ngModel)]="filters.quartier"
-                (change)="onFilterChange()"
-                type="text"
-                class="form-input text-sm"
-                placeholder="Ex: Mermoz"
-              />
+              <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+                <i class="fa-solid fa-map-pin text-muted-foreground"></i>
+                <span>Quartier</span>
+              </label>
+              <input [(ngModel)]="filters.quartier" (change)="onFilterChange()" type="text" class="form-input text-sm"
+                placeholder="Ex: Mermoz" />
             </div>
 
             <div>
-              <label class="form-label text-xs sm:text-sm">Tri</label>
+              <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+                <i class="fa-solid fa-sort text-muted-foreground"></i>
+                <span>Tri</span>
+              </label>
               <select [(ngModel)]="filters.sort" (change)="onFilterChange()" class="form-select text-sm">
                 <option value="dateInscription">Date d'inscription</option>
                 <option value="nombreLivraisons">Nombre de livraisons</option>
@@ -125,13 +116,15 @@
         <!-- Loading -->
         <div *ngIf="loading" class="card">
           <div class="flex items-center justify-center py-12">
-            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin">
+            </div>
           </div>
         </div>
 
         <!-- Error -->
         <div *ngIf="errorMessage && !loading" class="card">
           <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+            <i class="fa-solid fa-circle-exclamation mr-2"></i>
             {{ errorMessage }}
           </div>
         </div>
@@ -155,20 +148,30 @@
               <tbody>
                 <tr *ngFor="let vendeur of vendeurs" class="table-row">
                   <td class="table-cell">
-                    <div class="font-medium">{{ vendeur.prenom }} {{ vendeur.nom }}</div>
+                    <div class="font-medium flex items-center gap-2">
+                      <i class="fa-solid fa-user-circle text-primary"></i>
+                      <span>{{ vendeur.prenom }} {{ vendeur.nom }}</span>
+                    </div>
                     <div class="text-xs text-muted-foreground">ID: {{ vendeur.id }}</div>
                   </td>
                   <td class="table-cell">
-                    <a [href]="'tel:' + vendeur.telephone" class="text-primary hover:underline">
-                      {{ vendeur.telephone }}
+                    <a [href]="'tel:' + vendeur.telephone" class="text-primary hover:underline flex items-center gap-1">
+                      <i class="fa-solid fa-phone"></i>
+                      <span>{{ vendeur.telephone }}</span>
                     </a>
                   </td>
                   <td class="table-cell">
-                    <div>{{ vendeur.nomBoutique || '-' }}</div>
+                    <div class="flex items-center gap-1">
+                      <i class="fa-solid fa-store text-muted-foreground"></i>
+                      <span>{{ vendeur.nomBoutique || '-' }}</span>
+                    </div>
                     <div class="text-xs text-muted-foreground">{{ vendeur.categorieActivite || '-' }}</div>
                   </td>
                   <td class="table-cell text-sm">
-                    <div>{{ vendeur.quartier || '-' }}</div>
+                    <div class="flex items-center gap-1">
+                      <i class="fa-solid fa-location-dot text-muted-foreground"></i>
+                      <span>{{ vendeur.quartier || '-' }}</span>
+                    </div>
                     <div class="text-xs text-muted-foreground">{{ vendeur.commune || '-' }}</div>
                   </td>
                   <td class="table-cell">
@@ -177,6 +180,7 @@
                     </span>
                   </td>
                   <td class="table-cell text-sm">
+                    <i class="fa-solid fa-calendar mr-1 text-muted-foreground"></i>
                     {{ formatDate(vendeur.dateInscription) }}
                   </td>
                   <td class="table-cell font-semibold text-primary">
@@ -184,43 +188,38 @@
                   </td>
                   <td class="table-cell">
                     <div class="flex gap-2">
-                      <button
-                        (click)="openDetailModal(vendeur)"
-                        class="text-sm text-primary hover:underline"
-                      >
-                        Détails
+                      <button (click)="openDetailModal(vendeur)"
+                        class="text-sm text-primary hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-eye"></i>
+                        <span>Détails</span>
                       </button>
 
-                      <button
-                        *ngIf="vendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
+                      <button *ngIf="vendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
                         (click)="openActionModal(vendeur, 'valider')"
-                        class="text-sm text-green-600 hover:underline"
-                      >
-                        Valider
+                        class="text-sm text-green-600 hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>Valider</span>
                       </button>
 
-                      <button
-                        *ngIf="vendeur.statut === StatutVendeur.ACTIF"
+                      <button *ngIf="vendeur.statut === StatutVendeur.ACTIF"
                         (click)="openActionModal(vendeur, 'suspendre')"
-                        class="text-sm text-orange-600 hover:underline"
-                      >
-                        Suspendre
+                        class="text-sm text-orange-600 hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-pause-circle"></i>
+                        <span>Suspendre</span>
                       </button>
 
-                      <button
-                        *ngIf="vendeur.statut === StatutVendeur.SUSPENDU"
+                      <button *ngIf="vendeur.statut === StatutVendeur.SUSPENDU"
                         (click)="openActionModal(vendeur, 'reactiver')"
-                        class="text-sm text-green-600 hover:underline"
-                      >
-                        Réactiver
+                        class="text-sm text-green-600 hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Réactiver</span>
                       </button>
 
-                      <button
-                        *ngIf="vendeur.statut !== StatutVendeur.BLOQUE"
+                      <button *ngIf="vendeur.statut !== StatutVendeur.BLOQUE"
                         (click)="openActionModal(vendeur, 'bloquer')"
-                        class="text-sm text-red-600 hover:underline"
-                      >
-                        Bloquer
+                        class="text-sm text-red-600 hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-ban"></i>
+                        <span>Bloquer</span>
                       </button>
                     </div>
                   </td>
@@ -231,17 +230,17 @@
 
           <!-- Cards Mobile/Tablet -->
           <div class="lg:hidden space-y-3 sm:space-y-4 p-3 sm:p-4">
-            <div
-              *ngFor="let vendeur of vendeurs"
-              class="border rounded-lg p-3 sm:p-4"
-            >
+            <div *ngFor="let vendeur of vendeurs" class="border rounded-lg p-3 sm:p-4 overflow-hidden">
               <div class="flex items-start justify-between mb-3">
                 <div class="flex-1 min-w-0">
-                  <div class="font-semibold text-foreground text-sm sm:text-base truncate">
-                    {{ vendeur.prenom }} {{ vendeur.nom }}
+                  <div class="font-semibold text-foreground text-sm sm:text-base truncate flex items-center gap-2">
+                    <i class="fa-solid fa-user-circle text-primary"></i>
+                    <span>{{ vendeur.prenom }} {{ vendeur.nom }}</span>
                   </div>
-                  <a [href]="'tel:' + vendeur.telephone" class="text-xs sm:text-sm text-primary hover:underline">
-                    {{ vendeur.telephone }}
+                  <a [href]="'tel:' + vendeur.telephone"
+                    class="text-xs sm:text-sm text-primary hover:underline flex items-center gap-1">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>{{ vendeur.telephone }}</span>
                   </a>
                 </div>
                 <span [class]="getStatutBadgeClass(vendeur.statut)" class="text-xs ml-2 flex-shrink-0">
@@ -251,45 +250,49 @@
 
               <div class="space-y-1 sm:space-y-2 text-xs sm:text-sm mb-3">
                 <div class="flex justify-between">
-                  <span class="text-muted-foreground">Boutique:</span>
+                  <span class="text-muted-foreground flex items-center gap-1">
+                    <i class="fa-solid fa-store"></i>
+                    <span>Boutique:</span>
+                  </span>
                   <span class="font-medium truncate ml-2">{{ vendeur.nomBoutique || '-' }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-muted-foreground">Localisation:</span>
+                  <span class="text-muted-foreground flex items-center gap-1">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Localisation:</span>
+                  </span>
                   <span class="font-medium truncate ml-2">{{ vendeur.quartier }}, {{ vendeur.commune }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-muted-foreground">Solde:</span>
+                  <span class="text-muted-foreground flex items-center gap-1">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span>Solde:</span>
+                  </span>
                   <span class="font-semibold text-primary">{{ vendeur.soldeEnAttente | fcfa }}</span>
                 </div>
               </div>
 
               <div class="flex gap-2 flex-wrap">
                 <button (click)="openDetailModal(vendeur)" class="btn-outline text-xs sm:text-sm flex-1 py-2">
+                  <i class="fa-solid fa-eye mr-1"></i>
                   Détails
                 </button>
 
-                <button
-                  *ngIf="vendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
-                  (click)="openActionModal(vendeur, 'valider')"
-                  class="btn-primary text-xs sm:text-sm flex-1 py-2"
-                >
+                <button *ngIf="vendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
+                  (click)="openActionModal(vendeur, 'valider')" class="btn-primary text-xs sm:text-sm flex-1 py-2">
+                  <i class="fa-solid fa-check-circle mr-1"></i>
                   Valider
                 </button>
 
-                <button
-                  *ngIf="vendeur.statut === StatutVendeur.ACTIF"
-                  (click)="openActionModal(vendeur, 'suspendre')"
-                  class="btn-outline text-xs sm:text-sm flex-1 py-2"
-                >
+                <button *ngIf="vendeur.statut === StatutVendeur.ACTIF" (click)="openActionModal(vendeur, 'suspendre')"
+                  class="btn-outline text-xs sm:text-sm flex-1 py-2">
+                  <i class="fa-solid fa-pause-circle mr-1"></i>
                   Suspendre
                 </button>
 
-                <button
-                  *ngIf="vendeur.statut === StatutVendeur.SUSPENDU"
-                  (click)="openActionModal(vendeur, 'reactiver')"
-                  class="btn-primary text-xs sm:text-sm flex-1 py-2"
-                >
+                <button *ngIf="vendeur.statut === StatutVendeur.SUSPENDU"
+                  (click)="openActionModal(vendeur, 'reactiver')" class="btn-primary text-xs sm:text-sm flex-1 py-2">
+                  <i class="fa-solid fa-rotate-right mr-1"></i>
                   Réactiver
                 </button>
               </div>
@@ -298,12 +301,13 @@
 
           <!-- Empty State -->
           <div *ngIf="vendeurs.length === 0" class="text-center py-8 sm:py-12">
-            <div class="text-4xl sm:text-6xl mb-4">👥</div>
+            <i class="fa-solid fa-users text-5xl sm:text-6xl text-muted-foreground mb-4"></i>
             <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2">
               Aucun vendeur trouvé
             </h3>
             <p class="text-sm sm:text-base text-muted-foreground">
-              {{ activeTab === 'en-attente' ? 'Aucun vendeur en attente de validation' : 'Essayez de modifier vos filtres' }}
+              {{ activeTab === 'en-attente' ? 'Aucun vendeur en attente de validation' : 'Essayez de modifier vos
+              filtres' }}
             </p>
           </div>
 
@@ -315,21 +319,15 @@
               </div>
 
               <div class="flex gap-2">
-                <button
-                  (click)="previousPage()"
-                  [disabled]="currentPage === 0"
-                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
-                >
-                  <span class="hidden sm:inline">← Précédent</span>
-                  <span class="sm:hidden">←</span>
+                <button (click)="previousPage()" [disabled]="currentPage === 0"
+                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50">
+                  <i class="fa-solid fa-chevron-left mr-1"></i>
+                  <span class="hidden sm:inline">Précédent</span>
                 </button>
-                <button
-                  (click)="nextPage()"
-                  [disabled]="currentPage >= totalPages - 1"
-                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
-                >
-                  <span class="hidden sm:inline">Suivant →</span>
-                  <span class="sm:hidden">→</span>
+                <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1"
+                  class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50">
+                  <span class="hidden sm:inline">Suivant</span>
+                  <i class="fa-solid fa-chevron-right ml-1"></i>
                 </button>
               </div>
             </div>
@@ -341,11 +339,8 @@
 </div>
 
 <!-- Modal Détail Vendeur (Responsive) -->
-<div
-  *ngIf="showDetailModal"
-  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-  (click)="closeDetailModal()"
->
+<div *ngIf="showDetailModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+  (click)="closeDetailModal()">
   <div class="card max-w-4xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
     <!-- Loading -->
     <div *ngIf="loadingDetail" class="text-center py-12">
@@ -357,15 +352,16 @@
       <!-- Header -->
       <div class="flex items-start justify-between mb-4 sm:mb-6">
         <div class="flex-1 min-w-0 mr-4">
-          <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-2 truncate">
-            {{ selectedVendeur.prenom }} {{ selectedVendeur.nom }}
+          <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-2 truncate flex items-center gap-2">
+            <i class="fa-solid fa-user-circle text-primary"></i>
+            <span>{{ selectedVendeur.prenom }} {{ selectedVendeur.nom }}</span>
           </h2>
           <span [class]="getStatutBadgeClass(selectedVendeur.statut)" class="text-xs sm:text-sm">
             {{ getStatutLabel(selectedVendeur.statut) }}
           </span>
         </div>
         <button (click)="closeDetailModal()" class="text-2xl text-muted-foreground hover:text-foreground flex-shrink-0">
-          ×
+          <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
@@ -373,44 +369,75 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <!-- Info personnelles -->
         <div class="space-y-3 sm:space-y-4">
-          <h3 class="font-semibold text-foreground border-b pb-2 text-sm sm:text-base">Informations personnelles</h3>
-          
+          <h3 class="font-semibold text-foreground border-b pb-2 text-sm sm:text-base flex items-center gap-2">
+            <i class="fa-solid fa-id-card text-primary"></i>
+            <span>Informations personnelles</span>
+          </h3>
+
           <div>
-            <div class="text-xs sm:text-sm text-muted-foreground">Téléphone</div>
+            <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+              <i class="fa-solid fa-phone"></i>
+              <span>Téléphone</span>
+            </div>
             <div class="font-medium text-sm sm:text-base">{{ selectedVendeur.telephone }}</div>
           </div>
 
           <div *ngIf="selectedVendeur.email">
-            <div class="text-xs sm:text-sm text-muted-foreground">Email</div>
+            <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+              <i class="fa-solid fa-envelope"></i>
+              <span>Email</span>
+            </div>
             <div class="font-medium text-sm sm:text-base break-all">{{ selectedVendeur.email }}</div>
           </div>
 
           <div>
-            <div class="text-xs sm:text-sm text-muted-foreground">Localisation</div>
-            <div class="font-medium text-sm sm:text-base">{{ selectedVendeur.quartier }}, {{ selectedVendeur.commune }}</div>
+            <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+              <i class="fa-solid fa-location-dot"></i>
+              <span>Localisation</span>
+            </div>
+            <div class="font-medium text-sm sm:text-base">{{ selectedVendeur.quartier }}, {{ selectedVendeur.commune }}
+            </div>
             <div class="text-xs sm:text-sm text-muted-foreground">{{ selectedVendeur.adresseComplete }}</div>
           </div>
         </div>
 
         <!-- Info boutique -->
         <div class="space-y-3 sm:space-y-4">
-          <h3 class="font-semibold text-foreground border-b pb-2 text-sm sm:text-base">Boutique</h3>
-          
+          <h3 class="font-semibold text-foreground border-b pb-2 text-sm sm:text-base flex items-center gap-2">
+            <i class="fa-solid fa-store text-primary"></i>
+            <span>Boutique</span>
+          </h3>
+
           <div *ngIf="selectedVendeur.nomBoutique">
-            <div class="text-xs sm:text-sm text-muted-foreground">Nom</div>
+            <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+              <i class="fa-solid fa-shop"></i>
+              <span>Nom</span>
+            </div>
             <div class="font-medium text-sm sm:text-base">{{ selectedVendeur.nomBoutique }}</div>
           </div>
 
           <div *ngIf="selectedVendeur.categorieActivite">
-            <div class="text-xs sm:text-sm text-muted-foreground">Catégorie</div>
+            <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+              <i class="fa-solid fa-tag"></i>
+              <span>Catégorie</span>
+            </div>
             <div class="font-medium text-sm sm:text-base">{{ selectedVendeur.categorieActivite }}</div>
           </div>
 
           <div *ngIf="selectedVendeur.instagram || selectedVendeur.facebook">
-            <div class="text-xs sm:text-sm text-muted-foreground">Réseaux sociaux</div>
+            <div class="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+              <i class="fa-solid fa-share-nodes"></i>
+              <span>Réseaux sociaux</span>
+            </div>
             <div class="space-y-1 text-xs sm:text-sm">
-              <div *ngIf="selectedVendeur.instagram">📸 {{ selectedVendeur.instagram }}</div>
-              <div *ngIf="selectedVendeur.facebook">👤 {{ selectedVendeur.facebook }}</div>
+              <div *ngIf="selectedVendeur.instagram" class="flex items-center gap-1">
+                <i class="fa-brands fa-instagram text-pink-600"></i>
+                <span>{{ selectedVendeur.instagram }}</span>
+              </div>
+              <div *ngIf="selectedVendeur.facebook" class="flex items-center gap-1">
+                <i class="fa-brands fa-facebook text-blue-600"></i>
+                <span>{{ selectedVendeur.facebook }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -418,26 +445,38 @@
 
       <!-- Statistiques (Responsive Grid) -->
       <div class="mt-4 sm:mt-6">
-        <h3 class="font-semibold text-foreground border-b pb-2 mb-3 sm:mb-4 text-sm sm:text-base">Statistiques</h3>
-        
+        <h3
+          class="font-semibold text-foreground border-b pb-2 mb-3 sm:mb-4 text-sm sm:text-base flex items-center gap-2">
+          <i class="fa-solid fa-chart-bar text-primary"></i>
+          <span>Statistiques</span>
+        </h3>
+
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <div class="text-center p-3 sm:p-4 bg-muted/30 rounded-lg">
-            <div class="text-xl sm:text-2xl font-bold text-primary">{{ selectedVendeur.statistiques.nombreLivraisons }}</div>
+            <i class="fa-solid fa-box text-2xl text-primary mb-2"></i>
+            <div class="text-xl sm:text-2xl font-bold text-foreground">{{ selectedVendeur.statistiques.nombreLivraisons
+              }}</div>
             <div class="text-xs sm:text-sm text-muted-foreground">Livraisons</div>
           </div>
 
           <div class="text-center p-3 sm:p-4 bg-green-50 rounded-lg">
-            <div class="text-xl sm:text-2xl font-bold text-green-600">{{ selectedVendeur.statistiques.tauxReussite }}%</div>
+            <i class="fa-solid fa-chart-line text-2xl text-green-600 mb-2"></i>
+            <div class="text-xl sm:text-2xl font-bold text-green-600">{{ selectedVendeur.statistiques.tauxReussite }}%
+            </div>
             <div class="text-xs sm:text-sm text-muted-foreground">Taux réussite</div>
           </div>
 
           <div class="text-center p-3 sm:p-4 bg-muted/30 rounded-lg">
-            <div class="text-base sm:text-xl font-bold text-foreground">{{ selectedVendeur.statistiques.chiffreAffairesTotal | fcfa }}</div>
+            <i class="fa-solid fa-money-bill-wave text-2xl text-foreground mb-2"></i>
+            <div class="text-base sm:text-xl font-bold text-foreground">{{
+              selectedVendeur.statistiques.chiffreAffairesTotal | fcfa }}</div>
             <div class="text-xs sm:text-sm text-muted-foreground">CA total</div>
           </div>
 
           <div class="text-center p-3 sm:p-4 bg-orange-50 rounded-lg">
-            <div class="text-base sm:text-xl font-bold text-orange-600">{{ selectedVendeur.soldeEnAttente | fcfa }}</div>
+            <i class="fa-solid fa-wallet text-2xl text-orange-600 mb-2"></i>
+            <div class="text-base sm:text-xl font-bold text-orange-600">{{ selectedVendeur.soldeEnAttente | fcfa }}
+            </div>
             <div class="text-xs sm:text-sm text-muted-foreground">Solde</div>
           </div>
         </div>
@@ -445,23 +484,30 @@
 
       <!-- Historique -->
       <div class="mt-4 sm:mt-6 space-y-2 text-xs sm:text-sm">
-        <div>
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-calendar-plus text-muted-foreground"></i>
           <span class="text-muted-foreground">Inscrit le:</span>
-          <span class="ml-2 font-medium">{{ formatDate(selectedVendeur.dateInscription) }}</span>
+          <span class="ml-auto font-medium">{{ formatDate(selectedVendeur.dateInscription) }}</span>
         </div>
 
-        <div *ngIf="selectedVendeur.valideLe">
+        <div *ngIf="selectedVendeur.valideLe" class="flex items-center gap-2">
+          <i class="fa-solid fa-check-circle text-green-600"></i>
           <span class="text-muted-foreground">Validé le:</span>
-          <span class="ml-2 font-medium">{{ formatDate(selectedVendeur.valideLe) }}</span>
+          <span class="ml-auto font-medium">{{ formatDate(selectedVendeur.valideLe) }}</span>
         </div>
 
-        <div *ngIf="selectedVendeur.validePar">
+        <div *ngIf="selectedVendeur.validePar" class="flex items-center gap-2">
+          <i class="fa-solid fa-user-check text-muted-foreground"></i>
           <span class="text-muted-foreground">Validé par:</span>
-          <span class="ml-2 font-medium">{{ selectedVendeur.validePar.prenom }} {{ selectedVendeur.validePar.nom }}</span>
+          <span class="ml-auto font-medium">{{ selectedVendeur.validePar.prenom }} {{ selectedVendeur.validePar.nom
+            }}</span>
         </div>
 
         <div *ngIf="selectedVendeur.raisonSuspension" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <div class="text-xs sm:text-sm font-semibold text-red-800 mb-1">Raison suspension/blocage:</div>
+          <div class="text-xs sm:text-sm font-semibold text-red-800 mb-1 flex items-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Raison suspension/blocage:</span>
+          </div>
           <div class="text-xs sm:text-sm text-red-700">{{ selectedVendeur.raisonSuspension }}</div>
         </div>
       </div>
@@ -469,22 +515,21 @@
       <!-- Actions -->
       <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
         <button (click)="closeDetailModal()" class="btn-outline text-sm sm:text-base py-2 sm:py-3">
+          <i class="fa-solid fa-xmark mr-2"></i>
           Fermer
         </button>
 
-        <button
-          *ngIf="selectedVendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
+        <button *ngIf="selectedVendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
           (click)="closeDetailModal(); openActionModal(selectedVendeur, 'valider')"
-          class="btn-primary text-sm sm:text-base py-2 sm:py-3"
-        >
+          class="btn-primary text-sm sm:text-base py-2 sm:py-3">
+          <i class="fa-solid fa-check-circle mr-2"></i>
           Valider ce vendeur
         </button>
 
-        <button
-          *ngIf="selectedVendeur.statut === StatutVendeur.SUSPENDU"
+        <button *ngIf="selectedVendeur.statut === StatutVendeur.SUSPENDU"
           (click)="closeDetailModal(); openActionModal(selectedVendeur, 'reactiver')"
-          class="btn-primary text-sm sm:text-base py-2 sm:py-3"
-        >
+          class="btn-primary text-sm sm:text-base py-2 sm:py-3">
+          <i class="fa-solid fa-rotate-right mr-2"></i>
           Réactiver
         </button>
       </div>
@@ -493,73 +538,80 @@
 </div>
 
 <!-- Modal Action (Responsive) -->
-<div
-  *ngIf="showActionModal"
-  class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-  (click)="closeActionModal()"
->
+<div *ngIf="showActionModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+  (click)="closeActionModal()">
   <div class="card max-w-lg w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-    <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">
-      {{ actionType === 'valider' ? 'Valider' : actionType === 'suspendre' ? 'Suspendre' : actionType === 'bloquer' ? 'Bloquer' : 'Réactiver' }} le vendeur
+    <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
+      <i *ngIf="actionType === 'valider'" class="fa-solid fa-check-circle text-green-600"></i>
+      <i *ngIf="actionType === 'suspendre'" class="fa-solid fa-pause-circle text-orange-600"></i>
+      <i *ngIf="actionType === 'bloquer'" class="fa-solid fa-ban text-red-600"></i>
+      <i *ngIf="actionType === 'reactiver'" class="fa-solid fa-rotate-right text-green-600"></i>
+      <span>{{ actionType === 'valider' ? 'Valider' : actionType === 'suspendre' ? 'Suspendre' : actionType ===
+        'bloquer' ? 'Bloquer' : 'Réactiver' }} le vendeur</span>
     </h2>
 
-    <p class="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
-      {{ selectedVendeur?.prenom }} {{ selectedVendeur?.nom }}
+    <p class="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 flex items-center gap-2">
+      <i class="fa-solid fa-user-circle"></i>
+      <span>{{ selectedVendeur?.prenom }} {{ selectedVendeur?.nom }}</span>
     </p>
 
     <!-- Champ raison -->
     <div *ngIf="actionType === 'suspendre' || actionType === 'bloquer'" class="mb-4 sm:mb-6">
-      <label class="form-label text-xs sm:text-sm">Raison *</label>
-      <textarea
-        [(ngModel)]="raisonAction"
-        class="form-textarea text-sm"
-        rows="4"
-        placeholder="Expliquez la raison..."
-        required
-      ></textarea>
+      <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+        <i class="fa-solid fa-comment-dots text-muted-foreground"></i>
+        <span>Raison *</span>
+      </label>
+      <textarea [(ngModel)]="raisonAction" class="form-textarea text-sm" rows="4" placeholder="Expliquez la raison..."
+        required></textarea>
     </div>
 
     <!-- Confirmation message -->
     <div class="p-3 sm:p-4 rounded-lg mb-4 sm:mb-6"
-         [class.bg-green-50]="actionType === 'valider' || actionType === 'reactiver'"
-         [class.border-green-200]="actionType === 'valider' || actionType === 'reactiver'"
-         [class.bg-red-50]="actionType === 'suspendre' || actionType === 'bloquer'"
-         [class.border-red-200]="actionType === 'suspendre' || actionType === 'bloquer'"
-         [class.border]="true">
-      <p class="text-xs sm:text-sm">
-        <span *ngIf="actionType === 'valider'">
-          ✅ Le vendeur pourra accéder à la plateforme et créer des livraisons.
-        </span>
-        <span *ngIf="actionType === 'suspendre'">
-          ⚠️ Le vendeur sera suspendu temporairement. Il pourra être réactivé plus tard.
-        </span>
-        <span *ngIf="actionType === 'bloquer'">
-          🚫 Le vendeur sera bloqué définitivement. Cette action est irréversible.
-        </span>
-        <span *ngIf="actionType === 'reactiver'">
-          ✅ Le vendeur pourra à nouveau utiliser la plateforme.
+      [class.bg-green-50]="actionType === 'valider' || actionType === 'reactiver'"
+      [class.border-green-200]="actionType === 'valider' || actionType === 'reactiver'"
+      [class.bg-red-50]="actionType === 'suspendre' || actionType === 'bloquer'"
+      [class.border-red-200]="actionType === 'suspendre' || actionType === 'bloquer'" [class.border]="true">
+      <p class="text-xs sm:text-sm flex items-start gap-2">
+        <i *ngIf="actionType === 'valider'" class="fa-solid fa-circle-check text-green-600 mt-0.5"></i>
+        <i *ngIf="actionType === 'suspendre'" class="fa-solid fa-triangle-exclamation text-orange-600 mt-0.5"></i>
+        <i *ngIf="actionType === 'bloquer'" class="fa-solid fa-ban text-red-600 mt-0.5"></i>
+        <i *ngIf="actionType === 'reactiver'" class="fa-solid fa-circle-check text-green-600 mt-0.5"></i>
+        <span>
+          <span *ngIf="actionType === 'valider'">
+            Le vendeur pourra accéder à la plateforme et créer des livraisons.
+          </span>
+          <span *ngIf="actionType === 'suspendre'">
+            Le vendeur sera suspendu temporairement. Il pourra être réactivé plus tard.
+          </span>
+          <span *ngIf="actionType === 'bloquer'">
+            Le vendeur sera bloqué définitivement. Cette action est irréversible.
+          </span>
+          <span *ngIf="actionType === 'reactiver'">
+            Le vendeur pourra à nouveau utiliser la plateforme.
+          </span>
         </span>
       </p>
     </div>
 
     <!-- Buttons -->
     <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-      <button
-        (click)="closeActionModal()"
-        class="btn-outline text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
-        [disabled]="submittingAction"
-      >
+      <button (click)="closeActionModal()" class="btn-outline text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
+        [disabled]="submittingAction">
+        <i class="fa-solid fa-xmark mr-2"></i>
         Annuler
       </button>
-      <button
-        (click)="executeAction()"
-        class="text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
+      <button (click)="executeAction()" class="text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
         [class.btn-primary]="actionType === 'valider' || actionType === 'reactiver'"
-        [class.btn-destructive]="actionType === 'suspendre' || actionType === 'bloquer'"
-        [disabled]="submittingAction"
-      >
-        <span *ngIf="!submittingAction">Confirmer</span>
-        <span *ngIf="submittingAction">En cours...</span>
+        [class.btn-destructive]="actionType === 'suspendre' || actionType === 'bloquer'" [disabled]="submittingAction">
+        <span *ngIf="!submittingAction">
+          <i *ngIf="actionType === 'valider' || actionType === 'reactiver'" class="fa-solid fa-check mr-2"></i>
+          <i *ngIf="actionType === 'suspendre' || actionType === 'bloquer'" class="fa-solid fa-ban mr-2"></i>
+          Confirmer
+        </span>
+        <span *ngIf="submittingAction">
+          <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+          En cours...
+        </span>
       </button>
     </div>
   </div>

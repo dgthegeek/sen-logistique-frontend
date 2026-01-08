@@ -1,0 +1,13 @@
+/* src/app/shared/components/profil/profil.component.css */
+
+.badge-success {
+  @apply px-3 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full;
+}
+
+.badge-warning {
+  @apply px-3 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-full;
+}
+
+.badge-error {
+  @apply px-3 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full;
+}

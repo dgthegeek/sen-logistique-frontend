@@ -10,6 +10,9 @@ import { DeliveryInfo } from '../../../core/models/delivery.model'; // ← NOUVE
 import { ToastService } from '../../../core/services/toast.service';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
 import { LivraisonAdmin } from '../../../core/models/admin.model';
+import { LivraisonDetail } from '../../../core/models/livraison.model';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-admin-livraisons',
@@ -22,38 +25,39 @@ export class AdminLivraisonsComponent implements OnInit {
   livraisons: LivraisonAdmin[] = [];
   loading = true;
   errorMessage = '';
-  
+
   currentPage = 0;
   pageSize = 20;
   totalElements = 0;
   totalPages = 0;
-  
+
+  showDetailModal = false;
+  livraison: LivraisonDetail | null = null;
+
   selectedStatut = '';
   searchQuery = '';
-  
+
   showScannerModal = false;
   showConfirmModal = false;
   selectedLivraison: DeliveryInfo | null = null; // ← CHANGÉ LE TYPE
-  
+
   cashCollecte = 0;
   colisRemis = true;
   commentaire = '';
   submittingConfirmation = false;
-  
+
   statuts = [
     { value: '', label: 'Tous les statuts' },
     { value: 'RAMASSE', label: 'Ramassé' },
-    { value: 'EN_ROUTE', label: 'En route' },
     { value: 'LIVREE', label: 'Livré' },
-    { value: 'ECHEC_ABSENT', label: 'Échec (Absent)' },
-    { value: 'ECHEC_REFUSE', label: 'Échec (Refusé)' }
+    { value: 'EN_ATTENTE_RAMASSAGE', label: 'En attente de ramassage' },
   ];
 
   constructor(
     private apiService: ApiService,
     private toastService: ToastService,
     private confirmationService: ConfirmationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadLivraisons();
@@ -62,7 +66,7 @@ export class AdminLivraisonsComponent implements OnInit {
   loadLivraisons() {
     this.loading = true;
     this.errorMessage = '';
-    
+
     this.apiService.getLivraisonsAdmin(
       this.currentPage,
       this.pageSize,
@@ -123,7 +127,7 @@ export class AdminLivraisonsComponent implements OnInit {
     }
 
     this.loading = true;
-    
+
     this.apiService.getLivraisonByNumero(this.searchQuery.trim()).subscribe({
       next: (livraison: DeliveryInfo) => {
         console.log('📦 Livraison récupérée:', livraison);
@@ -203,7 +207,7 @@ export class AdminLivraisonsComponent implements OnInit {
   }
 
   getStatusBadgeClass(statut: string): string {
-    const classes: {[key: string]: string} = {
+    const classes: { [key: string]: string } = {
       'EN_ATTENTE_RAMASSAGE': 'badge-pending',
       'RAMASSE': 'badge-picked',
       'EN_ROUTE': 'badge-transit',
@@ -215,7 +219,7 @@ export class AdminLivraisonsComponent implements OnInit {
   }
 
   getStatusLabel(statut: string): string {
-    const labels: {[key: string]: string} = {
+    const labels: { [key: string]: string } = {
       'EN_ATTENTE_RAMASSAGE': 'En attente',
       'RAMASSE': 'Ramassé',
       'EN_ROUTE': 'En route',
@@ -239,4 +243,105 @@ export class AdminLivraisonsComponent implements OnInit {
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i);
   }
+
+  // Ajouter ces méthodes
+  openDetailModal(id: number) {
+    this.loadLivraison(id);
+    this.showDetailModal = true;
+  }
+
+  closeDetailModal() {
+    this.showDetailModal = false;
+    this.livraison = null;
+  }
+
+  loadLivraison(id: number) {
+    this.loading = true;
+    this.apiService.getLivraisonById(id).subscribe({
+      next: (livraison) => {
+        this.livraison = livraison;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Erreur chargement livraison:', error);
+        this.errorMessage = error.error?.message || 'Impossible de charger les détails de la livraison';
+        this.loading = false;
+        this.closeDetailModal();
+        this.toastService.error(this.errorMessage);
+      }
+    });
+  }
+
+  exporterExcel(): void {
+  if (this.livraisons.length === 0) {
+    this.toastService.warning('Aucune donnée à exporter');
+    return;
+  }
+
+  const exportData = this.livraisons.map(livraison => ({
+    'Numéro Tracking': livraison.numeroTracking,
+    'Statut': this.getStatusLabel(livraison.statut),
+    'Date Création': this.formatDateForExcel(livraison.dateCreation),
+    
+    // Financier
+    'Montant COD': livraison.montantCOD,
+    'Frais Livraison': livraison.fraisLivraison,
+    'Vendeur Reçoit': livraison.montantARecevoir,
+  }));
+
+  // Créer le worksheet
+  const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+
+  // Ajuster la largeur des colonnes
+  const columnWidths = [
+    { wch: 20 }, // Numéro Tracking
+    { wch: 20 }, // Statut
+    { wch: 18 }, // Date Création
+    { wch: 12 }, // Montant COD
+    { wch: 12 }, // Frais Livraison
+    { wch: 15 }, // Vendeur Reçoit
+  ];
+  worksheet['!cols'] = columnWidths;
+
+  // Créer le workbook
+  const workbook: XLSX.WorkBook = {
+    Sheets: { 'Livraisons': worksheet },
+    SheetNames: ['Livraisons']
+  };
+
+  // Générer le fichier
+  const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  
+  // Sauvegarder
+  const data: Blob = new Blob([excelBuffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+  });
+  
+  const fileName = `livraisons_${this.formatDateForFile(new Date())}.xlsx`;
+  FileSaver.saveAs(data, fileName);
+
+  this.toastService.success(`${this.livraisons.length} livraison(s) exportée(s) avec succès`);
+}
+
+private formatDateForExcel(date: string): string {
+  if (!date) return 'N/A';
+  
+  const dateObj = new Date(date);
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  const hours = String(dateObj.getHours()).padStart(2, '0');
+  const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+  
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+private formatDateForFile(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${year}${month}${day}_${hours}${minutes}`;
+}
 }

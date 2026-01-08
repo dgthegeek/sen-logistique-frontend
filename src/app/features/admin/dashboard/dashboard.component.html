@@ -12,10 +12,6 @@
             <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
               Dashboard Admin
             </h1>
-            <p class="text-sm sm:text-base text-muted-foreground">
-              Vue d'ensemble de l'activité
-              <span class="hidden sm:inline"> • Rafraîchissement automatique toutes les 30s</span>
-            </p>
           </div>
 
           <!-- Loading -->
@@ -45,7 +41,7 @@
               <!-- Cash collecté -->
               <div class="stat-card bg-green-50 border-green-200">
                 <div class="stat-card-icon bg-green-100 text-green-600">
-                  💵
+                  <i class="fa-solid fa-sack-dollar"></i>
                 </div>
                 <div class="stat-card-value text-green-600 text-xl sm:text-2xl">
                   {{ dashboard.finances.cashCollecte | fcfa }}
@@ -58,7 +54,7 @@
               <!-- À payer vendeurs -->
               <div class="stat-card bg-orange-50 border-orange-200">
                 <div class="stat-card-icon bg-orange-100 text-orange-600">
-                  💸
+                  <i class="fa-solid fa-money-bill-transfer"></i>
                 </div>
                 <div class="stat-card-value text-orange-600 text-xl sm:text-2xl">
                   {{ dashboard.finances.aPayerVendeurs | fcfa }}
@@ -71,7 +67,7 @@
               <!-- Commissions -->
               <div class="stat-card bg-primary/5 border-primary/20 sm:col-span-2 lg:col-span-1">
                 <div class="stat-card-icon bg-primary/10 text-primary">
-                  📈
+                  <i class="fa-solid fa-chart-line"></i>
                 </div>
                 <div class="stat-card-value text-primary text-xl sm:text-2xl">
                   {{ dashboard.finances.commissions | fcfa }}
@@ -87,7 +83,7 @@
               <!-- Livraisons -->
               <div class="stat-card">
                 <div class="stat-card-icon bg-blue-100 text-blue-600">
-                  📦
+                  <i class="fa-solid fa-box"></i>
                 </div>
                 <div class="stat-card-value text-xl sm:text-2xl">
                   {{ dashboard.finances.statistiques.nombreLivraisons }}
@@ -100,7 +96,7 @@
               <!-- Taux de réussite -->
               <div class="stat-card">
                 <div class="stat-card-icon bg-purple-100 text-purple-600">
-                  ⭐
+                  <i class="fa-solid fa-star"></i>
                 </div>
                 <div class="stat-card-value text-xl sm:text-2xl" [ngClass]="getTauxReussiteClass()">
                   {{ formatTauxReussite() }}
@@ -113,7 +109,7 @@
               <!-- Vendeurs actifs -->
               <div class="stat-card sm:col-span-2 lg:col-span-1">
                 <div class="stat-card-icon bg-indigo-100 text-indigo-600">
-                  👥
+                  <i class="fa-solid fa-users"></i>
                 </div>
                 <div class="stat-card-value text-xl sm:text-2xl">
                   {{ dashboard.finances.statistiques.nombreVendeurs }}
@@ -130,7 +126,7 @@
               <div class="card">
                 <div class="flex items-center justify-between mb-4 sm:mb-6">
                   <h2 class="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
-                    <span class="text-xl sm:text-2xl">📦</span>
+                    <i class="fa-solid fa-box text-xl sm:text-2xl"></i>
                     <span class="hidden sm:inline">Ramassages du jour</span>
                     <span class="sm:hidden">Ramassages</span>
                   </h2>
@@ -145,7 +141,7 @@
                     class="flex items-center justify-between p-2 sm:p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                   >
                     <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                      <div class="text-xl sm:text-2xl flex-shrink-0">🗺️</div>
+                      <i class="fa-solid fa-map-location-dot text-xl sm:text-2xl text-primary flex-shrink-0"></i>
                       <div class="min-w-0">
                         <div class="font-semibold text-foreground text-sm sm:text-base truncate">{{ zone.zone }}</div>
                         <div class="text-xs sm:text-sm text-muted-foreground">
@@ -160,13 +156,14 @@
                   </div>
 
                   <button routerLink="/admin/ramassages" class="btn-outline w-full mt-3 sm:mt-4 text-sm sm:text-base py-2 sm:py-3">
-                    <span class="hidden sm:inline">Organiser les ramassages →</span>
-                    <span class="sm:hidden">Voir ramassages →</span>
+                    <i class="fa-solid fa-arrow-right mr-2"></i>
+                    <span class="hidden sm:inline">Organiser les ramassages</span>
+                    <span class="sm:hidden">Voir ramassages</span>
                   </button>
                 </div>
 
                 <div *ngIf="dashboard.ramassages.totalColis === 0" class="text-center py-6 sm:py-8">
-                  <div class="text-3xl sm:text-4xl mb-2">✅</div>
+                  <i class="fa-solid fa-circle-check text-4xl sm:text-5xl text-green-600 mb-2"></i>
                   <p class="text-sm sm:text-base text-muted-foreground">Aucun ramassage prévu</p>
                 </div>
               </div>
@@ -175,7 +172,7 @@
               <div class="card">
                 <div class="flex items-center justify-between mb-4 sm:mb-6">
                   <h2 class="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
-                    <span class="text-xl sm:text-2xl">🚚</span>
+                    <i class="fa-solid fa-truck text-xl sm:text-2xl"></i>
                     <span class="hidden sm:inline">Livraisons en cours</span>
                     <span class="sm:hidden">Livraisons</span>
                   </h2>
@@ -190,7 +187,7 @@
                     class="flex items-center justify-between p-2 sm:p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                   >
                     <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                      <div class="text-xl sm:text-2xl flex-shrink-0">📍</div>
+                      <i class="fa-solid fa-location-dot text-xl sm:text-2xl text-primary flex-shrink-0"></i>
                       <div class="min-w-0">
                         <div class="font-semibold text-foreground text-sm sm:text-base truncate">{{ zone.zone }}</div>
                         <div class="text-xs sm:text-sm text-muted-foreground">Zone de livraison</div>
@@ -203,13 +200,14 @@
                   </div>
 
                   <button routerLink="/admin/livraisons" class="btn-outline w-full mt-3 sm:mt-4 text-sm sm:text-base py-2 sm:py-3">
-                    <span class="hidden sm:inline">Gérer les livraisons →</span>
-                    <span class="sm:hidden">Voir livraisons →</span>
+                    <i class="fa-solid fa-arrow-right mr-2"></i>
+                    <span class="hidden sm:inline">Gérer les livraisons</span>
+                    <span class="sm:hidden">Voir livraisons</span>
                   </button>
                 </div>
 
                 <div *ngIf="dashboard.livraisons.totalColis === 0" class="text-center py-6 sm:py-8">
-                  <div class="text-3xl sm:text-4xl mb-2">✅</div>
+                  <i class="fa-solid fa-circle-check text-4xl sm:text-5xl text-green-600 mb-2"></i>
                   <p class="text-sm sm:text-base text-muted-foreground">Aucune livraison en cours</p>
                 </div>
               </div>
@@ -219,7 +217,7 @@
             <div class="card">
               <div class="flex items-center justify-between mb-4 sm:mb-6 flex-wrap gap-2">
                 <h2 class="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
-                  <span class="text-xl sm:text-2xl">💸</span>
+                  <i class="fa-solid fa-money-bill-transfer text-xl sm:text-2xl"></i>
                   <span class="hidden sm:inline">Demandes de paiement en attente</span>
                   <span class="sm:hidden">Demandes paiement</span>
                 </h2>
@@ -234,7 +232,7 @@
                   class="flex items-center justify-between p-3 sm:p-4 border rounded-lg hover:bg-muted/50 transition-colors gap-3"
                 >
                   <div class="flex items-center gap-2 sm:gap-4 min-w-0">
-                    <div class="text-xl sm:text-2xl flex-shrink-0">👤</div>
+                    <i class="fa-solid fa-user-circle text-xl sm:text-2xl text-primary flex-shrink-0"></i>
                     <div class="min-w-0">
                       <div class="font-semibold text-foreground text-sm sm:text-base truncate">
                         {{ demande.vendeur.prenom }} {{ demande.vendeur.nom }}
@@ -259,13 +257,14 @@
                 </div>
 
                 <button routerLink="/admin/finances" class="btn-primary w-full mt-3 sm:mt-4 text-sm sm:text-base py-2 sm:py-3">
-                  <span class="hidden sm:inline">Gérer les paiements →</span>
-                  <span class="sm:hidden">Gérer paiements →</span>
+                  <i class="fa-solid fa-arrow-right mr-2"></i>
+                  <span class="hidden sm:inline">Gérer les paiements</span>
+                  <span class="sm:hidden">Gérer paiements</span>
                 </button>
               </div>
 
               <div *ngIf="dashboard.paiements.demandes.length === 0" class="text-center py-6 sm:py-8">
-                <div class="text-3xl sm:text-4xl mb-2">✅</div>
+                <i class="fa-solid fa-circle-check text-4xl sm:text-5xl text-green-600 mb-2"></i>
                 <p class="text-sm sm:text-base text-muted-foreground">Aucune demande de paiement</p>
               </div>
             </div>
@@ -273,28 +272,28 @@
             <!-- Quick Actions (2 cols mobile, 4 cols desktop) -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <button routerLink="/admin/ramassages" class="btn-primary py-4 sm:py-6 flex flex-col items-center gap-1 sm:gap-2">
-                <span class="text-xl sm:text-2xl">📦</span>
+                <i class="fa-solid fa-box text-xl sm:text-2xl"></i>
                 <span class="text-xs sm:text-sm text-center">
                   <span class="hidden sm:inline">Organiser ramassages</span>
                   <span class="sm:hidden">Ramassages</span>
                 </span>
               </button>
               <button routerLink="/admin/livraisons" class="btn-secondary py-4 sm:py-6 flex flex-col items-center gap-1 sm:gap-2">
-                <span class="text-xl sm:text-2xl">🚚</span>
+                <i class="fa-solid fa-truck text-xl sm:text-2xl"></i>
                 <span class="text-xs sm:text-sm text-center">
                   <span class="hidden sm:inline">Gérer livraisons</span>
                   <span class="sm:hidden">Livraisons</span>
                 </span>
               </button>
               <button routerLink="/admin/finances" class="btn-outline py-4 sm:py-6 flex flex-col items-center gap-1 sm:gap-2">
-                <span class="text-xl sm:text-2xl">💰</span>
+                <i class="fa-solid fa-wallet text-xl sm:text-2xl"></i>
                 <span class="text-xs sm:text-sm text-center">
                   <span class="hidden sm:inline">Gérer paiements</span>
                   <span class="sm:hidden">Paiements</span>
                 </span>
               </button>
               <button routerLink="/admin/livraisons" class="btn-outline py-4 sm:py-6 flex flex-col items-center gap-1 sm:gap-2">
-                <span class="text-xl sm:text-2xl">📱</span>
+                <i class="fa-solid fa-qrcode text-xl sm:text-2xl"></i>
                 <span class="text-xs sm:text-sm text-center">Scanner QR</span>
               </button>
             </div>
@@ -302,7 +301,8 @@
             <!-- Indicateur rafraîchissement -->
             <div class="text-center">
               <p class="text-xs text-muted-foreground">
-                🔄 <span class="hidden sm:inline">Rafraîchissement automatique toutes les 30 secondes</span>
+                <i class="fa-solid fa-rotate"></i>
+                <span class="hidden sm:inline">Rafraîchissement automatique toutes les 30 secondes</span>
                 <span class="sm:hidden">Auto-refresh 30s</span>
               </p>
             </div>

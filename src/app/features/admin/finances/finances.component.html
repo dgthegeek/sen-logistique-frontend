@@ -37,8 +37,9 @@
 
           <!-- Indicateur période active -->
           <div class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-xs sm:text-sm">
+            <i class="fa-solid fa-chart-bar text-primary"></i>
             <span class="text-primary font-medium">
-              📊 Statistiques {{ getPeriodeLabel() }}
+              Statistiques {{ getPeriodeLabel() }}
             </span>
           </div>
         </div>
@@ -66,7 +67,7 @@
               <div class="flex sm:block items-center justify-between sm:justify-start">
                 <div class="sm:mb-3">
                   <div class="stat-card-icon bg-green-100 text-green-600 inline-flex">
-                    💵
+                    <i class="fa-solid fa-sack-dollar"></i>
                   </div>
                 </div>
                 <div>
@@ -85,7 +86,7 @@
               <div class="flex sm:block items-center justify-between sm:justify-start">
                 <div class="sm:mb-3">
                   <div class="stat-card-icon bg-orange-100 text-orange-600 inline-flex">
-                    💸
+                    <i class="fa-solid fa-money-bill-transfer"></i>
                   </div>
                 </div>
                 <div>
@@ -104,7 +105,7 @@
               <div class="flex sm:block items-center justify-between sm:justify-start">
                 <div class="sm:mb-3">
                   <div class="stat-card-icon bg-primary/10 text-primary inline-flex">
-                    📈
+                    <i class="fa-solid fa-chart-line"></i>
                   </div>
                 </div>
                 <div>
@@ -123,7 +124,7 @@
               <div class="flex sm:block items-center justify-between sm:justify-start">
                 <div class="sm:mb-3">
                   <div class="stat-card-icon bg-blue-100 text-blue-600 inline-flex">
-                    📦
+                    <i class="fa-solid fa-box"></i>
                   </div>
                 </div>
                 <div>
@@ -143,7 +144,7 @@
             <!-- Vendeurs actifs -->
             <div class="card bg-indigo-50 border-indigo-200">
               <div class="flex items-center gap-3 sm:gap-4">
-                <div class="text-3xl sm:text-4xl">👥</div>
+                <i class="fa-solid fa-users text-3xl sm:text-4xl text-indigo-600"></i>
                 <div>
                   <div class="text-xl sm:text-2xl font-bold text-indigo-600">
                     {{ dashboard.statistiques.nombreVendeurs }}
@@ -158,7 +159,7 @@
             <!-- Taux de réussite -->
             <div class="card bg-purple-50 border-purple-200">
               <div class="flex items-center gap-3 sm:gap-4">
-                <div class="text-3xl sm:text-4xl">⭐</div>
+                <i class="fa-solid fa-star text-3xl sm:text-4xl text-purple-600"></i>
                 <div>
                   <div class="text-xl sm:text-2xl font-bold text-purple-600">
                     {{ dashboard.statistiques.tauxReussite.toFixed(1) }}%
@@ -173,9 +174,10 @@
 
           <!-- Demandes de paiement en attente -->
           <div class="card">
-            <h2 class="text-lg sm:text-xl font-bold text-foreground mb-4 sm:mb-6">
-              Demandes de paiement en attente
-              <span class="text-sm font-normal text-muted-foreground ml-2">
+            <h2 class="text-lg sm:text-xl font-bold text-foreground mb-4 sm:mb-6 flex items-center gap-2">
+              <i class="fa-solid fa-money-bill-wave"></i>
+              <span>Demandes de paiement en attente</span>
+              <span class="text-sm font-normal text-muted-foreground">
                 ({{ paiementsPending.demandes.length }})
               </span>
             </h2>
@@ -186,16 +188,16 @@
                 class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 sm:p-4 border rounded-lg hover:bg-muted/50 transition-colors"
               >
                 <div class="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
-                  <div class="text-xl sm:text-2xl flex-shrink-0 mt-1">💰</div>
+                  <i class="fa-solid fa-user-circle text-xl sm:text-2xl text-primary flex-shrink-0 mt-1"></i>
                   <div class="flex-1 min-w-0">
                     <div class="font-semibold text-foreground text-sm sm:text-base truncate">
                       {{ demande.vendeur.prenom }} {{ demande.vendeur.nom }}
                     </div>
                     <div class="text-xs sm:text-sm text-muted-foreground truncate">
-                      {{ demande.vendeur.nomBoutique }} • {{ demande.vendeur.telephone }}
+                      <i class="fa-solid fa-store mr-1"></i>{{ demande.vendeur.nomBoutique }} • <i class="fa-solid fa-phone mr-1"></i>{{ demande.vendeur.telephone }}
                     </div>
                     <div class="text-xs sm:text-sm text-muted-foreground mt-1">
-                      {{ demande.nombreLivraisons }} livraison{{ demande.nombreLivraisons > 1 ? 's' : '' }} • <span class="hidden sm:inline">Demandé le </span>{{ formatDate(demande.dateDemande) }}
+                      <i class="fa-solid fa-box mr-1"></i>{{ demande.nombreLivraisons }} livraison{{ demande.nombreLivraisons > 1 ? 's' : '' }} • <span class="hidden sm:inline">Demandé le </span>{{ formatDate(demande.dateDemande) }}
                     </div>
                   </div>
                 </div>
@@ -211,14 +213,16 @@
                     <button
                       (click)="callVendeur(demande.vendeur.telephone)"
                       class="btn-outline text-sm px-3 py-2"
+                      title="Appeler"
                     >
-                      📞
+                      <i class="fa-solid fa-phone"></i>
                     </button>
                     <button
                       (click)="openPayerModal(demande)"
                       class="btn-primary text-sm px-3 py-2"
                     >
-                      <span class="hidden sm:inline">💸 Payer</span>
+                      <i class="fa-solid fa-money-bill-wave mr-1 sm:mr-2"></i>
+                      <span class="hidden sm:inline">Payer</span>
                       <span class="sm:hidden">Payer</span>
                     </button>
                   </div>
@@ -235,7 +239,7 @@
             </div>
 
             <div *ngIf="paiementsPending.demandes.length === 0" class="text-center py-8 sm:py-12">
-              <div class="text-4xl sm:text-6xl mb-4">✅</div>
+              <i class="fa-solid fa-circle-check text-5xl sm:text-6xl text-green-600 mb-4"></i>
               <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2">
                 Aucune demande en attente
               </h3>
@@ -248,8 +252,9 @@
           <!-- Historique Transactions -->
           <div class="card">
             <div class="flex items-center justify-between mb-4 sm:mb-6">
-              <h2 class="text-lg sm:text-xl font-bold text-foreground">
-                Historique<span class="hidden sm:inline"> des transactions</span>
+              <h2 class="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>Historique<span class="hidden sm:inline"> des transactions</span></span>
               </h2>
               <span class="text-xs sm:text-sm text-muted-foreground">
                 {{ totalElements }} transaction{{ totalElements > 1 ? 's' : '' }}
@@ -259,7 +264,9 @@
             <!-- Filtres (Responsive) -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div>
-                <label class="form-label text-xs sm:text-sm">Date début</label>
+                <label class="form-label text-xs sm:text-sm">
+                  <i class="fa-solid fa-calendar-days mr-1"></i>Date début
+                </label>
                 <input
                   [(ngModel)]="dateDebut"
                   (change)="onFilterChange()"
@@ -268,7 +275,9 @@
                 />
               </div>
               <div>
-                <label class="form-label text-xs sm:text-sm">Date fin</label>
+                <label class="form-label text-xs sm:text-sm">
+                  <i class="fa-solid fa-calendar-days mr-1"></i>Date fin
+                </label>
                 <input
                   [(ngModel)]="dateFin"
                   (change)="onFilterChange()"
@@ -281,6 +290,7 @@
                   (click)="dateDebut = ''; dateFin = ''; selectedVendeurId = null; onFilterChange()"
                   class="btn-outline w-full text-sm"
                 >
+                  <i class="fa-solid fa-rotate-left mr-2"></i>
                   <span class="hidden sm:inline">Réinitialiser filtres</span>
                   <span class="sm:hidden">Réinitialiser</span>
                 </button>
@@ -308,9 +318,11 @@
                 <tbody>
                   <tr *ngFor="let transaction of transactions" class="table-row">
                     <td class="table-cell text-sm">
+                      <i class="fa-solid fa-calendar text-muted-foreground mr-1"></i>
                       {{ formatDateShort(transaction.date) }}
                     </td>
                     <td class="table-cell font-medium">
+                      <i class="fa-solid fa-user text-muted-foreground mr-1"></i>
                       {{ transaction.vendeur }}
                     </td>
                     <td class="table-cell">
@@ -340,9 +352,11 @@
                 <div class="flex items-start justify-between mb-2">
                   <div class="flex-1 min-w-0">
                     <div class="font-semibold text-foreground text-sm truncate">
+                      <i class="fa-solid fa-user text-muted-foreground mr-1"></i>
                       {{ transaction.vendeur }}
                     </div>
                     <div class="text-xs text-muted-foreground">
+                      <i class="fa-solid fa-calendar text-muted-foreground mr-1"></i>
                       {{ formatDateShort(transaction.date) }}
                     </div>
                   </div>
@@ -368,7 +382,7 @@
 
             <!-- Empty State -->
             <div *ngIf="!loadingTransactions && transactions.length === 0" class="text-center py-8 sm:py-12">
-              <div class="text-4xl sm:text-6xl mb-4">💳</div>
+              <i class="fa-solid fa-receipt text-5xl sm:text-6xl text-muted-foreground mb-4"></i>
               <h3 class="text-lg sm:text-xl font-semibold text-foreground mb-2">
                 Aucune transaction
               </h3>
@@ -390,16 +404,16 @@
                     [disabled]="currentPage === 0"
                     class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
                   >
-                    <span class="hidden sm:inline">← Précédent</span>
-                    <span class="sm:hidden">←</span>
+                    <i class="fa-solid fa-chevron-left mr-1"></i>
+                    <span class="hidden sm:inline">Précédent</span>
                   </button>
                   <button
                     (click)="nextPage()"
                     [disabled]="currentPage >= totalPages - 1"
                     class="btn-outline text-xs sm:text-sm px-3 py-2 disabled:opacity-50"
                   >
-                    <span class="hidden sm:inline">Suivant →</span>
-                    <span class="sm:hidden">→</span>
+                    <span class="hidden sm:inline">Suivant</span>
+                    <i class="fa-solid fa-chevron-right ml-1"></i>
                   </button>
                 </div>
               </div>
@@ -418,27 +432,40 @@
   (click)="closePayerModal()"
 >
   <div class="card max-w-lg w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-    <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">
-      💸 Payer un vendeur
+    <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 flex items-center gap-2">
+      <i class="fa-solid fa-money-bill-wave text-primary"></i>
+      <span>Payer un vendeur</span>
     </h2>
 
     <!-- Info Vendeur -->
     <div class="bg-muted/30 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
       <div class="grid grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm mb-3 sm:mb-4">
         <div>
-          <div class="text-muted-foreground">Vendeur</div>
+          <div class="text-muted-foreground flex items-center gap-1">
+            <i class="fa-solid fa-user"></i>
+            <span>Vendeur</span>
+          </div>
           <div class="font-semibold text-sm sm:text-base">{{ selectedDemande.vendeur.prenom }} {{ selectedDemande.vendeur.nom }}</div>
         </div>
         <div>
-          <div class="text-muted-foreground">Boutique</div>
+          <div class="text-muted-foreground flex items-center gap-1">
+            <i class="fa-solid fa-store"></i>
+            <span>Boutique</span>
+          </div>
           <div class="font-medium text-sm sm:text-base">{{ selectedDemande.vendeur.nomBoutique }}</div>
         </div>
         <div>
-          <div class="text-muted-foreground">Téléphone</div>
+          <div class="text-muted-foreground flex items-center gap-1">
+            <i class="fa-solid fa-phone"></i>
+            <span>Téléphone</span>
+          </div>
           <div class="font-medium text-sm sm:text-base">{{ selectedDemande.vendeur.telephone }}</div>
         </div>
         <div>
-          <div class="text-muted-foreground">Livraisons</div>
+          <div class="text-muted-foreground flex items-center gap-1">
+            <i class="fa-solid fa-box"></i>
+            <span>Livraisons</span>
+          </div>
           <div class="font-medium text-sm sm:text-base">{{ selectedDemande.nombreLivraisons }}</div>
         </div>
       </div>
@@ -492,6 +519,7 @@
         class="btn-outline flex-1 text-sm sm:text-base py-2 sm:py-3"
         [disabled]="submittingPaiement"
       >
+        <i class="fa-solid fa-xmark mr-2"></i>
         Annuler
       </button>
       <button
@@ -499,9 +527,15 @@
         class="btn-primary flex-1 text-sm sm:text-base py-2 sm:py-3"
         [disabled]="submittingPaiement || montantAPayer <= 0"
       >
-        <span *ngIf="!submittingPaiement" class="hidden sm:inline">💸 Payer {{ montantAPayer | fcfa }}</span>
-        <span *ngIf="!submittingPaiement" class="sm:hidden">Payer</span>
-        <span *ngIf="submittingPaiement">Traitement...</span>
+        <span *ngIf="!submittingPaiement">
+          <i class="fa-solid fa-money-bill-wave mr-1 sm:mr-2"></i>
+          <span class="hidden sm:inline">Payer {{ montantAPayer | fcfa }}</span>
+          <span class="sm:hidden">Payer</span>
+        </span>
+        <span *ngIf="submittingPaiement">
+          <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+          Traitement...
+        </span>
       </button>
     </div>
   </div>
