@@ -1,0 +1,204 @@
+<div class="min-h-screen bg-background">
+    <app-header></app-header>
+
+    <div class="flex">
+        <app-sidebar></app-sidebar>
+
+        <main class="flex-1 p-4 sm:p-6">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header -->
+                <div class="flex flex-col gap-4 mb-6 sm:mb-8">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+                            Impression QR Codes
+                        </h1>
+                        <p class="text-sm sm:text-base text-muted-foreground" *ngIf="!loading">
+                            <i class="fa-solid fa-qrcode mr-1"></i>
+                            {{ totalElements }} livraison(s) ramassée(s) disponible(s)
+                        </p>
+                    </div>
+
+                    <!-- Search & Actions -->
+                    <div class="flex flex-col md:flex-row gap-3">
+                        <!-- Search -->
+                        <div class="flex-1">
+                            <div class="relative">
+                                <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
+                                    placeholder="Rechercher par numéro de tracking..." class="form-input pl-10" />
+                                <i
+                                    class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+                            </div>
+                        </div>
+
+                        <!-- Print Button -->
+                        <button (click)="imprimerQRCodes()" [disabled]="selectedLivraisons.size === 0 || generatingQR"
+                            class="btn-primary whitespace-nowrap"
+                            [class.opacity-50]="selectedLivraisons.size === 0 || generatingQR">
+                            <span *ngIf="!generatingQR">
+                                <i class="fa-solid fa-print mr-2"></i>
+                                Imprimer QR ({{ selectedLivraisons.size }})
+                            </span>
+                            <span *ngIf="generatingQR">
+                                <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                                Génération...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div *ngIf="loading" class="card">
+                    <div class="flex items-center justify-center py-12">
+                        <div
+                            class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error -->
+                <div *ngIf="errorMessage && !loading" class="card">
+                    <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+                        <i class="fa-solid fa-circle-exclamation mr-2"></i>
+                        {{ errorMessage }}
+                    </div>
+                </div>
+
+                <!-- Livraisons List -->
+                <div *ngIf="!loading && livraisons.length > 0" class="card">
+                    <!-- Select All Header -->
+                    <div class="flex items-center justify-between p-4 border-b bg-muted/30">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" [checked]="allSelected" (change)="selectAll()" class="w-5 h-5" />
+                            <span class="font-semibold text-foreground">
+                                Tout sélectionner ({{ livraisons.length }})
+                            </span>
+                        </div>
+                        <div class="text-sm text-muted-foreground">
+                            {{ selectedLivraisons.size }} sélectionnée(s)
+                        </div>
+                    </div>
+
+                    <!-- Livraisons Grid (Responsive) -->
+                    <div class="p-4 space-y-3">
+                        <div *ngFor="let livraison of livraisons"
+                            class="flex items-start gap-3 p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
+                            (click)="toggleLivraison(livraison.id)" [ngClass]="{
+    'bg-primary/10': isLivraisonSelected(livraison.id),
+    'border-primary': isLivraisonSelected(livraison.id)
+  }">
+
+                            <!-- Checkbox -->
+                            <input type="checkbox" [checked]="isLivraisonSelected(livraison.id)"
+                                (click)="$event.stopPropagation()" (change)="toggleLivraison(livraison.id)"
+                                class="mt-1 w-5 h-5 flex-shrink-0" />
+
+                            <!-- Content -->
+                            <div class="flex-1 min-w-0">
+                                <!-- Header avec tracking et QR badge -->
+                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                                    <div class="flex-1 min-w-0">
+                                        <div
+                                            class="font-mono font-bold text-primary text-base sm:text-lg break-all mb-1">
+                                            <i class="fa-solid fa-barcode mr-2"></i>
+                                            {{ livraison.numeroTracking }}
+                                        </div>
+                                        <div class="text-xs sm:text-sm text-muted-foreground">
+                                            <i class="fa-solid fa-calendar mr-1"></i>
+                                            {{ livraison.dateCreation | date:'dd/MM/yyyy HH:mm' }}
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2 flex-wrap">
+                                        <span [class]="getStatutBadgeClass(livraison.statut)" class="badge text-xs">
+                                            {{ getStatutLabel(livraison.statut) }}
+                                        </span>
+                                        <span class="badge badge-success text-xs">
+                                            <i class="fa-solid fa-qrcode mr-1"></i>
+                                            QR disponible
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Details Grid (Responsive) -->
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
+                                    <!-- Client -->
+                                    <!-- <div class="p-2 bg-muted/30 rounded">
+                    <div class="text-muted-foreground mb-1">
+                      <i class="fa-solid fa-user mr-1"></i>Client
+                    </div>
+                    <div class="font-medium text-foreground truncate">
+                      {{ livraison.nomClient }}
+                    </div>
+                  </div> -->
+
+                                    <!-- Montant COD -->
+                                    <div class="p-2 bg-muted/30 rounded">
+                                        <div class="text-muted-foreground mb-1">
+                                            <i class="fa-solid fa-money-bill mr-1"></i>Montant COD
+                                        </div>
+                                        <div class="font-bold text-primary">
+                                            {{ livraison.montantCOD | number:'1.0-0' }} FCFA
+                                        </div>
+                                    </div>
+
+                                    <!-- Frais -->
+                                    <div class="p-2 bg-muted/30 rounded">
+                                        <div class="text-muted-foreground mb-1">
+                                            <i class="fa-solid fa-tag mr-1"></i>Frais
+                                        </div>
+                                        <div class="font-medium text-foreground">
+                                            {{ livraison.fraisLivraison | number:'1.0-0' }} FCFA
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- QR Code Preview (optionnel) -->
+                                <div class="mt-3 p-2 bg-blue-50 border border-blue-200 rounded flex items-center gap-2">
+                                    <i class="fa-solid fa-info-circle text-blue-600"></i>
+                                    <span class="text-xs text-blue-800">
+                                        Cliquez sur "Imprimer QR" pour générer le code QR de cette livraison
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div *ngIf="totalPages > 1" class="border-t p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-muted-foreground">
+                                Page {{ currentPage + 1 }} / {{ totalPages }} • {{ totalElements }} livraison(s)
+                            </div>
+                            <div class="flex gap-2">
+                                <button (click)="previousPage()" [disabled]="currentPage === 0"
+                                    class="btn-outline px-4 py-2 disabled:opacity-50">
+                                    <i class="fa-solid fa-chevron-left mr-2"></i>
+                                    <span class="hidden sm:inline">Précédent</span>
+                                </button>
+                                <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1"
+                                    class="btn-outline px-4 py-2 disabled:opacity-50">
+                                    <span class="hidden sm:inline">Suivant</span>
+                                    <i class="fa-solid fa-chevron-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div *ngIf="!loading && livraisons.length === 0" class="card text-center py-12">
+                    <i class="fa-solid fa-box-open text-6xl text-muted-foreground mb-4"></i>
+                    <h3 class="text-xl font-semibold text-foreground mb-2">
+                        Aucune livraison ramassée
+                    </h3>
+                    <p class="text-muted-foreground mb-4">
+                        Les livraisons avec statut "Ramassée" apparaîtront ici
+                    </p>
+                    <button routerLink="/admin/ramassages" class="btn-primary">
+                        <i class="fa-solid fa-box mr-2"></i>
+                        Voir les ramassages
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

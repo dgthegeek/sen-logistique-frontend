@@ -36,6 +36,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Gestion vendeurs', route: '/admin/vendeurs', icon: 'fa-solid fa-users-gear' },
         { label: 'Zones de livraison', route: '/admin/zones', icon: 'fa-solid fa-map-location-dot' },
         { label: 'Mon compte', route: '/admin/profil', icon: 'fa-solid fa-user-gear' },
+        { label: 'Impression QR', route: '/admin/impression-qr', icon: 'fa-solid fa-qrcode' }
       ];
     } else {
       this.menuItems = [
