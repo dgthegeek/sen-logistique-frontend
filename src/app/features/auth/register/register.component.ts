@@ -7,6 +7,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { Quartier } from '../../../core/models/auth.model';
 import { StatutVendeur } from '../../../core/models/vendeur.model';
 import { AuthHeaderComponent } from "../../../shared/components/auth-header/auth-header.component";
+import { Zone } from '../../../core/models/livraison.model';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,9 @@ export class RegisterComponent implements OnInit {
   loading = false;
   errorMessage = '';
   
-  communes = ['Dakar', 'Pikine', 'Guédiawaye', 'Rufisque'];
+  communes: string[] = [];
+  zones: Zone[] = [];
+  
   quartiers: Quartier[] = [];
   filteredQuartiers: Quartier[] = [];
 
@@ -64,6 +67,21 @@ export class RegisterComponent implements OnInit {
     this.registerForm.get('commune')?.valueChanges.subscribe(commune => {
       if (commune) {
         this.loadQuartiers(commune);
+      }
+    });
+    this.loadZones();
+  }
+
+  loadZones() {
+    this.apiService.getZones().subscribe({
+      next: (zones) => {
+        this.zones = zones;
+        const allCommunes = zones.flatMap(z => z.communes);
+        this.communes = [...new Set(allCommunes)].sort();
+      },
+      error: (error) => {
+        console.error('❌ Erreur chargement zones:', error);
+        this.communes = ['Dakar', 'Pikine', 'Guédiawaye', 'Rufisque'];
       }
     });
   }

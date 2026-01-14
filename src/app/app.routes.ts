@@ -29,6 +29,7 @@ import { StatutCompteComponent } from './pages/statut-compte/statut-compte.compo
 import { ZonesComponent } from './features/admin/zones/zones.component';
 import { ProfilComponent } from './shared/components/profil/profil.component';
 import { CreerLivraisonVendeurComponent } from './features/admin/creer-livraison-vendeur/creer-livraison-vendeur.component';
+import { ImpressionQrComponent } from './features/admin/impression-qr/impression-qr.component';
 
 export const routes: Routes = [
   // Landing page comme page par défaut
@@ -82,7 +83,8 @@ export const routes: Routes = [
       { path: 'vendeurs', component: GestionVendeursComponent },
       { path: 'zones', component: ZonesComponent },      // ← NOUVEAU
       { path: 'profil', component: ProfilComponent }, 
-      { path: 'creer-livraison-vendeur', component: CreerLivraisonVendeurComponent }
+      { path: 'creer-livraison-vendeur', component: CreerLivraisonVendeurComponent },
+      { path: 'impression-qr', component: ImpressionQrComponent }, 
     ]
   },
 
