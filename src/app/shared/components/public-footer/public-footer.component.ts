@@ -70,7 +70,7 @@ import { RouterModule } from '@angular/router';
             <h3 class="text-white font-semibold mb-4">Entreprise</h3>
             <ul class="space-y-2 text-sm">
               <li>
-                <a href="#why-dioks" class="hover:text-white transition-colors flex items-center gap-2">
+                <a routerLink="/a-propos" class="hover:text-white transition-colors flex items-center gap-2">
                   <i class="fa-solid fa-circle-info text-primary"></i>
                   <span>À propos</span>
                 </a>
