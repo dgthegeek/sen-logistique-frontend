@@ -23,17 +23,19 @@ import { AuthService } from '../../../core/services/auth.service';
 
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center gap-8">
-            <a (click)="scrollTo('services')" class="nav-link">Services</a>
-            <a (click)="scrollTo('why-dioks')" class="nav-link">Pourquoi Dioks ?</a>
-            <a (click)="scrollTo('how-it-works')" class="nav-link">Comment ça marche</a>
-            <a (click)="scrollTo('testimonials')" class="nav-link">Témoignages</a>
-            <a (click)="scrollTo('contact')" class="nav-link">Contact</a>
+            <a (click)="navigateToSection('services')" class="nav-link">Services</a>
+            <a (click)="navigateToSection('why-dioks')" class="nav-link">Pourquoi Dioks ?</a>
+            <a (click)="navigateToSection('how-it-works')" class="nav-link">Comment ça marche</a>
+            <a (click)="navigateToSection('testimonials')" class="nav-link">Témoignages</a>
+            <a routerLink="/a-propos" class="nav-link" routerLinkActive="text-primary">À propos</a>
+            <a (click)="navigateToSection('contact')" class="nav-link">Contact</a>
           </div>
 
           <!-- Actions -->
           <div class="hidden md:flex items-center gap-4">
-            <a routerLink="/tracking" class="text-sm text-primary hover:underline">
-              📦 Suivre un colis
+            <a routerLink="/tracking" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary rounded-lg hover:bg-primary hover:text-white transition-all">
+              <i class="fa-solid fa-location-dot"></i>
+              <span>Suivre un colis</span>
             </a>
             <a *ngIf="!isAuthenticated" routerLink="/login" class="btn-outline text-sm">
               Se connecter
@@ -57,16 +59,20 @@ import { AuthService } from '../../../core/services/auth.service';
 
         <!-- Mobile Navigation -->
         <div *ngIf="mobileMenuOpen" class="md:hidden py-4 space-y-3">
-          <a (click)="scrollTo('services')" class="block px-4 py-2 hover:bg-muted rounded">Services</a>
-          <a (click)="scrollTo('why-dioks')" class="block px-4 py-2 hover:bg-muted rounded">Pourquoi Dioks ?</a>
-          <a (click)="scrollTo('how-it-works')" class="block px-4 py-2 hover:bg-muted rounded">Comment ça marche</a>
-          <a (click)="scrollTo('testimonials')" class="block px-4 py-2 hover:bg-muted rounded">Témoignages</a>
-          <a (click)="scrollTo('contact')" class="block px-4 py-2 hover:bg-muted rounded">Contact</a>
+          <a (click)="navigateToSection('services')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Services</a>
+          <a (click)="navigateToSection('why-dioks')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Pourquoi Dioks ?</a>
+          <a (click)="navigateToSection('how-it-works')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Comment ça marche</a>
+          <a (click)="navigateToSection('testimonials')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Témoignages</a>
+          <a routerLink="/a-propos" (click)="mobileMenuOpen = false" class="block px-4 py-2 hover:bg-muted rounded">À propos</a>
+          <a (click)="navigateToSection('contact')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Contact</a>
           <div class="border-t pt-3 space-y-2">
-            <a routerLink="/tracking" class="block px-4 py-2 text-primary">📦 Suivre un colis</a>
-            <a *ngIf="!isAuthenticated" routerLink="/login" class="block px-4 py-2 btn-outline text-center">Se connecter</a>
-            <a *ngIf="!isAuthenticated" routerLink="/register" class="block px-4 py-2 btn-primary text-center">Rejoindre</a>
-            <a *ngIf="isAuthenticated" [routerLink]="dashboardLink" class="block px-4 py-2 btn-primary text-center">Dashboard</a>
+            <a routerLink="/tracking" (click)="mobileMenuOpen = false" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary rounded-lg hover:bg-primary hover:text-white transition-all"> 
+              <i class="fa-solid fa-location-dot"></i>
+              <span>Suivre un colis</span>
+            </a>
+            <a *ngIf="!isAuthenticated" routerLink="/login" (click)="mobileMenuOpen = false" class="block px-4 py-2 btn-outline text-center">Se connecter</a>
+            <a *ngIf="!isAuthenticated" routerLink="/register" (click)="mobileMenuOpen = false" class="block px-4 py-2 btn-primary text-center">Rejoindre</a>
+            <a *ngIf="isAuthenticated" [routerLink]="dashboardLink" (click)="mobileMenuOpen = false" class="block px-4 py-2 btn-primary text-center">Dashboard</a>
           </div>
         </div>
       </nav>
@@ -84,7 +90,7 @@ export class PublicHeaderComponent {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   get isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
@@ -99,8 +105,35 @@ export class PublicHeaderComponent {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
 
-  scrollTo(sectionId: string) {
+  /**
+   * Navigation intelligente vers sections
+   * - Si sur home: scroll direct
+   * - Si ailleurs: navigate vers home puis scroll
+   */
+  navigateToSection(sectionId: string) {
     this.mobileMenuOpen = false;
+
+    // Vérifier si on est sur la home
+    const isOnHome = this.router.url === '/' || this.router.url === '/home';
+
+    if (isOnHome) {
+      // Déjà sur home → scroll direct
+      this.scrollToElement(sectionId);
+    } else {
+      // Sur autre page → navigate puis scroll
+      this.router.navigate(['/']).then(() => {
+        // Attendre que la page soit chargée
+        setTimeout(() => {
+          this.scrollToElement(sectionId);
+        }, 100);
+      });
+    }
+  }
+
+  /**
+   * Scroll vers élément avec smooth behavior
+   */
+  private scrollToElement(sectionId: string) {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });

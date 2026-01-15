@@ -1,0 +1,294 @@
+<app-public-header></app-public-header>
+
+<div class="min-h-screen bg-background">
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-primary to-primary-dark text-white py-20 sm:py-32 overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="container mx-auto px-4 sm:px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 animate-fadeInUp">
+                    À propos de Dioks
+                </h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 animate-fadeInUp animation-delay-200">
+                    La solution logistique conçue pour les vendeurs de toutes tailles
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fadeInUp animation-delay-400">
+                    <button (click)="scrollToSection('mission')" class="btn-secondary px-8 py-3">
+                        Notre Mission
+                    </button>
+                    <button routerLink="/contact" class="btn-outline-yellow px-8 py-3">
+                        Nous Contacter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <!-- <section class="py-12 sm:py-16 bg-white border-b">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+                <div *ngFor="let stat of stats" class="text-center animate-fadeInUp">
+                    <div
+                        class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full mb-4">
+                        <i [class]="stat.icon + ' text-2xl sm:text-3xl text-primary'"></i>
+                    </div>
+                    <div class="text-3xl sm:text-4xl font-bold text-foreground mb-2">{{ stat.number }}</div>
+                    <div class="text-sm sm:text-base text-muted-foreground">{{ stat.label }}</div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Mission Section -->
+    <section id="mission" class="py-16 sm:py-24">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <!-- Image/Illustration -->
+                    <div class="order-2 md:order-1">
+                        <div class="relative">
+                            <div
+                                class="aspect-square bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center">
+                                <i class="fa-solid fa-truck-fast text-8xl sm:text-9xl text-primary/30"></i>
+                            </div>
+                            <!-- Floating cards -->
+                            <div class="absolute -top-6 -right-6 bg-white shadow-xl rounded-xl p-4 animate-float">
+                                <i class="fa-solid fa-check-circle text-3xl text-green-500"></i>
+                            </div>
+                            <div
+                                class="absolute -bottom-6 -left-6 bg-white shadow-xl rounded-xl p-4 animate-float animation-delay-500">
+                                <i class="fa-solid fa-bolt text-3xl text-yellow-500"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="order-1 md:order-2">
+                        <h2 class="text-3xl sm:text-4xl font-bold text-foreground mb-6">
+                            Notre Mission
+                        </h2>
+                        <div class="space-y-4 text-muted-foreground text-base sm:text-lg">
+                            <p>
+                                <strong class="text-foreground">Dioks</strong> est née d'une observation simple :
+                                des milliers de vendeurs à Dakar comme dans les régions rencontrent les mêmes
+                                difficultés
+                                pour gérer leurs livraisons et encaisser leurs paiements.
+                            </p>
+                            <p>
+                                Nous avons créé une plateforme qui simplifie tout :
+                                <span class="text-foreground font-medium">de la création de livraison à l'encaissement
+                                    du paiement à la livraison</span>,
+                                en passant par le suivi en temps réel et la gestion des retours.
+                            </p>
+                            <p>
+                                Notre objectif est de permettre à chaque vendeur, qu'il soit débutant ou confirmé,
+                                de se concentrer sur ce qu'il fait de mieux :
+                                <span class="text-primary font-semibold">vendre ses produits</span>,
+                                pendant que nous gérons la logistique.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CEO Message Section -->
+    <section class="py-16 sm:py-24 bg-muted/30">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+                        Un mot du fondateur
+                    </h2>
+                    <div class="w-20 h-1 bg-primary mx-auto"></div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl p-8 sm:p-12 relative">
+                    <!-- Quote icon -->
+                    <div class="absolute top-6 left-6 text-primary/10">
+                        <i class="fa-solid fa-quote-left text-6xl sm:text-7xl"></i>
+                    </div>
+
+                    <div class="relative z-10">
+                        <!-- CEO Photo placeholder -->
+                        <div class="flex justify-center mb-8">
+                            <img src="assets/images/ceo.JPG" alt="Baye Masse - CEO & Fondateur Dioks"
+                                class="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover shadow-xl border-4 border-white" />
+                        </div>
+
+                        <!-- Message -->
+                        <div class="space-y-6 text-muted-foreground text-base sm:text-lg leading-relaxed">
+                            <p>
+                                J'ai toujours été fasciné par
+                                la manière dont la technologie peut résoudre des problèmes réels et concrets.
+                            </p>
+                            <p>
+                                <span class="text-foreground font-medium">Dioks n'est pas née d'une idée
+                                    abstraite</span>,
+                                mais d'observations concrètes : des vendeurs qui passaient des heures
+                                à coordonner des livraisons, à gérer le cash, à rassurer les clients.
+                                <span class="text-primary font-semibold">Je me suis dit qu'il devait y avoir une
+                                    meilleure façon</span>.
+                            </p>
+                            <p>
+                                Aujourd'hui, voir des vendeurs gagner du temps, réduire leurs coûts et développer
+                                leur activité grâce à Dioks, c'est exactement ce qui me motive à continuer.
+                            </p>
+                            <p class="text-foreground font-medium italic">
+                                "La technologie doit servir les vraies personnes, pas l'inverse.
+                                Chaque ligne de code de Dioks est pensée pour simplifier la vie de nos vendeurs."
+                            </p>
+                        </div>
+
+                        <!-- Signature -->
+                        <div class="mt-8 pt-6 border-t">
+                            <div class="font-bold text-xl text-foreground">Masse Ndiaye</div>
+                            <div class="text-primary font-medium">CEO & Fondateur, Dioks</div>
+                        </div>
+                    </div>
+
+                    <!-- Quote icon bottom -->
+                    <div class="absolute bottom-6 right-6 text-primary/10">
+                        <i class="fa-solid fa-quote-right text-6xl sm:text-7xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="py-16 sm:py-24">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+                        Nos Valeurs
+                    </h2>
+                    <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                        Les principes qui guident chacune de nos actions et décisions
+                    </p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+                    <div *ngFor="let valeur of valeurs; let i = index"
+                        class="bg-white rounded-xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fadeInUp"
+                        [style.animation-delay]="(i * 100) + 'ms'">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <i [class]="valeur.icon + ' text-3xl text-primary'"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-foreground mb-3">{{ valeur.title }}</h3>
+                        <p class="text-muted-foreground leading-relaxed">{{ valeur.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section
+    <section class="py-16 sm:py-24 bg-muted/30">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+                        Notre Parcours
+                    </h2>
+                    <p class="text-lg text-muted-foreground">
+                        De l'idée à la réalité, découvrez l'histoire de Dioks
+                    </p>
+                </div>
+
+                <div class="relative">
+                    <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-primary/20 -translate-x-1/2">
+                    </div>
+
+                    <div class="space-y-12">
+                        <div *ngFor="let item of timeline; let i = index" class="relative"
+                            [class.md:flex-row-reverse]="i % 2 === 0">
+                            <div class="md:grid md:grid-cols-2 md:gap-8 items-center">
+                                <div [class.md:text-right]="i % 2 === 0" [class.md:col-start-1]="i % 2 === 0"
+                                    [class.md:col-start-2]="i % 2 !== 0">
+                                    <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                                        <div
+                                            class="inline-block px-4 py-1 bg-primary text-white rounded-full text-sm font-bold mb-3">
+                                            {{ item.year }}
+                                        </div>
+                                        <h3 class="text-xl font-bold text-foreground mb-2">{{ item.title }}</h3>
+                                        <p class="text-muted-foreground">{{ item.description }}</p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg">
+                                </div>
+
+                                <div [class.md:col-start-2]="i % 2 === 0" [class.md:col-start-1]="i % 2 !== 0"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Team Section -->
+    <!-- <section class="py-16 sm:py-24">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+                        L'Équipe
+                    </h2>
+                    <p class="text-lg text-muted-foreground">
+                        Passionnés par la technologie et l'entrepreneuriat local
+                    </p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div *ngFor="let member of team"
+                        class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                        <div
+                            class="h-64 bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white text-6xl font-bold">
+                            {{ member.name.charAt(0) }}
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-foreground mb-1">{{ member.name }}</h3>
+                            <div class="text-primary font-medium mb-3">{{ member.role }}</div>
+                            <p class="text-muted-foreground text-sm">{{ member.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- CTA Section -->
+    <section class="py-16 sm:py-24 bg-gradient-to-br from-primary to-primary-dark text-white">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+                    Prêt à simplifier vos livraisons ?
+                </h2>
+                <p class="text-lg sm:text-xl text-white/90 mb-8">
+                    Rejoignez des dizaines de vendeurs qui font confiance à Dioks pour leurs livraisons
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button routerLink="/auth/register" class="btn-secondary px-8 py-4 text-lg">
+                        <i class="fa-solid fa-rocket mr-2"></i>
+                        Créer mon compte
+                    </button>
+                    <button routerLink="/contact" class="btn-outline-white px-8 py-4 text-lg">
+                        <i class="fa-solid fa-envelope mr-2"></i>
+                        Nous contacter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -30,10 +30,13 @@ import { ZonesComponent } from './features/admin/zones/zones.component';
 import { ProfilComponent } from './shared/components/profil/profil.component';
 import { CreerLivraisonVendeurComponent } from './features/admin/creer-livraison-vendeur/creer-livraison-vendeur.component';
 import { ImpressionQrComponent } from './features/admin/impression-qr/impression-qr.component';
+import { AProposComponent } from './pages/a-propos/a-propos.component';
 
 export const routes: Routes = [
   // Landing page comme page par défaut
   { path: '', component: LandingComponent },
+
+  { path: 'a-propos', component: AProposComponent }, 
   
   // Page statut compte (EN_ATTENTE / SUSPENDU / BLOQUE)
   { path: 'statut-compte', component: StatutCompteComponent },
