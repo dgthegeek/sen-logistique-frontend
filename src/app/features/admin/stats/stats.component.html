@@ -1,0 +1,116 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Titre -->
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-1">
+              <i class="fa-solid fa-chart-line"></i> Tableau de bord
+            </h1>
+            <p class="text-sm text-muted-foreground">Commandes, livreurs et zones.</p>
+          </div>
+          <button class="btn-outline" (click)="charger()">
+            <i class="fa-solid fa-rotate-right"></i> Actualiser
+          </button>
+        </div>
+
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+
+        <ng-container *ngIf="!loading && stats">
+          <!-- Cartes commandes par statut -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 mb-6">
+            <div *ngFor="let carte of cartes" class="card text-center">
+              <i class="fa-solid {{ carte.icon }} text-xl mb-1" [ngClass]="carte.classe"></i>
+              <div class="text-2xl font-bold text-foreground">{{ carte.valeur }}</div>
+              <div class="text-xs text-muted-foreground">{{ carte.label }}</div>
+            </div>
+          </div>
+
+          <!-- Temps moyen -->
+          <div class="card mb-6 flex items-center gap-3">
+            <i class="fa-solid fa-stopwatch text-2xl text-primary"></i>
+            <div>
+              <div class="text-sm text-muted-foreground">Temps moyen de livraison</div>
+              <div class="text-xl font-bold text-foreground">
+                {{ formatTemps(stats.tempsMoyenLivraisonMinutes) }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance livreurs -->
+          <div class="card mb-6">
+            <h2 class="text-lg font-bold text-foreground mb-3">
+              <i class="fa-solid fa-people-carry-box"></i> Performance des livreurs
+            </h2>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="text-left text-muted-foreground border-b border-border">
+                    <th class="p-2">Livreur</th>
+                    <th class="p-2 text-center">Livrées</th>
+                    <th class="p-2 text-center">En cours</th>
+                    <th class="p-2 text-center">Échecs</th>
+                    <th class="p-2 text-center">Taux réussite</th>
+                    <th class="p-2 text-center">Temps moyen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="stats.livreurs.length === 0">
+                    <td colspan="6" class="p-4 text-center text-muted-foreground">Aucun livreur.</td>
+                  </tr>
+                  <tr *ngFor="let l of stats.livreurs" class="border-b border-border/50">
+                    <td class="p-2 font-medium text-foreground">{{ l.prenom }} {{ l.nom }}</td>
+                    <td class="p-2 text-center">{{ l.livrees }}</td>
+                    <td class="p-2 text-center">{{ l.enCours }}</td>
+                    <td class="p-2 text-center">{{ l.echecs }}</td>
+                    <td class="p-2 text-center font-semibold">{{ l.tauxReussite }}%</td>
+                    <td class="p-2 text-center">{{ formatTemps(l.tempsMoyenMinutes) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Stats par zone -->
+          <div class="card">
+            <h2 class="text-lg font-bold text-foreground mb-3">
+              <i class="fa-solid fa-map-location-dot"></i> Statistiques par zone
+            </h2>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="text-left text-muted-foreground border-b border-border">
+                    <th class="p-2">Zone</th>
+                    <th class="p-2 text-center">Livraisons</th>
+                    <th class="p-2 text-right">Chiffre d'affaires</th>
+                    <th class="p-2 text-center">Taux d'échec</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="stats.zones.length === 0">
+                    <td colspan="4" class="p-4 text-center text-muted-foreground">Aucune donnée.</td>
+                  </tr>
+                  <tr *ngFor="let z of stats.zones" class="border-b border-border/50">
+                    <td class="p-2 font-medium text-foreground">{{ z.zone }}</td>
+                    <td class="p-2 text-center">{{ z.nombreLivraisons }}</td>
+                    <td class="p-2 text-right font-semibold">{{ z.chiffreAffaires | fcfa }}</td>
+                    <td class="p-2 text-center">
+                      <span [class.text-red-600]="z.tauxEchec > 20">{{ z.tauxEchec }}%</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </main>
+  </div>
+</div>

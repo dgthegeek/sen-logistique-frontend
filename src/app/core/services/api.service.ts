@@ -17,7 +17,7 @@ import { AdminVendeurActionResponse, AdminVendeursEnAttenteResponse, BloquerVend
 import {
   CommandeCloseur, CommandeDispatch, CommandeLivreur, MembreResponse, LivreurResponse,
   CreateMembreRequest, AssignerLivreurRequest, AssignerLivreurResponse, LivrerRequest, EchecRequest,
-  StatutLivraison
+  StatutLivraison, DashboardStats
 } from '../models/closing-dispatch.model';
 
 @Injectable({ providedIn: 'root' })
@@ -338,6 +338,12 @@ export class ApiService {
 
   livreurEchec(id: number, data: EchecRequest): Observable<CommandeLivreur> {
     return this.http.post<CommandeLivreur>(`${this.baseUrl}/livreur/livraisons/${id}/echec`, data);
+  }
+
+  // ========== STATS (Admin) ==========
+
+  getDashboardStats(): Observable<DashboardStats> {
+    return this.http.get<DashboardStats>(`${this.baseUrl}/admin/stats/dashboard`);
   }
 
 }

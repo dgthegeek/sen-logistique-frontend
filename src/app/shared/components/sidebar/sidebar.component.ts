@@ -29,6 +29,7 @@ export class SidebarComponent implements OnInit {
     if (this.isAdmin) {
       this.menuItems = [
         { label: 'Dashboard', route: '/admin/dashboard', icon: 'fa-solid fa-chart-line' },
+        { label: 'Statistiques', route: '/admin/stats', icon: 'fa-solid fa-chart-column' },
         { label: 'Ramassages', route: '/admin/ramassages', icon: 'fa-solid fa-box' },
         { label: 'Créer livraison vendeur', route: '/admin/creer-livraison-vendeur', icon: 'fa-solid fa-truck-fast' },
         { label: 'Livraisons', route: '/admin/livraisons', icon: 'fa-solid fa-truck' },

@@ -118,3 +118,41 @@ export interface EchecRequest {
   motif: MotifEchec;
   commentaire?: string;
 }
+
+// ===================== STATS / DASHBOARD =====================
+
+export interface CommandesParStatut {
+  nouvelles: number;
+  aAppeler: number;
+  confirmees: number;
+  pretesALivrer: number;
+  assignees: number;
+  enLivraison: number;
+  livrees: number;
+  echecs: number;
+}
+
+export interface LivreurStats {
+  id: number;
+  nom: string;
+  prenom: string;
+  livrees: number;
+  enCours: number;
+  echecs: number;
+  tauxReussite: number;
+  tempsMoyenMinutes: number;
+}
+
+export interface ZoneStats {
+  zone: string;
+  nombreLivraisons: number;
+  chiffreAffaires: number;
+  tauxEchec: number;
+}
+
+export interface DashboardStats {
+  commandes: CommandesParStatut;
+  tempsMoyenLivraisonMinutes: number;
+  livreurs: LivreurStats[];
+  zones: ZoneStats[];
+}

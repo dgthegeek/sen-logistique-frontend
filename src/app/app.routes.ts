@@ -12,6 +12,7 @@ import { livreurGuard } from './core/guards/livreur.guard';
 import { CloseurCommandesComponent } from './features/closeur/commandes/commandes.component';
 import { AdminDispatchComponent } from './features/admin/dispatch/dispatch.component';
 import { AdminEquipeComponent } from './features/admin/equipe/equipe.component';
+import { AdminStatsComponent } from './features/admin/stats/stats.component';
 import { LivreurMesLivraisonsComponent } from './features/livreur/mes-livraisons/mes-livraisons.component';
 
 // Vendeur imports
@@ -98,6 +99,7 @@ export const routes: Routes = [
       { path: 'impression-qr', component: ImpressionQrComponent },
       { path: 'dispatch', component: AdminDispatchComponent },   // ← Module Dispatch
       { path: 'equipe', component: AdminEquipeComponent },       // ← Gestion closeurs/livreurs
+      { path: 'stats', component: AdminStatsComponent },         // ← Tableau de bord stats
     ]
   },
 
