@@ -19,6 +19,10 @@ import {
   CreateMembreRequest, AssignerLivreurRequest, AssignerLivreurResponse, LivrerRequest, EchecRequest,
   StatutLivraison, DashboardStats
 } from '../models/closing-dispatch.model';
+import {
+  Produit, PageProduit, CreateProduitRequest, UpdateProduitRequest,
+  MouvementStockRequest, AjustementStockRequest, Mouvement
+} from '../models/stock.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -344,6 +348,52 @@ export class ApiService {
 
   getDashboardStats(): Observable<DashboardStats> {
     return this.http.get<DashboardStats>(`${this.baseUrl}/admin/stats/dashboard`);
+  }
+
+  // ========== STOCK (Admin) ==========
+
+  getProduits(search?: string, page: number = 0, size: number = 50): Observable<PageProduit> {
+    let params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    if (search) { params = params.set('search', search); }
+    return this.http.get<PageProduit>(`${this.baseUrl}/admin/produits`, { params });
+  }
+
+  getProduit(id: number): Observable<Produit> {
+    return this.http.get<Produit>(`${this.baseUrl}/admin/produits/${id}`);
+  }
+
+  createProduit(data: CreateProduitRequest): Observable<Produit> {
+    return this.http.post<Produit>(`${this.baseUrl}/admin/produits`, data);
+  }
+
+  updateProduit(id: number, data: UpdateProduitRequest): Observable<Produit> {
+    return this.http.put<Produit>(`${this.baseUrl}/admin/produits/${id}`, data);
+  }
+
+  entreeStock(id: number, data: MouvementStockRequest): Observable<Produit> {
+    return this.http.post<Produit>(`${this.baseUrl}/admin/produits/${id}/entree-stock`, data);
+  }
+
+  ajusterStock(id: number, data: AjustementStockRequest): Observable<Produit> {
+    return this.http.post<Produit>(`${this.baseUrl}/admin/produits/${id}/ajuster`, data);
+  }
+
+  getMouvements(id: number): Observable<Mouvement[]> {
+    return this.http.get<Mouvement[]>(`${this.baseUrl}/admin/produits/${id}/mouvements`);
+  }
+
+  scanProduit(code: string): Observable<Produit> {
+    return this.http.get<Produit>(`${this.baseUrl}/admin/produits/scan/${code}`);
+  }
+
+  getStockAlertes(): Observable<Produit[]> {
+    return this.http.get<Produit[]>(`${this.baseUrl}/admin/stock/alertes`);
+  }
+
+  // ========== STOCK (Vendeur) ==========
+
+  getMesProduits(): Observable<Produit[]> {
+    return this.http.get<Produit[]>(`${this.baseUrl}/vendeur/produits`);
   }
 
 }

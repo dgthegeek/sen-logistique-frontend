@@ -13,6 +13,8 @@ import { CloseurCommandesComponent } from './features/closeur/commandes/commande
 import { AdminDispatchComponent } from './features/admin/dispatch/dispatch.component';
 import { AdminEquipeComponent } from './features/admin/equipe/equipe.component';
 import { AdminStatsComponent } from './features/admin/stats/stats.component';
+import { AdminStockComponent } from './features/admin/stock/stock.component';
+import { VendeurMonStockComponent } from './features/vendeur/mon-stock/mon-stock.component';
 import { LivreurMesLivraisonsComponent } from './features/livreur/mes-livraisons/mes-livraisons.component';
 
 // Vendeur imports
@@ -77,6 +79,7 @@ export const routes: Routes = [
       { path: 'creer-livraison', component: CreerLivraisonComponent },
       { path: 'livraisons', component: LivraisonsComponent },
       { path: 'livraisons/:id', component: LivraisonDetailComponent },
+      { path: 'mon-stock', component: VendeurMonStockComponent },
       { path: 'finances', component: VendeurFinancesComponent },
       { path: 'profil', component: ProfilComponent },
     ]
@@ -100,6 +103,7 @@ export const routes: Routes = [
       { path: 'dispatch', component: AdminDispatchComponent },   // ← Module Dispatch
       { path: 'equipe', component: AdminEquipeComponent },       // ← Gestion closeurs/livreurs
       { path: 'stats', component: AdminStatsComponent },         // ← Tableau de bord stats
+      { path: 'stock', component: AdminStockComponent },         // ← Module Stock
     ]
   },
 

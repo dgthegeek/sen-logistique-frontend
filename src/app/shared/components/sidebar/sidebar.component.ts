@@ -36,6 +36,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Dispatch livreurs', route: '/admin/dispatch', icon: 'fa-solid fa-truck-arrow-right' },
         { label: 'Équipe', route: '/admin/equipe', icon: 'fa-solid fa-users-gear' },
         { label: 'Finances', route: '/admin/finances', icon: 'fa-solid fa-money-bill-trend-up' },
+        { label: 'Stock & produits', route: '/admin/stock', icon: 'fa-solid fa-boxes-stacked' },
         { label: 'Gestion vendeurs', route: '/admin/vendeurs', icon: 'fa-solid fa-store' },
         { label: 'Zones de livraison', route: '/admin/zones', icon: 'fa-solid fa-map-location-dot' },
         { label: 'Mon compte', route: '/admin/profil', icon: 'fa-solid fa-user-gear' },
@@ -56,6 +57,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Dashboard', route: '/vendeur/dashboard', icon: 'fa-solid fa-chart-pie' },
         { label: 'Nouvelle livraison', route: '/vendeur/creer-livraison', icon: 'fa-solid fa-circle-plus' },
         { label: 'Mes livraisons', route: '/vendeur/livraisons', icon: 'fa-solid fa-boxes-stacked' },
+        { label: 'Mon stock', route: '/vendeur/mon-stock', icon: 'fa-solid fa-warehouse' },
         { label: 'Mes finances', route: '/vendeur/finances', icon: 'fa-solid fa-wallet' },
         { label: 'Mon compte', route: '/vendeur/profil', icon: 'fa-solid fa-user-circle' },
       ];

@@ -1,0 +1,210 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Titre -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-1">
+              <i class="fa-solid fa-boxes-stacked"></i> Stock & Produits
+            </h1>
+            <p class="text-sm text-muted-foreground">{{ totalElements }} produit(s)</p>
+          </div>
+          <button class="btn-primary" (click)="ouvrirCreate()">
+            <i class="fa-solid fa-plus"></i> Nouveau produit
+          </button>
+        </div>
+
+        <!-- Recherche -->
+        <div class="card mb-4 flex gap-2">
+          <input type="text" class="form-input flex-1" placeholder="Rechercher par nom ou code..."
+                 [(ngModel)]="search" (keyup.enter)="rechercher()" />
+          <button class="btn-outline" (click)="rechercher()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+
+        <div *ngIf="!loading && produits.length === 0" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-box-open text-2xl mb-2"></i>
+          <p>Aucun produit.</p>
+        </div>
+
+        <!-- Tableau produits -->
+        <div *ngIf="!loading && produits.length > 0" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="p-2">Code</th>
+                <th class="p-2">Produit</th>
+                <th class="p-2">Partenaire</th>
+                <th class="p-2 text-center">Stock</th>
+                <th class="p-2 text-right">Prix</th>
+                <th class="p-2 text-center">Statut</th>
+                <th class="p-2 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of produits" class="border-b border-border/50 hover:bg-muted/30">
+                <td class="p-2 font-mono">{{ p.code }}</td>
+                <td class="p-2 font-medium text-foreground">{{ p.nom }}</td>
+                <td class="p-2">{{ p.vendeurNom }}</td>
+                <td class="p-2 text-center">
+                  <span class="font-semibold" [class.text-red-600]="p.enAlerte">{{ p.quantiteStock }}</span>
+                  <i *ngIf="p.enAlerte" class="fa-solid fa-triangle-exclamation text-red-600 ml-1"
+                     title="Stock faible"></i>
+                </td>
+                <td class="p-2 text-right">{{ p.prixUnitaire ? (p.prixUnitaire | fcfa) : '—' }}</td>
+                <td class="p-2 text-center">
+                  <span class="badge" [ngClass]="p.actif ? 'badge-delivered' : 'badge-canceled'">
+                    {{ p.actif ? 'Actif' : 'Inactif' }}
+                  </span>
+                </td>
+                <td class="p-2">
+                  <div class="flex justify-end gap-1">
+                    <button class="btn-ghost" title="Entrée stock" (click)="ouvrirStock(p, 'entree')">
+                      <i class="fa-solid fa-arrow-down-long text-green-600"></i>
+                    </button>
+                    <button class="btn-ghost" title="Ajuster (inventaire)" (click)="ouvrirStock(p, 'ajuster')">
+                      <i class="fa-solid fa-sliders"></i>
+                    </button>
+                    <button class="btn-ghost" title="Mouvements" (click)="voirMouvements(p)">
+                      <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
+                    <button class="btn-ghost" title="Activer/Désactiver" (click)="toggleActif(p)">
+                      <i class="fa-solid" [ngClass]="p.actif ? 'fa-toggle-on text-green-600' : 'fa-toggle-off'"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Pagination -->
+          <div class="flex items-center justify-between mt-3" *ngIf="totalPages > 1">
+            <button class="btn-outline" [disabled]="currentPage === 0" (click)="pagePrecedente()">Précédent</button>
+            <span class="text-sm text-muted-foreground">Page {{ currentPage + 1 }} / {{ totalPages }}</span>
+            <button class="btn-outline" [disabled]="currentPage >= totalPages - 1" (click)="pageSuivante()">Suivant</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal création -->
+<div *ngIf="showCreateModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+  <div class="card max-w-lg w-full">
+    <h2 class="text-lg font-bold text-foreground mb-4">Nouveau produit</h2>
+    <div class="mb-3">
+      <label class="form-label">Nom *</label>
+      <input type="text" class="form-input" [(ngModel)]="newProduit.nom" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Partenaire *</label>
+      <select class="form-select" [(ngModel)]="newProduit.vendeurId">
+        <option [ngValue]="0" disabled>— Choisir un partenaire —</option>
+        <option *ngFor="let v of vendeurs" [ngValue]="v.id">
+          {{ v.prenom }} {{ v.nom }}<ng-container *ngIf="v.nomBoutique"> ({{ v.nomBoutique }})</ng-container>
+        </option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <input type="text" class="form-input" [(ngModel)]="newProduit.description" />
+    </div>
+    <div class="grid grid-cols-3 gap-3 mb-4">
+      <div>
+        <label class="form-label">Prix unitaire</label>
+        <input type="number" class="form-input" [(ngModel)]="newProduit.prixUnitaire" min="0" />
+      </div>
+      <div>
+        <label class="form-label">Stock initial</label>
+        <input type="number" class="form-input" [(ngModel)]="newProduit.quantiteInitiale" min="0" />
+      </div>
+      <div>
+        <label class="form-label">Seuil alerte</label>
+        <input type="number" class="form-input" [(ngModel)]="newProduit.seuilAlerte" min="0" />
+      </div>
+    </div>
+    <div class="flex justify-end gap-2">
+      <button class="btn-ghost" (click)="fermerCreate()">Annuler</button>
+      <button class="btn-primary" [disabled]="saving" (click)="creer()">Créer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal entrée / ajustement -->
+<div *ngIf="showStockModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+  <div class="card max-w-md w-full">
+    <h2 class="text-lg font-bold text-foreground mb-1">
+      {{ stockMode === 'entree' ? 'Entrée de stock' : 'Ajustement (inventaire)' }}
+    </h2>
+    <p class="text-sm text-muted-foreground mb-4" *ngIf="produitCible">
+      {{ produitCible.code }} — {{ produitCible.nom }} (stock actuel : {{ produitCible.quantiteStock }})
+    </p>
+    <div class="mb-3">
+      <label class="form-label">
+        {{ stockMode === 'entree' ? 'Quantité à ajouter' : 'Nouvelle quantité réelle' }}
+      </label>
+      <input type="number" class="form-input" [(ngModel)]="quantite" min="0" />
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Commentaire (optionnel)</label>
+      <input type="text" class="form-input" [(ngModel)]="commentaire"
+             placeholder="Ex: Réception fournisseur F-2026-0418" />
+    </div>
+    <div class="flex justify-end gap-2">
+      <button class="btn-ghost" (click)="fermerStock()">Annuler</button>
+      <button class="btn-primary" [disabled]="saving" (click)="validerStock()">Valider</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal mouvements -->
+<div *ngIf="showMouvementsModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+  <div class="card max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-bold text-foreground" *ngIf="produitCible">
+        Mouvements — {{ produitCible.code }}
+      </h2>
+      <button class="btn-ghost" (click)="fermerMouvements()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div *ngIf="loadingMouvements" class="text-center py-6 text-muted-foreground">
+      <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+    </div>
+    <table *ngIf="!loadingMouvements" class="w-full text-sm">
+      <thead>
+        <tr class="text-left text-muted-foreground border-b border-border">
+          <th class="p-2">Date</th>
+          <th class="p-2">Type</th>
+          <th class="p-2 text-center">Variation</th>
+          <th class="p-2 text-center">Stock</th>
+          <th class="p-2">Auteur</th>
+          <th class="p-2">Commentaire</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="mouvements.length === 0">
+          <td colspan="6" class="p-4 text-center text-muted-foreground">Aucun mouvement.</td>
+        </tr>
+        <tr *ngFor="let m of mouvements" class="border-b border-border/50">
+          <td class="p-2 whitespace-nowrap">{{ m.dateMouvement | date:'dd/MM/yy HH:mm' }}</td>
+          <td class="p-2">{{ m.type }}</td>
+          <td class="p-2 text-center font-semibold"
+              [class.text-green-600]="m.variation > 0" [class.text-red-600]="m.variation < 0">
+            {{ m.variation > 0 ? '+' : '' }}{{ m.variation }}
+          </td>
+          <td class="p-2 text-center">{{ m.stockAvant }} → {{ m.stockApres }}</td>
+          <td class="p-2">{{ m.auteur }}</td>
+          <td class="p-2">{{ m.commentaire }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
