@@ -1,0 +1,142 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-5xl mx-auto">
+        <!-- Titre -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-1">
+              <i class="fa-solid fa-users-gear"></i> Gestion de l'équipe
+            </h1>
+            <p class="text-sm text-muted-foreground">Closeurs et livreurs.</p>
+          </div>
+          <button class="btn-primary" (click)="ouvrirModal()">
+            <i class="fa-solid fa-plus"></i>
+            Ajouter un {{ onglet === 'closeurs' ? 'closeur' : 'livreur' }}
+          </button>
+        </div>
+
+        <!-- Onglets -->
+        <div class="flex gap-2 mb-4">
+          <button class="btn-outline" [class.btn-primary]="onglet === 'closeurs'"
+                  (click)="changerOnglet('closeurs')">
+            Closeurs ({{ closeurs.length }})
+          </button>
+          <button class="btn-outline" [class.btn-primary]="onglet === 'livreurs'"
+                  (click)="changerOnglet('livreurs')">
+            Livreurs ({{ livreurs.length }})
+          </button>
+        </div>
+
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+
+        <!-- Closeurs -->
+        <div *ngIf="!loading && onglet === 'closeurs'" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="p-2">Nom</th>
+                <th class="p-2">Téléphone</th>
+                <th class="p-2">Email</th>
+                <th class="p-2">Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="closeurs.length === 0">
+                <td colspan="4" class="p-4 text-center text-muted-foreground">Aucun closeur.</td>
+              </tr>
+              <tr *ngFor="let c of closeurs" class="border-b border-border/50">
+                <td class="p-2 font-medium text-foreground">{{ c.prenom }} {{ c.nom }}</td>
+                <td class="p-2">{{ c.telephone }}</td>
+                <td class="p-2">{{ c.email || '—' }}</td>
+                <td class="p-2">
+                  <span class="badge" [ngClass]="c.actif ? 'badge-delivered' : 'badge-canceled'">
+                    {{ c.actif ? 'Actif' : 'Inactif' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Livreurs -->
+        <div *ngIf="!loading && onglet === 'livreurs'" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="p-2">Nom</th>
+                <th class="p-2">Téléphone</th>
+                <th class="p-2">Zone préférée</th>
+                <th class="p-2">En cours</th>
+                <th class="p-2">Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="livreurs.length === 0">
+                <td colspan="5" class="p-4 text-center text-muted-foreground">Aucun livreur.</td>
+              </tr>
+              <tr *ngFor="let l of livreurs" class="border-b border-border/50">
+                <td class="p-2 font-medium text-foreground">{{ l.prenom }} {{ l.nom }}</td>
+                <td class="p-2">{{ l.telephone }}</td>
+                <td class="p-2">{{ l.zonePreferee || '—' }}</td>
+                <td class="p-2">{{ l.nombreLivraisonsEnCours || 0 }}</td>
+                <td class="p-2">
+                  <span class="badge" [ngClass]="l.actif ? 'badge-delivered' : 'badge-canceled'">
+                    {{ l.actif ? 'Actif' : 'Inactif' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal création -->
+<div *ngIf="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+  <div class="card max-w-md w-full">
+    <h2 class="text-lg font-bold text-foreground mb-4">
+      Nouveau {{ onglet === 'closeurs' ? 'closeur' : 'livreur' }}
+    </h2>
+    <div class="grid grid-cols-2 gap-3 mb-3">
+      <div>
+        <label class="form-label">Prénom *</label>
+        <input type="text" class="form-input" [(ngModel)]="form.prenom" />
+      </div>
+      <div>
+        <label class="form-label">Nom *</label>
+        <input type="text" class="form-input" [(ngModel)]="form.nom" />
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Téléphone *</label>
+      <input type="tel" class="form-input" [(ngModel)]="form.telephone" placeholder="771234567" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email (optionnel)</label>
+      <input type="email" class="form-input" [(ngModel)]="form.email" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Mot de passe *</label>
+      <input type="password" class="form-input" [(ngModel)]="form.password" />
+    </div>
+    <div class="mb-4" *ngIf="onglet === 'livreurs'">
+      <label class="form-label">Zone préférée (optionnel)</label>
+      <input type="text" class="form-input" [(ngModel)]="form.zonePreferee" placeholder="Ex: Pikine" />
+    </div>
+    <div class="flex justify-end gap-2">
+      <button class="btn-ghost" (click)="fermerModal()">Annuler</button>
+      <button class="btn-primary" [disabled]="saving" (click)="enregistrer()">
+        <i class="fa-solid fa-floppy-disk"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>

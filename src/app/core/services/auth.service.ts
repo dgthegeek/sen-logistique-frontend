@@ -80,6 +80,14 @@ export class AuthService {
     return isAdmin;
   }
 
+  isCloseur(): boolean {
+    return this.currentUserSubject.value?.role === 'CLOSEUR';
+  }
+
+  isLivreur(): boolean {
+    return this.currentUserSubject.value?.role === 'LIVREUR';
+  }
+
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }

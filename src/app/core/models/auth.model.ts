@@ -1,4 +1,4 @@
-import { User } from "./user.model";
+import { User, UserRole } from "./user.model";
 
 export interface LoginRequest {
   telephone: string;
@@ -47,7 +47,7 @@ export interface UserInfo {
   prenom: string;
   telephone: string;
   email?: string;
-  role: 'VENDEUR' | 'ADMIN';
+  role: UserRole;
   nomBoutique?: string;
   commune?: string;
   quartier?: string;

@@ -14,6 +14,11 @@ import {
 import { TrackingInfo } from '../models/tracking.model';
 import { ConfirmLivraisonRequest, ConfirmLivraisonResponse, DeliveryInfo } from '../models/delivery.model';
 import { AdminVendeurActionResponse, AdminVendeursEnAttenteResponse, BloquerVendeurRequest, PageVendeur, SuspendreVendeurRequest, VendeurDetailDTO, VendeurFilters } from '../models/vendeur.model';
+import {
+  CommandeCloseur, CommandeDispatch, CommandeLivreur, MembreResponse, LivreurResponse,
+  CreateMembreRequest, AssignerLivreurRequest, AssignerLivreurResponse, LivrerRequest, EchecRequest,
+  StatutLivraison
+} from '../models/closing-dispatch.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -257,6 +262,82 @@ export class ApiService {
   // Réactiver un vendeur
   reactiverVendeur(id: number): Observable<AdminVendeurActionResponse> {
     return this.http.post<AdminVendeurActionResponse>(`${this.baseUrl}/admin/vendeurs/${id}/reactiver`, {});
+  }
+
+  // ========== CLOSING (Closeur) ==========
+
+  getCommandesCloseur(statut?: StatutLivraison): Observable<CommandeCloseur[]> {
+    let params = new HttpParams();
+    if (statut) { params = params.set('statut', statut); }
+    return this.http.get<CommandeCloseur[]>(`${this.baseUrl}/closeur/commandes`, { params });
+  }
+
+  closeurAppeler(id: number): Observable<CommandeCloseur> {
+    return this.http.post<CommandeCloseur>(`${this.baseUrl}/closeur/commandes/${id}/appeler`, {});
+  }
+
+  closeurConfirmer(id: number): Observable<CommandeCloseur> {
+    return this.http.post<CommandeCloseur>(`${this.baseUrl}/closeur/commandes/${id}/confirmer`, {});
+  }
+
+  closeurPreteALivrer(id: number): Observable<CommandeCloseur> {
+    return this.http.post<CommandeCloseur>(`${this.baseUrl}/closeur/commandes/${id}/prete-a-livrer`, {});
+  }
+
+  closeurReporter(id: number, commentaire?: string): Observable<CommandeCloseur> {
+    return this.http.post<CommandeCloseur>(`${this.baseUrl}/closeur/commandes/${id}/reporter`, { commentaire });
+  }
+
+  closeurAnnuler(id: number, commentaire?: string): Observable<CommandeCloseur> {
+    return this.http.post<CommandeCloseur>(`${this.baseUrl}/closeur/commandes/${id}/annuler`, { commentaire });
+  }
+
+  // ========== DISPATCH (Admin) ==========
+
+  getDispatchPretes(): Observable<CommandeDispatch[]> {
+    return this.http.get<CommandeDispatch[]>(`${this.baseUrl}/admin/dispatch/pretes`);
+  }
+
+  assignerLivreur(data: AssignerLivreurRequest): Observable<AssignerLivreurResponse> {
+    return this.http.post<AssignerLivreurResponse>(`${this.baseUrl}/admin/dispatch/assigner`, data);
+  }
+
+  // ========== EQUIPE (Admin) ==========
+
+  getCloseurs(): Observable<MembreResponse[]> {
+    return this.http.get<MembreResponse[]>(`${this.baseUrl}/admin/closeurs`);
+  }
+
+  createCloseur(data: CreateMembreRequest): Observable<MembreResponse> {
+    return this.http.post<MembreResponse>(`${this.baseUrl}/admin/closeurs`, data);
+  }
+
+  getLivreurs(): Observable<LivreurResponse[]> {
+    return this.http.get<LivreurResponse[]>(`${this.baseUrl}/admin/livreurs`);
+  }
+
+  createLivreur(data: CreateMembreRequest): Observable<LivreurResponse> {
+    return this.http.post<LivreurResponse>(`${this.baseUrl}/admin/livreurs`, data);
+  }
+
+  // ========== LIVREUR ==========
+
+  getMesLivraisonsLivreur(statut?: StatutLivraison): Observable<CommandeLivreur[]> {
+    let params = new HttpParams();
+    if (statut) { params = params.set('statut', statut); }
+    return this.http.get<CommandeLivreur[]>(`${this.baseUrl}/livreur/mes-livraisons`, { params });
+  }
+
+  livreurCommencer(id: number): Observable<CommandeLivreur> {
+    return this.http.post<CommandeLivreur>(`${this.baseUrl}/livreur/livraisons/${id}/commencer`, {});
+  }
+
+  livreurLivrer(id: number, data: LivrerRequest): Observable<CommandeLivreur> {
+    return this.http.post<CommandeLivreur>(`${this.baseUrl}/livreur/livraisons/${id}/livrer`, data);
+  }
+
+  livreurEchec(id: number, data: EchecRequest): Observable<CommandeLivreur> {
+    return this.http.post<CommandeLivreur>(`${this.baseUrl}/livreur/livraisons/${id}/echec`, data);
   }
 
 }

@@ -1,0 +1,130 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-5xl mx-auto">
+        <!-- Titre -->
+        <div class="mb-6">
+          <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+            <i class="fa-solid fa-motorcycle"></i> Mes livraisons
+          </h1>
+          <p class="text-sm text-muted-foreground">Vos commandes assignées.</p>
+        </div>
+
+        <!-- Chargement -->
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+
+        <!-- Vide -->
+        <div *ngIf="!loading && livraisons.length === 0" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-inbox text-2xl mb-2"></i>
+          <p>Aucune livraison assignée pour le moment.</p>
+        </div>
+
+        <!-- Liste -->
+        <div *ngIf="!loading && livraisons.length > 0" class="space-y-3">
+          <div *ngFor="let l of livraisons" class="card">
+            <div class="flex flex-col gap-3">
+              <div class="flex items-center justify-between gap-2">
+                <span class="font-mono text-sm text-muted-foreground">{{ l.numeroTracking }}</span>
+                <span class="badge" [ngClass]="badgeClass(l.statut)">{{ statutLabels[l.statut] }}</span>
+              </div>
+
+              <div>
+                <p class="font-semibold text-foreground">{{ l.nomClient }}</p>
+                <a href="tel:{{ l.telephoneClient }}" class="text-primary text-sm">
+                  <i class="fa-solid fa-phone"></i> {{ l.telephoneClient }}
+                </a>
+                <p class="text-sm text-muted-foreground mt-1">
+                  <i class="fa-solid fa-location-dot"></i> {{ l.adresse }}<span *ngIf="l.zone"> — {{ l.zone }}</span>
+                </p>
+                <p *ngIf="l.pointRepere" class="text-xs text-muted-foreground">
+                  <i class="fa-solid fa-map-pin"></i> {{ l.pointRepere }}
+                </p>
+                <p class="text-sm mt-1">
+                  <i class="fa-solid fa-box"></i> {{ l.produit }} ·
+                  <strong>À encaisser : {{ l.montantAEncaisser | fcfa }}</strong>
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <button *ngIf="l.statut === 'ASSIGNEE'" class="btn-primary"
+                        [disabled]="actionEnCours === l.id" (click)="commencer(l)">
+                  <i class="fa-solid fa-play"></i> Commencer
+                </button>
+                <button *ngIf="l.statut === 'EN_LIVRAISON'" class="btn-primary"
+                        [disabled]="actionEnCours === l.id" (click)="ouvrirLivrer(l)">
+                  <i class="fa-solid fa-circle-check"></i> Livrée
+                </button>
+                <button *ngIf="l.statut === 'ASSIGNEE' || l.statut === 'EN_LIVRAISON'" class="btn-danger"
+                        [disabled]="actionEnCours === l.id" (click)="ouvrirEchec(l)">
+                  <i class="fa-solid fa-triangle-exclamation"></i> Échec
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal Livrer -->
+<div *ngIf="showLivrerModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+  <div class="card max-w-md w-full">
+    <h2 class="text-lg font-bold text-foreground mb-4">
+      <i class="fa-solid fa-circle-check"></i> Confirmer la livraison
+    </h2>
+    <p class="text-sm text-muted-foreground mb-3" *ngIf="livrerCible">
+      {{ livrerCible.numeroTracking }} — {{ livrerCible.nomClient }}
+    </p>
+    <div class="mb-3">
+      <label class="form-label">Montant encaissé (FCFA)</label>
+      <input type="number" class="form-input" [(ngModel)]="cashCollecte" min="0" />
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Commentaire (optionnel)</label>
+      <input type="text" class="form-input" [(ngModel)]="commentaireLivraison"
+             placeholder="Ex: Cliente satisfaite" />
+    </div>
+    <div class="flex justify-end gap-2">
+      <button class="btn-ghost" (click)="fermerLivrer()">Annuler</button>
+      <button class="btn-primary" [disabled]="actionEnCours === livrerCible?.id" (click)="confirmerLivrer()">
+        Confirmer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Échec -->
+<div *ngIf="showEchecModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+  <div class="card max-w-md w-full">
+    <h2 class="text-lg font-bold text-foreground mb-4">
+      <i class="fa-solid fa-triangle-exclamation"></i> Échec de livraison
+    </h2>
+    <p class="text-sm text-muted-foreground mb-3" *ngIf="echecCible">
+      {{ echecCible.numeroTracking }} — {{ echecCible.nomClient }}
+    </p>
+    <div class="mb-3">
+      <label class="form-label">Motif <span class="text-destructive">*</span></label>
+      <select class="form-select" [(ngModel)]="motifEchec">
+        <option [ngValue]="null" disabled>— Choisir un motif —</option>
+        <option *ngFor="let m of motifs" [ngValue]="m.value">{{ m.label }}</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Commentaire (optionnel)</label>
+      <input type="text" class="form-input" [(ngModel)]="commentaireEchec" />
+    </div>
+    <div class="flex justify-end gap-2">
+      <button class="btn-ghost" (click)="fermerEchec()">Annuler</button>
+      <button class="btn-danger" [disabled]="actionEnCours === echecCible?.id" (click)="confirmerEchec()">
+        Enregistrer l'échec
+      </button>
+    </div>
+  </div>
+</div>

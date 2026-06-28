@@ -1,0 +1,88 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Titre -->
+        <div class="mb-6">
+          <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+            <i class="fa-solid fa-truck-arrow-right"></i> Dispatch — Commandes prêtes à livrer
+          </h1>
+          <p class="text-sm text-muted-foreground">
+            Sélectionnez les commandes puis assignez-les à un livreur.
+          </p>
+        </div>
+
+        <!-- Barre d'assignation -->
+        <div class="card mb-4 flex flex-col sm:flex-row sm:items-end gap-3">
+          <div class="flex-1">
+            <label class="form-label">Livreur</label>
+            <select class="form-select" [(ngModel)]="livreurId">
+              <option [ngValue]="null" disabled>— Choisir un livreur —</option>
+              <option *ngFor="let l of livreurs" [ngValue]="l.id">
+                {{ l.prenom }} {{ l.nom }}
+                <ng-container *ngIf="l.zonePreferee"> ({{ l.zonePreferee }})</ng-container>
+                — {{ l.nombreLivraisonsEnCours || 0 }} en cours
+              </option>
+            </select>
+          </div>
+          <button class="btn-primary" [disabled]="assigning || selection.size === 0 || !livreurId"
+                  (click)="assigner()">
+            <i class="fa-solid fa-user-check"></i>
+            Assigner {{ selection.size > 0 ? '(' + selection.size + ')' : '' }}
+          </button>
+        </div>
+
+        <!-- Chargement -->
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+
+        <!-- Vide -->
+        <div *ngIf="!loading && commandes.length === 0" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-inbox text-2xl mb-2"></i>
+          <p>Aucune commande prête à livrer pour le moment.</p>
+        </div>
+
+        <!-- Tableau -->
+        <div *ngIf="!loading && commandes.length > 0" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="p-2">
+                  <input type="checkbox" (change)="toutSelectionner($event)"
+                         [checked]="selection.size === commandes.length && commandes.length > 0" />
+                </th>
+                <th class="p-2">N° commande</th>
+                <th class="p-2">Client</th>
+                <th class="p-2">Téléphone</th>
+                <th class="p-2">Adresse</th>
+                <th class="p-2">Zone</th>
+                <th class="p-2">Produit</th>
+                <th class="p-2 text-right">Montant</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of commandes" class="border-b border-border/50 hover:bg-muted/30"
+                  [class.bg-muted]="estSelectionnee(c.id)">
+                <td class="p-2">
+                  <input type="checkbox" [checked]="estSelectionnee(c.id)" (change)="toggle(c.id)" />
+                </td>
+                <td class="p-2 font-mono">{{ c.numeroTracking }}</td>
+                <td class="p-2 font-medium text-foreground">{{ c.nomClient }}</td>
+                <td class="p-2">{{ c.telephoneClient }}</td>
+                <td class="p-2">{{ c.adresse }}</td>
+                <td class="p-2">{{ c.zone }}</td>
+                <td class="p-2">{{ c.produit }}</td>
+                <td class="p-2 text-right font-semibold">{{ c.montantCOD | fcfa }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

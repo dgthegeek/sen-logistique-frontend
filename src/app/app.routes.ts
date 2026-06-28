@@ -5,6 +5,14 @@ import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { vendeurGuard } from './core/guards/vendeur.guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { closeurGuard } from './core/guards/closeur.guard';
+import { livreurGuard } from './core/guards/livreur.guard';
+
+// Closing / Dispatch imports
+import { CloseurCommandesComponent } from './features/closeur/commandes/commandes.component';
+import { AdminDispatchComponent } from './features/admin/dispatch/dispatch.component';
+import { AdminEquipeComponent } from './features/admin/equipe/equipe.component';
+import { LivreurMesLivraisonsComponent } from './features/livreur/mes-livraisons/mes-livraisons.component';
 
 // Vendeur imports
 import { DashboardComponent as VendeurDashboardComponent } from './features/vendeur/dashboard/dashboard.component';
@@ -85,9 +93,33 @@ export const routes: Routes = [
       { path: 'finances', component: AdminFinancesComponent },
       { path: 'vendeurs', component: GestionVendeursComponent },
       { path: 'zones', component: ZonesComponent },      // ← NOUVEAU
-      { path: 'profil', component: ProfilComponent }, 
+      { path: 'profil', component: ProfilComponent },
       { path: 'creer-livraison-vendeur', component: CreerLivraisonVendeurComponent },
-      { path: 'impression-qr', component: ImpressionQrComponent }, 
+      { path: 'impression-qr', component: ImpressionQrComponent },
+      { path: 'dispatch', component: AdminDispatchComponent },   // ← Module Dispatch
+      { path: 'equipe', component: AdminEquipeComponent },       // ← Gestion closeurs/livreurs
+    ]
+  },
+
+  // Closeur routes (module Closing)
+  {
+    path: 'closeur',
+    canActivate: [authGuard, closeurGuard],
+    children: [
+      { path: '', redirectTo: 'commandes', pathMatch: 'full' },
+      { path: 'commandes', component: CloseurCommandesComponent },
+      { path: 'profil', component: ProfilComponent },
+    ]
+  },
+
+  // Livreur routes (interface livreur)
+  {
+    path: 'livreur',
+    canActivate: [authGuard, livreurGuard],
+    children: [
+      { path: '', redirectTo: 'mes-livraisons', pathMatch: 'full' },
+      { path: 'mes-livraisons', component: LivreurMesLivraisonsComponent },
+      { path: 'profil', component: ProfilComponent },
     ]
   },
 

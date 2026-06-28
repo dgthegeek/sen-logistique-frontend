@@ -53,6 +53,10 @@ export class LoginComponent {
       if (response.user.role === 'ADMIN') {
         console.log('➡️ Redirection admin...');
         this.router.navigate(['/admin/dashboard']);
+      } else if (response.user.role === 'CLOSEUR') {
+        this.router.navigate(['/closeur/commandes']);
+      } else if (response.user.role === 'LIVREUR') {
+        this.router.navigate(['/livreur/mes-livraisons']);
       } else {
         console.log('➡️ Traitement vendeur...');
         

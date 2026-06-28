@@ -32,11 +32,23 @@ export class SidebarComponent implements OnInit {
         { label: 'Ramassages', route: '/admin/ramassages', icon: 'fa-solid fa-box' },
         { label: 'Créer livraison vendeur', route: '/admin/creer-livraison-vendeur', icon: 'fa-solid fa-truck-fast' },
         { label: 'Livraisons', route: '/admin/livraisons', icon: 'fa-solid fa-truck' },
+        { label: 'Dispatch livreurs', route: '/admin/dispatch', icon: 'fa-solid fa-truck-arrow-right' },
+        { label: 'Équipe', route: '/admin/equipe', icon: 'fa-solid fa-users-gear' },
         { label: 'Finances', route: '/admin/finances', icon: 'fa-solid fa-money-bill-trend-up' },
-        { label: 'Gestion vendeurs', route: '/admin/vendeurs', icon: 'fa-solid fa-users-gear' },
+        { label: 'Gestion vendeurs', route: '/admin/vendeurs', icon: 'fa-solid fa-store' },
         { label: 'Zones de livraison', route: '/admin/zones', icon: 'fa-solid fa-map-location-dot' },
         { label: 'Mon compte', route: '/admin/profil', icon: 'fa-solid fa-user-gear' },
         { label: 'Impression QR', route: '/admin/impression-qr', icon: 'fa-solid fa-qrcode' }
+      ];
+    } else if (this.authService.isCloseur()) {
+      this.menuItems = [
+        { label: 'Commandes', route: '/closeur/commandes', icon: 'fa-solid fa-headset' },
+        { label: 'Mon compte', route: '/closeur/profil', icon: 'fa-solid fa-user-gear' },
+      ];
+    } else if (this.authService.isLivreur()) {
+      this.menuItems = [
+        { label: 'Mes livraisons', route: '/livreur/mes-livraisons', icon: 'fa-solid fa-motorcycle' },
+        { label: 'Mon compte', route: '/livreur/profil', icon: 'fa-solid fa-user-gear' },
       ];
     } else {
       this.menuItems = [
