@@ -85,6 +85,18 @@ export class CreerLivraisonVendeurComponent implements OnInit {
     return this.produits.filter(p => p.vendeurId === this.selectedVendeur!.id);
   }
 
+  /** Auto-remplit la description (et le prix) quand on choisit un produit du stock. */
+  onProduitChange(): void {
+    const id = this.livraisonForm.get('produitId')?.value;
+    const produit = this.produits.find(p => p.id === id);
+    if (produit) {
+      this.livraisonForm.patchValue({ descriptionProduit: produit.nom, quantite: 1 });
+      if (produit.prixUnitaire) {
+        this.livraisonForm.patchValue({ montantProduit: produit.prixUnitaire });
+      }
+    }
+  }
+
   initForm() {
     this.livraisonForm = this.fb.group({
       // Infos client

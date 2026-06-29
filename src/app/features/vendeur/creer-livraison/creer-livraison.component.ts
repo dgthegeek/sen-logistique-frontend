@@ -7,6 +7,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
 import { Zone, Quartier, CalculTarifResponse, CreateLivraisonResponse, CreateLivraisonRequest } from '../../../core/models/livraison.model';
+import { Produit } from '../../../core/models/stock.model';
 
 @Component({
   selector: 'app-creer-livraison',
@@ -34,6 +35,8 @@ export class CreerLivraisonComponent implements OnInit {
   
   createdLivraison: CreateLivraisonResponse | null = null;
 
+  produits: Produit[] = [];
+
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
@@ -53,6 +56,8 @@ export class CreerLivraisonComponent implements OnInit {
       
       // Étape 2: Détails colis
       descriptionProduit: ['', Validators.required],
+      produitId: [null],
+      quantite: [1],
       fragile: [false],
       poidsEstime: [''],
       montantProduit: [0, [Validators.required, Validators.min(0)]], // ← RENOMMÉ
@@ -64,7 +69,8 @@ export class CreerLivraisonComponent implements OnInit {
 
   ngOnInit() {
     this.loadZones();
-    
+    this.loadMesProduits();
+
     // WATCH: Commune → Load quartiers
     this.livraisonForm.get('commune')?.valueChanges.subscribe(commune => {
       if (commune) {
@@ -103,6 +109,24 @@ export class CreerLivraisonComponent implements OnInit {
         this.calculerTarif();
       }
     });
+  }
+
+  loadMesProduits() {
+    this.apiService.getMesProduits().subscribe({
+      next: (produits) => this.produits = produits.filter(p => p.actif),
+      error: () => {}
+    });
+  }
+
+  onProduitChange() {
+    const id = this.livraisonForm.get('produitId')?.value;
+    const produit = this.produits.find(p => p.id === id);
+    if (produit) {
+      this.livraisonForm.patchValue({ descriptionProduit: produit.nom, quantite: 1 });
+      if (produit.prixUnitaire) {
+        this.livraisonForm.patchValue({ montantProduit: produit.prixUnitaire });
+      }
+    }
   }
 
   loadZones() {
@@ -278,6 +302,8 @@ export class CreerLivraisonComponent implements OnInit {
       adresseComplete: formValue.adresseComplete,
       pointRepere: formValue.pointRepere || undefined,
       descriptionProduit: formValue.descriptionProduit,
+      produitId: formValue.produitId || undefined,
+      quantite: formValue.produitId ? (formValue.quantite || 1) : undefined,
       fragile: formValue.fragile,
       poids: formValue.poidsEstime || undefined,
       montantCOD: montantCOD, // ← COD TOTAL

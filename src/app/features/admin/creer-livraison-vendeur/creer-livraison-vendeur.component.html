@@ -218,7 +218,8 @@
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" *ngIf="produitsDuVendeur.length > 0">
                 <div class="sm:col-span-2">
                   <label class="form-label text-xs sm:text-sm">Produit du stock (optionnel)</label>
-                  <select formControlName="produitId" class="form-select text-sm sm:text-base">
+                  <select formControlName="produitId" class="form-select text-sm sm:text-base"
+                          (change)="onProduitChange()">
                     <option [ngValue]="null">— Aucun (pas de suivi de stock) —</option>
                     <option *ngFor="let p of produitsDuVendeur" [ngValue]="p.id">
                       {{ p.code }} — {{ p.nom }} (stock: {{ p.quantiteStock }})

@@ -232,6 +232,28 @@
                         </h2>
 
                         <div class="space-y-3 sm:space-y-4">
+                            <!-- Produit du stock (optionnel) -->
+                            <div *ngIf="produits.length > 0" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div class="sm:col-span-2">
+                                    <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+                                        <i class="fa-solid fa-boxes-stacked text-muted-foreground"></i>
+                                        <span>Produit de mon stock (optionnel)</span>
+                                    </label>
+                                    <select formControlName="produitId" class="form-select text-sm sm:text-base"
+                                            (change)="onProduitChange()">
+                                        <option [ngValue]="null">— Aucun (pas de suivi de stock) —</option>
+                                        <option *ngFor="let p of produits" [ngValue]="p.id">
+                                            {{ p.code }} — {{ p.nom }} (stock: {{ p.quantiteStock }})
+                                        </option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label text-xs sm:text-sm">Quantité</label>
+                                    <input formControlName="quantite" type="number" min="1"
+                                           class="form-input text-sm sm:text-base" />
+                                </div>
+                            </div>
+
                             <!-- Description produit -->
                             <div>
                                 <label class="form-label text-xs sm:text-sm flex items-center gap-1">
