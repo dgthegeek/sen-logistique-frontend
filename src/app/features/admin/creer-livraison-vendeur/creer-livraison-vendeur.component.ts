@@ -9,6 +9,7 @@ import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
 import { StatutVendeur, VendeurDTO, VendeurFilters } from '../../../core/models/vendeur.model';
 import { CreateLivraisonRequest, CalculTarifRequest, Zone } from '../../../core/models/livraison.model';
 import { MarquerRamasseRequest } from '../../../core/models/admin.model';
+import { Produit } from '../../../core/models/stock.model';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { Subject } from 'rxjs';
@@ -51,6 +52,9 @@ export class CreerLivraisonVendeurComponent implements OnInit {
   createdLivraison: any = null;
   autoRamassageInProgress = false;
 
+  // Produits (stock) - sélection optionnelle pour décrément auto
+  produits: Produit[] = [];
+
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
@@ -65,6 +69,20 @@ export class CreerLivraisonVendeurComponent implements OnInit {
     this.loadCommunes();
     this.setupFormListeners();
     this.setupSearchDebounce();
+    this.loadProduits();
+  }
+
+  loadProduits() {
+    this.apiService.getProduits(undefined, 0, 200).subscribe({
+      next: (p) => this.produits = p.content.filter(pr => pr.actif),
+      error: () => {}
+    });
+  }
+
+  /** Produits actifs du partenaire sélectionné. */
+  get produitsDuVendeur(): Produit[] {
+    if (!this.selectedVendeur) { return []; }
+    return this.produits.filter(p => p.vendeurId === this.selectedVendeur!.id);
   }
 
   initForm() {
@@ -78,6 +96,8 @@ export class CreerLivraisonVendeurComponent implements OnInit {
       pointRepere: [''],
       // Infos colis
       descriptionProduit: ['', Validators.required],
+      produitId: [null],
+      quantite: [1],
       fragile: [false],
       poidsEstime: [null],
       montantProduit: [0, [Validators.required, Validators.min(1)]],
@@ -379,6 +399,8 @@ export class CreerLivraisonVendeurComponent implements OnInit {
       adresseComplete: formValue.adresseComplete,
       pointRepere: formValue.pointRepere || undefined,
       descriptionProduit: formValue.descriptionProduit,
+      produitId: formValue.produitId || undefined,
+      quantite: formValue.produitId ? (formValue.quantite || 1) : undefined,
       fragile: formValue.fragile,
       poids: formValue.poidsEstime || undefined,
       montantCOD: montantCOD,
@@ -397,9 +419,10 @@ export class CreerLivraisonVendeurComponent implements OnInit {
           ...response,
           montantARecevoir: formValue.montantProduit
         };
-        
-        // Ramasser automatiquement
-        this.autoRamassageLivraison(response.id);
+
+        // Nouveau flux Closing : la commande entre en file closeur (statut NOUVELLE).
+        this.toastService.success('Commande créée ! Elle est dans la file du closeur (à appeler).');
+        this.loading = false;
       },
       error: (error) => {
         this.toastService.error(error.error?.message || 'Erreur lors de la création');

@@ -214,6 +214,24 @@
                 <input formControlName="descriptionProduit" type="text" class="form-input text-sm sm:text-base" />
               </div>
 
+              <!-- Produit du stock (optionnel) : décrément auto à la livraison -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" *ngIf="produitsDuVendeur.length > 0">
+                <div class="sm:col-span-2">
+                  <label class="form-label text-xs sm:text-sm">Produit du stock (optionnel)</label>
+                  <select formControlName="produitId" class="form-select text-sm sm:text-base">
+                    <option [ngValue]="null">— Aucun (pas de suivi de stock) —</option>
+                    <option *ngFor="let p of produitsDuVendeur" [ngValue]="p.id">
+                      {{ p.code }} — {{ p.nom }} (stock: {{ p.quantiteStock }})
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label text-xs sm:text-sm">Quantité</label>
+                  <input formControlName="quantite" type="number" min="1"
+                         class="form-input text-sm sm:text-base" />
+                </div>
+              </div>
+
               <div class="flex items-center gap-2">
                 <input formControlName="fragile" type="checkbox" id="fragile" class="form-checkbox w-4 h-4 sm:w-5 sm:h-5" />
                 <label for="fragile" class="text-xs sm:text-sm font-medium">Colis fragile</label>

@@ -45,6 +45,8 @@ export interface CreateLivraisonRequest {
   
   // Infos colis
   descriptionProduit: string;
+  produitId?: number;   // Produit du stock lié (optionnel) - décrément auto à la livraison
+  quantite?: number;    // Quantité commandée du produit lié
   fragile: boolean;
   poids?: number;
   montantCOD: number;
