@@ -68,14 +68,23 @@ export interface CreateLivraisonResponse {
   message: string;
 }
 
-export type StatutLivraison = 
+export type StatutLivraison =
+  // Nouveau cycle (Closing + Dispatch)
+  | 'NOUVELLE'
+  | 'A_APPELER'
+  | 'CONFIRMEE'
+  | 'PRETE_A_LIVRER'
+  | 'ASSIGNEE'
+  | 'EN_LIVRAISON'
+  | 'LIVREE'
+  | 'ECHEC'
+  | 'ANNULEE'
+  // Ancien cycle (ramassage - dormant)
   | 'EN_ATTENTE_RAMASSAGE'
   | 'RAMASSE'
   | 'EN_ROUTE'
-  | 'LIVREE'
   | 'ECHEC_ABSENT'
-  | 'ECHEC_REFUSE'
-  | 'ANNULEE';
+  | 'ECHEC_REFUSE';
 
 // Pour la liste (GET /vendeur/livraisons)
 export interface LivraisonResume {

@@ -49,39 +49,60 @@ export class LivraisonDetailComponent implements OnInit {
 
   getStatusBadgeClass(statut: StatutLivraison): string {
     const statusMap: { [key in StatutLivraison]: string } = {
+      'NOUVELLE': 'badge-pending',
+      'A_APPELER': 'badge-pending',
+      'CONFIRMEE': 'badge-picked',
+      'PRETE_A_LIVRER': 'badge-picked',
+      'ASSIGNEE': 'badge-transit',
+      'EN_LIVRAISON': 'badge-transit',
+      'LIVREE': 'badge-delivered',
+      'ECHEC': 'badge-failed',
+      'ANNULEE': 'badge-canceled',
       'EN_ATTENTE_RAMASSAGE': 'badge-pending',
       'RAMASSE': 'badge-picked',
       'EN_ROUTE': 'badge-transit',
-      'LIVREE': 'badge-delivered',
       'ECHEC_ABSENT': 'badge-failed',
-      'ECHEC_REFUSE': 'badge-failed',
-      'ANNULEE': 'badge-canceled'
+      'ECHEC_REFUSE': 'badge-failed'
     };
     return `badge ${statusMap[statut]}`;
   }
 
   getStatusLabel(statut: StatutLivraison): string {
     const labels: { [key in StatutLivraison]: string } = {
+      'NOUVELLE': 'Nouvelle commande',
+      'A_APPELER': 'À appeler',
+      'CONFIRMEE': 'Confirmée',
+      'PRETE_A_LIVRER': 'Prête à livrer',
+      'ASSIGNEE': 'Assignée à un livreur',
+      'EN_LIVRAISON': 'En livraison',
+      'LIVREE': 'Livré avec succès',
+      'ECHEC': 'Échec de livraison',
+      'ANNULEE': 'Annulé',
       'EN_ATTENTE_RAMASSAGE': 'En attente de ramassage',
       'RAMASSE': 'Ramassé',
       'EN_ROUTE': 'En route vers le client',
-      'LIVREE': 'Livré avec succès',
       'ECHEC_ABSENT': 'Échec - Client absent',
-      'ECHEC_REFUSE': 'Échec - Colis refusé',
-      'ANNULEE': 'Annulé'
+      'ECHEC_REFUSE': 'Échec - Colis refusé'
     };
     return labels[statut];
   }
 
   getStatusIcon(statut: StatutLivraison): string {
     const icons: { [key in StatutLivraison]: string } = {
+      'NOUVELLE': '🆕',
+      'A_APPELER': '📞',
+      'CONFIRMEE': '✔️',
+      'PRETE_A_LIVRER': '📦',
+      'ASSIGNEE': '🧭',
+      'EN_LIVRAISON': '🚚',
+      'LIVREE': '✅',
+      'ECHEC': '❌',
+      'ANNULEE': '⛔',
       'EN_ATTENTE_RAMASSAGE': '⏳',
       'RAMASSE': '📦',
       'EN_ROUTE': '🚚',
-      'LIVREE': '✅',
       'ECHEC_ABSENT': '❌',
-      'ECHEC_REFUSE': '🚫',
-      'ANNULEE': '⛔'
+      'ECHEC_REFUSE': '🚫'
     };
     return icons[statut];
   }

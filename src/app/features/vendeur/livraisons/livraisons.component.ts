@@ -32,13 +32,15 @@ export class LivraisonsComponent implements OnInit {
   
   statuts: { value: StatutLivraison | '', label: string }[] = [
     { value: '', label: 'Tous les statuts' },
-    { value: 'EN_ATTENTE_RAMASSAGE', label: 'En attente' },
-    { value: 'RAMASSE', label: 'Ramassé' },
-    { value: 'EN_ROUTE', label: 'En route' },
-    { value: 'LIVREE', label: 'Livré' },
-    { value: 'ECHEC_ABSENT', label: 'Échec (Absent)' },
-    { value: 'ECHEC_REFUSE', label: 'Échec (Refusé)' },
-    { value: 'ANNULEE', label: 'Annulé' }
+    { value: 'NOUVELLE', label: 'Nouvelle commande' },
+    { value: 'A_APPELER', label: 'À appeler' },
+    { value: 'CONFIRMEE', label: 'Confirmée' },
+    { value: 'PRETE_A_LIVRER', label: 'Prête à livrer' },
+    { value: 'ASSIGNEE', label: 'Assignée' },
+    { value: 'EN_LIVRAISON', label: 'En livraison' },
+    { value: 'LIVREE', label: 'Livrée' },
+    { value: 'ECHEC', label: 'Échec' },
+    { value: 'ANNULEE', label: 'Annulée' }
   ];
 
   constructor(private apiService: ApiService) {}
@@ -108,26 +110,40 @@ export class LivraisonsComponent implements OnInit {
 
   getStatusBadgeClass(statut: StatutLivraison): string {
     const statusMap: {[key in StatutLivraison]: string} = {
+      'NOUVELLE': 'badge-pending',
+      'A_APPELER': 'badge-pending',
+      'CONFIRMEE': 'badge-picked',
+      'PRETE_A_LIVRER': 'badge-picked',
+      'ASSIGNEE': 'badge-transit',
+      'EN_LIVRAISON': 'badge-transit',
+      'LIVREE': 'badge-delivered',
+      'ECHEC': 'badge-failed',
+      'ANNULEE': 'badge-canceled',
       'EN_ATTENTE_RAMASSAGE': 'badge-pending',
       'RAMASSE': 'badge-picked',
       'EN_ROUTE': 'badge-transit',
-      'LIVREE': 'badge-delivered',
       'ECHEC_ABSENT': 'badge-failed',
-      'ECHEC_REFUSE': 'badge-failed',
-      'ANNULEE': 'badge-canceled'
+      'ECHEC_REFUSE': 'badge-failed'
     };
     return `badge ${statusMap[statut]}`;
   }
 
   getStatusLabel(statut: StatutLivraison): string {
     const labels: {[key in StatutLivraison]: string} = {
-      'EN_ATTENTE_RAMASSAGE': 'En attente',
+      'NOUVELLE': 'Nouvelle commande',
+      'A_APPELER': 'À appeler',
+      'CONFIRMEE': 'Confirmée',
+      'PRETE_A_LIVRER': 'Prête à livrer',
+      'ASSIGNEE': 'Assignée',
+      'EN_LIVRAISON': 'En livraison',
+      'LIVREE': 'Livrée',
+      'ECHEC': 'Échec',
+      'ANNULEE': 'Annulée',
+      'EN_ATTENTE_RAMASSAGE': 'En attente de ramassage',
       'RAMASSE': 'Ramassé',
       'EN_ROUTE': 'En route',
-      'LIVREE': 'Livré',
       'ECHEC_ABSENT': 'Échec (Absent)',
-      'ECHEC_REFUSE': 'Échec (Refusé)',
-      'ANNULEE': 'Annulé'
+      'ECHEC_REFUSE': 'Échec (Refusé)'
     };
     return labels[statut];
   }

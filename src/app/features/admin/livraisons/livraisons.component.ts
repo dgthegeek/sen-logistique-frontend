@@ -48,9 +48,15 @@ export class AdminLivraisonsComponent implements OnInit {
 
   statuts = [
     { value: '', label: 'Tous les statuts' },
-    { value: 'RAMASSE', label: 'Ramassé' },
-    { value: 'LIVREE', label: 'Livré' },
-    { value: 'EN_ATTENTE_RAMASSAGE', label: 'En attente de ramassage' },
+    { value: 'NOUVELLE', label: 'Nouvelle commande' },
+    { value: 'A_APPELER', label: 'À appeler' },
+    { value: 'CONFIRMEE', label: 'Confirmée' },
+    { value: 'PRETE_A_LIVRER', label: 'Prête à livrer' },
+    { value: 'ASSIGNEE', label: 'Assignée' },
+    { value: 'EN_LIVRAISON', label: 'En livraison' },
+    { value: 'LIVREE', label: 'Livrée' },
+    { value: 'ECHEC', label: 'Échec' },
+    { value: 'ANNULEE', label: 'Annulée' },
   ];
 
   constructor(
@@ -208,10 +214,19 @@ export class AdminLivraisonsComponent implements OnInit {
 
   getStatusBadgeClass(statut: string): string {
     const classes: { [key: string]: string } = {
+      'NOUVELLE': 'badge-pending',
+      'A_APPELER': 'badge-pending',
+      'CONFIRMEE': 'badge-picked',
+      'PRETE_A_LIVRER': 'badge-picked',
+      'ASSIGNEE': 'badge-transit',
+      'EN_LIVRAISON': 'badge-transit',
+      'LIVREE': 'badge-delivered',
+      'ECHEC': 'badge-failed',
+      'ANNULEE': 'badge-canceled',
+      // Ancien cycle (dormant)
       'EN_ATTENTE_RAMASSAGE': 'badge-pending',
       'RAMASSE': 'badge-picked',
       'EN_ROUTE': 'badge-transit',
-      'LIVREE': 'badge-delivered',
       'ECHEC_ABSENT': 'badge-failed',
       'ECHEC_REFUSE': 'badge-failed'
     };
@@ -220,13 +235,21 @@ export class AdminLivraisonsComponent implements OnInit {
 
   getStatusLabel(statut: string): string {
     const labels: { [key: string]: string } = {
-      'EN_ATTENTE_RAMASSAGE': 'En attente',
+      'NOUVELLE': 'Nouvelle commande',
+      'A_APPELER': 'À appeler',
+      'CONFIRMEE': 'Confirmée',
+      'PRETE_A_LIVRER': 'Prête à livrer',
+      'ASSIGNEE': 'Assignée',
+      'EN_LIVRAISON': 'En livraison',
+      'LIVREE': 'Livrée',
+      'ECHEC': 'Échec',
+      'ANNULEE': 'Annulée',
+      // Ancien cycle (dormant)
+      'EN_ATTENTE_RAMASSAGE': 'En attente de ramassage',
       'RAMASSE': 'Ramassé',
       'EN_ROUTE': 'En route',
-      'LIVREE': 'Livré',
       'ECHEC_ABSENT': 'Échec (Absent)',
-      'ECHEC_REFUSE': 'Échec (Refusé)',
-      'ANNULEE': 'Annulé'
+      'ECHEC_REFUSE': 'Échec (Refusé)'
     };
     return labels[statut] || statut;
   }
