@@ -26,9 +26,14 @@
         <!-- Bilan du jour (KPI CEO) -->
         <div class="card mb-6">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-            <h2 class="text-lg font-bold text-foreground">
-              <i class="fa-solid fa-clipboard-list"></i> Bilan du jour
-            </h2>
+            <div>
+              <h2 class="text-lg font-bold text-foreground">
+                <i class="fa-solid fa-clipboard-list"></i> Bilan du jour
+              </h2>
+              <p class="text-xs text-muted-foreground">
+                Activité de la date sélectionnée (créées / livrées / échouées ce jour-là).
+              </p>
+            </div>
             <input type="date" class="form-input w-auto" [(ngModel)]="selectedDate" (change)="chargerBilan()" />
           </div>
           <div *ngIf="bilan" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -86,6 +91,13 @@
         </div>
 
         <ng-container *ngIf="!loading && stats">
+          <!-- Pipeline actuel (état temps réel, toutes commandes) -->
+          <div class="mb-2">
+            <h2 class="text-lg font-bold text-foreground">
+              <i class="fa-solid fa-list-check"></i> Pipeline actuel
+            </h2>
+            <p class="text-xs text-muted-foreground">État en temps réel de toutes les commandes (toutes dates).</p>
+          </div>
           <!-- Cartes commandes par statut -->
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 mb-6">
             <div *ngFor="let carte of cartes" class="card text-center">
