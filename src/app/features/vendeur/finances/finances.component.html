@@ -7,13 +7,18 @@
     <main class="flex-1 p-4 sm:p-6">
       <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="mb-6 sm:mb-8">
-          <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-            Mes finances
-          </h1>
-          <p class="text-sm sm:text-base text-muted-foreground">
-            Gérez vos paiements et consultez votre historique
-          </p>
+        <div class="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+              Mes finances
+            </h1>
+            <p class="text-sm sm:text-base text-muted-foreground">
+              Gérez vos paiements et consultez votre historique
+            </p>
+          </div>
+          <button class="btn-outline" (click)="loadFinances()">
+            <i class="fa-solid fa-rotate-right"></i> Actualiser
+          </button>
         </div>
 
         <!-- Loading -->
