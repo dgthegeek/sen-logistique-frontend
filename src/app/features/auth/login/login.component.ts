@@ -52,7 +52,7 @@ export class LoginComponent {
       // Redirection selon rôle ET statut
       if (response.user.role === 'ADMIN') {
         console.log('➡️ Redirection admin...');
-        this.router.navigate(['/admin/dashboard']);
+        this.router.navigate(['/admin/stats']);
       } else if (response.user.role === 'CLOSEUR') {
         this.router.navigate(['/closeur/commandes']);
       } else if (response.user.role === 'LIVREUR') {

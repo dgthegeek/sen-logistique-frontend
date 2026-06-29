@@ -25,7 +25,6 @@ import { LivraisonDetailComponent } from './features/vendeur/livraison-detail/li
 import { FinancesComponent as VendeurFinancesComponent } from './features/vendeur/finances/finances.component';
 
 // Admin imports
-import { AdminDashboardComponent } from './features/admin/dashboard/dashboard.component';
 import { RamassagesComponent } from './features/admin/ramassages/ramassages.component';
 import { AdminLivraisonsComponent } from './features/admin/livraisons/livraisons.component';
 import { AdminFinancesComponent } from './features/admin/finances/finances.component';
@@ -90,8 +89,8 @@ export const routes: Routes = [
     path: 'admin',
     canActivate: [authGuard, adminGuard],
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: AdminDashboardComponent },
+      { path: '', redirectTo: 'stats', pathMatch: 'full' },
+      { path: 'dashboard', redirectTo: 'stats', pathMatch: 'full' },
       { path: 'ramassages', component: RamassagesComponent },
       { path: 'livraisons', component: AdminLivraisonsComponent },
       { path: 'finances', component: AdminFinancesComponent },

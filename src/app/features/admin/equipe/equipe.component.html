@@ -14,7 +14,7 @@
             </h1>
             <p class="text-sm text-muted-foreground">Closeurs et livreurs.</p>
           </div>
-          <button class="btn-primary" (click)="ouvrirModal()">
+          <button class="btn-primary" (click)="ouvrirCreate()">
             <i class="fa-solid fa-plus"></i>
             Ajouter un {{ onglet === 'closeurs' ? 'closeur' : 'livreur' }}
           </button>
@@ -45,11 +45,12 @@
                 <th class="p-2">Téléphone</th>
                 <th class="p-2">Email</th>
                 <th class="p-2">Statut</th>
+                <th class="p-2 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngIf="closeurs.length === 0">
-                <td colspan="4" class="p-4 text-center text-muted-foreground">Aucun closeur.</td>
+                <td colspan="5" class="p-4 text-center text-muted-foreground">Aucun closeur.</td>
               </tr>
               <tr *ngFor="let c of closeurs" class="border-b border-border/50">
                 <td class="p-2 font-medium text-foreground">{{ c.prenom }} {{ c.nom }}</td>
@@ -59,6 +60,16 @@
                   <span class="badge" [ngClass]="c.actif ? 'badge-delivered' : 'badge-canceled'">
                     {{ c.actif ? 'Actif' : 'Inactif' }}
                   </span>
+                </td>
+                <td class="p-2">
+                  <div class="flex justify-end gap-1">
+                    <button class="btn-ghost" title="Modifier" (click)="ouvrirEdit(c)">
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button class="btn-ghost" title="Activer/Désactiver" (click)="toggleActif(c)">
+                      <i class="fa-solid" [ngClass]="c.actif ? 'fa-toggle-on text-green-600' : 'fa-toggle-off'"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -75,11 +86,12 @@
                 <th class="p-2">Zone préférée</th>
                 <th class="p-2">En cours</th>
                 <th class="p-2">Statut</th>
+                <th class="p-2 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngIf="livreurs.length === 0">
-                <td colspan="5" class="p-4 text-center text-muted-foreground">Aucun livreur.</td>
+                <td colspan="6" class="p-4 text-center text-muted-foreground">Aucun livreur.</td>
               </tr>
               <tr *ngFor="let l of livreurs" class="border-b border-border/50">
                 <td class="p-2 font-medium text-foreground">{{ l.prenom }} {{ l.nom }}</td>
@@ -91,6 +103,16 @@
                     {{ l.actif ? 'Actif' : 'Inactif' }}
                   </span>
                 </td>
+                <td class="p-2">
+                  <div class="flex justify-end gap-1">
+                    <button class="btn-ghost" title="Modifier" (click)="ouvrirEdit(l)">
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button class="btn-ghost" title="Activer/Désactiver" (click)="toggleActif(l)">
+                      <i class="fa-solid" [ngClass]="l.actif ? 'fa-toggle-on text-green-600' : 'fa-toggle-off'"></i>
+                    </button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -100,11 +122,11 @@
   </div>
 </div>
 
-<!-- Modal création -->
+<!-- Modal création / édition -->
 <div *ngIf="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
   <div class="card max-w-md w-full">
     <h2 class="text-lg font-bold text-foreground mb-4">
-      Nouveau {{ onglet === 'closeurs' ? 'closeur' : 'livreur' }}
+      {{ isEdition ? 'Modifier' : 'Nouveau' }} {{ onglet === 'closeurs' ? 'closeur' : 'livreur' }}
     </h2>
     <div class="grid grid-cols-2 gap-3 mb-3">
       <div>
@@ -125,7 +147,9 @@
       <input type="email" class="form-input" [(ngModel)]="form.email" />
     </div>
     <div class="mb-3">
-      <label class="form-label">Mot de passe *</label>
+      <label class="form-label">
+        Mot de passe {{ isEdition ? '(laisser vide pour ne pas changer)' : '*' }}
+      </label>
       <input type="password" class="form-input" [(ngModel)]="form.password" />
     </div>
     <div class="mb-4" *ngIf="onglet === 'livreurs'">

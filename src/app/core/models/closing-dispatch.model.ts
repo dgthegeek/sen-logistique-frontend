@@ -99,6 +99,16 @@ export interface CreateMembreRequest {
   zonePreferee?: string;
 }
 
+export interface UpdateMembreRequest {
+  nom?: string;
+  prenom?: string;
+  telephone?: string;
+  email?: string;
+  actif?: boolean;
+  zonePreferee?: string;
+  password?: string;
+}
+
 export interface AssignerLivreurRequest {
   livraisonIds: number[];
   livreurId: number;

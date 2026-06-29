@@ -16,8 +16,8 @@ import { ConfirmLivraisonRequest, ConfirmLivraisonResponse, DeliveryInfo } from 
 import { AdminVendeurActionResponse, AdminVendeursEnAttenteResponse, BloquerVendeurRequest, PageVendeur, SuspendreVendeurRequest, VendeurDetailDTO, VendeurFilters } from '../models/vendeur.model';
 import {
   CommandeCloseur, CommandeDispatch, CommandeLivreur, MembreResponse, LivreurResponse,
-  CreateMembreRequest, AssignerLivreurRequest, AssignerLivreurResponse, LivrerRequest, EchecRequest,
-  StatutLivraison, DashboardStats, BilanJour
+  CreateMembreRequest, UpdateMembreRequest, AssignerLivreurRequest, AssignerLivreurResponse,
+  LivrerRequest, EchecRequest, StatutLivraison, DashboardStats, BilanJour
 } from '../models/closing-dispatch.model';
 import {
   Produit, PageProduit, CreateProduitRequest, UpdateProduitRequest,
@@ -316,12 +316,20 @@ export class ApiService {
     return this.http.post<MembreResponse>(`${this.baseUrl}/admin/closeurs`, data);
   }
 
+  updateCloseur(id: number, data: UpdateMembreRequest): Observable<MembreResponse> {
+    return this.http.put<MembreResponse>(`${this.baseUrl}/admin/closeurs/${id}`, data);
+  }
+
   getLivreurs(): Observable<LivreurResponse[]> {
     return this.http.get<LivreurResponse[]>(`${this.baseUrl}/admin/livreurs`);
   }
 
   createLivreur(data: CreateMembreRequest): Observable<LivreurResponse> {
     return this.http.post<LivreurResponse>(`${this.baseUrl}/admin/livreurs`, data);
+  }
+
+  updateLivreur(id: number, data: UpdateMembreRequest): Observable<LivreurResponse> {
+    return this.http.put<LivreurResponse>(`${this.baseUrl}/admin/livreurs/${id}`, data);
   }
 
   // ========== LIVREUR ==========
