@@ -156,3 +156,19 @@ export interface DashboardStats {
   livreurs: LivreurStats[];
   zones: ZoneStats[];
 }
+
+export interface BilanJour {
+  date: string;
+  commandesCreees: number;
+  livrees: number;
+  echecs: number;
+  tauxReussite: number;
+  chiffreAffaires: number;
+  beneficeEstime: number;
+  montantDuPartenaires: number;
+  delaiMoyenMinutes: number;
+  partenairesActifs: number;
+  livreursActifs: number;
+  stockTotalRestant: number;
+  produitsEnAlerte: number;
+}

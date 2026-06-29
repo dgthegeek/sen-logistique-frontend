@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
-import { DashboardStats } from '../../../core/models/closing-dispatch.model';
+import { DashboardStats, BilanJour } from '../../../core/models/closing-dispatch.model';
 
 interface CarteStatut {
   label: string;
@@ -18,13 +19,15 @@ interface CarteStatut {
 @Component({
   selector: 'app-admin-stats',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderComponent, SidebarComponent, FcfaPipe],
+  imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, SidebarComponent, FcfaPipe],
   templateUrl: './stats.component.html',
   styleUrls: ['./stats.component.css']
 })
 export class AdminStatsComponent implements OnInit {
   stats: DashboardStats | null = null;
+  bilan: BilanJour | null = null;
   loading = true;
+  selectedDate = new Date().toISOString().substring(0, 10);
 
   constructor(
     private api: ApiService,
@@ -33,6 +36,7 @@ export class AdminStatsComponent implements OnInit {
 
   ngOnInit(): void {
     this.charger();
+    this.chargerBilan();
   }
 
   charger(): void {
@@ -47,6 +51,23 @@ export class AdminStatsComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  chargerBilan(): void {
+    this.api.getBilan(this.selectedDate).subscribe({
+      next: (b) => this.bilan = b,
+      error: () => this.toast.error('Impossible de charger le bilan')
+    });
+  }
+
+  /** Volume max parmi les zones (pour l'échelle de la carte heatmap). */
+  get maxZoneVolume(): number {
+    if (!this.stats || this.stats.zones.length === 0) { return 1; }
+    return Math.max(...this.stats.zones.map(z => z.nombreLivraisons), 1);
+  }
+
+  barWidth(z: { nombreLivraisons: number }): number {
+    return Math.round((z.nombreLivraisons / this.maxZoneVolume) * 100);
   }
 
   get cartes(): CarteStatut[] {

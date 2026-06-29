@@ -23,6 +23,68 @@
           <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
         </div>
 
+        <!-- Bilan du jour (KPI CEO) -->
+        <div class="card mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+            <h2 class="text-lg font-bold text-foreground">
+              <i class="fa-solid fa-clipboard-list"></i> Bilan du jour
+            </h2>
+            <input type="date" class="form-input w-auto" [(ngModel)]="selectedDate" (change)="chargerBilan()" />
+          </div>
+          <div *ngIf="bilan" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="text-center">
+              <div class="text-xl font-bold text-foreground">{{ bilan.commandesCreees }}</div>
+              <div class="text-xs text-muted-foreground">Commandes créées</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-green-600">{{ bilan.livrees }}</div>
+              <div class="text-xs text-muted-foreground">Livrées</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-red-600">{{ bilan.echecs }}</div>
+              <div class="text-xs text-muted-foreground">Échecs</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-foreground">{{ bilan.tauxReussite }}%</div>
+              <div class="text-xs text-muted-foreground">Taux réussite</div>
+            </div>
+            <div class="text-center">
+              <div class="text-base font-bold text-foreground">{{ bilan.chiffreAffaires | fcfa }}</div>
+              <div class="text-xs text-muted-foreground">Chiffre d'affaires</div>
+            </div>
+            <div class="text-center">
+              <div class="text-base font-bold text-foreground">{{ bilan.beneficeEstime | fcfa }}</div>
+              <div class="text-xs text-muted-foreground">Bénéfice estimé</div>
+            </div>
+            <div class="text-center">
+              <div class="text-base font-bold text-amber-600">{{ bilan.montantDuPartenaires | fcfa }}</div>
+              <div class="text-xs text-muted-foreground">Dû aux partenaires</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-foreground">{{ formatTemps(bilan.delaiMoyenMinutes) }}</div>
+              <div class="text-xs text-muted-foreground">Délai moyen</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-foreground">{{ bilan.partenairesActifs }}</div>
+              <div class="text-xs text-muted-foreground">Partenaires actifs</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-foreground">{{ bilan.livreursActifs }}</div>
+              <div class="text-xs text-muted-foreground">Livreurs actifs</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-foreground">{{ bilan.stockTotalRestant }}</div>
+              <div class="text-xs text-muted-foreground">Stock restant</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold" [class.text-red-600]="bilan.produitsEnAlerte > 0">
+                {{ bilan.produitsEnAlerte }}
+              </div>
+              <div class="text-xs text-muted-foreground">Alertes stock</div>
+            </div>
+          </div>
+        </div>
+
         <ng-container *ngIf="!loading && stats">
           <!-- Cartes commandes par statut -->
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 mb-6">
@@ -76,6 +138,34 @@
                 </tbody>
               </table>
             </div>
+          </div>
+
+          <!-- Carte des zones (heatmap par volume de livraisons) -->
+          <div class="card mb-6">
+            <h2 class="text-lg font-bold text-foreground mb-3">
+              <i class="fa-solid fa-fire"></i> Carte des zones — où Dioks livre le plus
+            </h2>
+            <div *ngIf="stats.zones.length === 0" class="text-center text-muted-foreground py-4">
+              Aucune donnée de zone.
+            </div>
+            <div class="space-y-2">
+              <div *ngFor="let z of stats.zones" class="flex items-center gap-3">
+                <div class="w-28 sm:w-40 text-sm text-foreground truncate">{{ z.zone }}</div>
+                <div class="flex-1 bg-muted rounded h-6 overflow-hidden">
+                  <div class="h-6 rounded flex items-center justify-end pr-2 text-xs text-white font-semibold"
+                       [ngClass]="z.tauxEchec > 20 ? 'bg-red-500' : 'bg-primary'"
+                       [style.width.%]="barWidth(z) < 8 ? 8 : barWidth(z)">
+                    {{ z.nombreLivraisons }}
+                  </div>
+                </div>
+                <div class="w-24 text-right text-xs text-muted-foreground hidden sm:block">
+                  {{ z.chiffreAffaires | fcfa }}
+                </div>
+              </div>
+            </div>
+            <p class="text-xs text-muted-foreground mt-3">
+              Barre = volume de livraisons · rouge = taux d'échec élevé (&gt; 20%).
+            </p>
           </div>
 
           <!-- Stats par zone -->

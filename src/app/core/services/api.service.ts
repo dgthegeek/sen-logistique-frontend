@@ -17,7 +17,7 @@ import { AdminVendeurActionResponse, AdminVendeursEnAttenteResponse, BloquerVend
 import {
   CommandeCloseur, CommandeDispatch, CommandeLivreur, MembreResponse, LivreurResponse,
   CreateMembreRequest, AssignerLivreurRequest, AssignerLivreurResponse, LivrerRequest, EchecRequest,
-  StatutLivraison, DashboardStats
+  StatutLivraison, DashboardStats, BilanJour
 } from '../models/closing-dispatch.model';
 import {
   Produit, PageProduit, CreateProduitRequest, UpdateProduitRequest,
@@ -348,6 +348,12 @@ export class ApiService {
 
   getDashboardStats(): Observable<DashboardStats> {
     return this.http.get<DashboardStats>(`${this.baseUrl}/admin/stats/dashboard`);
+  }
+
+  getBilan(date?: string): Observable<BilanJour> {
+    let params = new HttpParams();
+    if (date) { params = params.set('date', date); }
+    return this.http.get<BilanJour>(`${this.baseUrl}/admin/bilan`, { params });
   }
 
   // ========== STOCK (Admin) ==========
