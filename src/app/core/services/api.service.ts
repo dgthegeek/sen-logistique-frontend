@@ -366,9 +366,10 @@ export class ApiService {
 
   // ========== STOCK (Admin) ==========
 
-  getProduits(search?: string, page: number = 0, size: number = 50): Observable<PageProduit> {
+  getProduits(search?: string, vendeurId?: number, page: number = 0, size: number = 50): Observable<PageProduit> {
     let params = new HttpParams().set('page', page.toString()).set('size', size.toString());
     if (search) { params = params.set('search', search); }
+    if (vendeurId) { params = params.set('vendeurId', vendeurId.toString()); }
     return this.http.get<PageProduit>(`${this.baseUrl}/admin/produits`, { params });
   }
 

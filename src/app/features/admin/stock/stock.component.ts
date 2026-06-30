@@ -25,6 +25,7 @@ export class AdminStockComponent implements OnInit {
   loading = true;
   saving = false;
   search = '';
+  filtreVendeurId: number | null = null;
 
   currentPage = 0;
   pageSize = 50;
@@ -59,7 +60,7 @@ export class AdminStockComponent implements OnInit {
 
   charger(): void {
     this.loading = true;
-    this.api.getProduits(this.search || undefined, this.currentPage, this.pageSize).subscribe({
+    this.api.getProduits(this.search || undefined, this.filtreVendeurId || undefined, this.currentPage, this.pageSize).subscribe({
       next: (p) => {
         this.produits = p.content;
         this.totalPages = p.totalPages;
@@ -78,6 +79,11 @@ export class AdminStockComponent implements OnInit {
   }
 
   rechercher(): void {
+    this.currentPage = 0;
+    this.charger();
+  }
+
+  filtrerParPartenaire(): void {
     this.currentPage = 0;
     this.charger();
   }

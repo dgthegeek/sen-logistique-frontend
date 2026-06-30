@@ -19,10 +19,16 @@
           </button>
         </div>
 
-        <!-- Recherche -->
-        <div class="card mb-4 flex gap-2">
+        <!-- Recherche + filtre partenaire -->
+        <div class="card mb-4 flex flex-col sm:flex-row gap-2">
           <input type="text" class="form-input flex-1" placeholder="Rechercher par nom ou code..."
                  [(ngModel)]="search" (keyup.enter)="rechercher()" />
+          <select class="form-select sm:w-64" [(ngModel)]="filtreVendeurId" (change)="filtrerParPartenaire()">
+            <option [ngValue]="null">Tous les partenaires</option>
+            <option *ngFor="let v of vendeurs" [ngValue]="v.id">
+              {{ v.prenom }} {{ v.nom }}<ng-container *ngIf="v.nomBoutique"> ({{ v.nomBoutique }})</ng-container>
+            </option>
+          </select>
           <button class="btn-outline" (click)="rechercher()"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
 

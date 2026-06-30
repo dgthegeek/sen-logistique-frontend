@@ -78,7 +78,7 @@ export class CreerLivraisonVendeurComponent implements OnInit {
   }
 
   loadProduits() {
-    this.apiService.getProduits(undefined, 0, 200).subscribe({
+    this.apiService.getProduits(undefined, undefined, 0, 200).subscribe({
       next: (p) => this.produits = p.content.filter(pr => pr.actif),
       error: () => {}
     });
