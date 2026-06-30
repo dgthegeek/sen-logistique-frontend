@@ -21,7 +21,7 @@ import {
 } from '../models/closing-dispatch.model';
 import {
   Produit, PageProduit, CreateProduitRequest, UpdateProduitRequest,
-  MouvementStockRequest, AjustementStockRequest, Mouvement
+  MouvementStockRequest, AjustementStockRequest, Mouvement, CreateMonProduitRequest
 } from '../models/stock.model';
 
 @Injectable({ providedIn: 'root' })
@@ -408,6 +408,14 @@ export class ApiService {
 
   getMesProduits(): Observable<Produit[]> {
     return this.http.get<Produit[]>(`${this.baseUrl}/vendeur/produits`);
+  }
+
+  creerMonProduit(data: CreateMonProduitRequest): Observable<Produit> {
+    return this.http.post<Produit>(`${this.baseUrl}/vendeur/produits`, data);
+  }
+
+  modifierMonProduit(id: number, data: UpdateProduitRequest): Observable<Produit> {
+    return this.http.put<Produit>(`${this.baseUrl}/vendeur/produits/${id}`, data);
   }
 
 }

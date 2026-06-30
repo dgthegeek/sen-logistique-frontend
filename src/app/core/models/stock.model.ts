@@ -45,6 +45,14 @@ export interface UpdateProduitRequest {
   actif?: boolean;
 }
 
+export interface CreateMonProduitRequest {
+  nom: string;
+  description?: string;
+  prixUnitaire?: number;
+  quantiteInitiale?: number;
+  seuilAlerte?: number;
+}
+
 export interface MouvementStockRequest {
   quantite: number;
   commentaire?: string;

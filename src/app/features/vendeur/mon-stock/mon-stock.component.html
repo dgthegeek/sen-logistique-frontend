@@ -6,11 +6,19 @@
 
     <main class="flex-1 min-w-0 p-4 sm:p-6">
       <div class="max-w-5xl mx-auto">
-        <div class="mb-6">
-          <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-1">
-            <i class="fa-solid fa-warehouse"></i> Mon stock
-          </h1>
-          <p class="text-sm text-muted-foreground">Vos produits stockés chez Dioks.</p>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-1">
+              <i class="fa-solid fa-warehouse"></i> Mon catalogue
+            </h1>
+            <p class="text-sm text-muted-foreground">Vos produits stockés chez Dioks.</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn-outline" (click)="charger()"><i class="fa-solid fa-rotate-right"></i></button>
+            <button class="btn-primary" (click)="ouvrirCreate()">
+              <i class="fa-solid fa-plus"></i> Nouveau produit
+            </button>
+          </div>
         </div>
 
         <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
@@ -19,7 +27,7 @@
 
         <div *ngIf="!loading && produits.length === 0" class="card text-center py-10 text-muted-foreground">
           <i class="fa-solid fa-box-open text-2xl mb-2"></i>
-          <p>Aucun produit en stock pour le moment.</p>
+          <p>Aucun produit. Cliquez sur « Nouveau produit » pour démarrer votre catalogue.</p>
         </div>
 
         <div *ngIf="!loading && produits.length > 0" class="card overflow-x-auto">
@@ -31,6 +39,7 @@
                 <th class="p-2 text-center">Stock</th>
                 <th class="p-2 text-right">Prix</th>
                 <th class="p-2 text-center">Statut</th>
+                <th class="p-2 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -47,11 +56,57 @@
                     {{ p.actif ? 'Actif' : 'Inactif' }}
                   </span>
                 </td>
+                <td class="p-2 text-right">
+                  <button class="btn-ghost" title="Modifier" (click)="ouvrirEdit(p)">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
+          <p class="text-xs text-muted-foreground mt-3">
+            <i class="fa-solid fa-circle-info"></i>
+            La quantité en stock est gérée par Dioks à la réception de votre marchandise.
+          </p>
         </div>
       </div>
     </main>
+  </div>
+</div>
+
+<!-- Modal création / édition -->
+<div *ngIf="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+  <div class="card max-w-md w-full">
+    <h2 class="text-lg font-bold text-foreground mb-4">
+      {{ isEdition ? 'Modifier le produit' : 'Nouveau produit' }}
+    </h2>
+    <div class="mb-3">
+      <label class="form-label">Nom *</label>
+      <input type="text" class="form-input" [(ngModel)]="form.nom" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <input type="text" class="form-input" [(ngModel)]="form.description" />
+    </div>
+    <div class="grid gap-3 mb-4" [class.grid-cols-3]="!isEdition" [class.grid-cols-2]="isEdition">
+      <div>
+        <label class="form-label">Prix unitaire</label>
+        <input type="number" class="form-input" [(ngModel)]="form.prixUnitaire" min="0" />
+      </div>
+      <div *ngIf="!isEdition">
+        <label class="form-label">Stock initial</label>
+        <input type="number" class="form-input" [(ngModel)]="form.quantiteInitiale" min="0" />
+      </div>
+      <div>
+        <label class="form-label">Seuil alerte</label>
+        <input type="number" class="form-input" [(ngModel)]="form.seuilAlerte" min="0" />
+      </div>
+    </div>
+    <div class="flex justify-end gap-2">
+      <button class="btn-ghost" (click)="fermerModal()">Annuler</button>
+      <button class="btn-primary" [disabled]="saving" (click)="enregistrer()">
+        <i class="fa-solid fa-floppy-disk"></i> Enregistrer
+      </button>
+    </div>
   </div>
 </div>
