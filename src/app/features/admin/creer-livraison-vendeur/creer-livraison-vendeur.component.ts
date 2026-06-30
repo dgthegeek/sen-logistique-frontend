@@ -55,6 +55,11 @@ export class CreerLivraisonVendeurComponent implements OnInit {
   // Produits (stock) - sélection optionnelle pour décrément auto
   produits: Produit[] = [];
 
+  // Panier multi-produits (optionnel)
+  panier: { produitId: number; nom: string; prix: number; quantite: number }[] = [];
+  selProduitId: number | null = null;
+  selQuantite = 1;
+
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
@@ -85,15 +90,41 @@ export class CreerLivraisonVendeurComponent implements OnInit {
     return this.produits.filter(p => p.vendeurId === this.selectedVendeur!.id);
   }
 
-  /** Auto-remplit la description (et le prix) quand on choisit un produit du stock. */
-  onProduitChange(): void {
-    const id = this.livraisonForm.get('produitId')?.value;
-    const produit = this.produits.find(p => p.id === id);
-    if (produit) {
-      this.livraisonForm.patchValue({ descriptionProduit: produit.nom, quantite: 1 });
-      if (produit.prixUnitaire) {
-        this.livraisonForm.patchValue({ montantProduit: produit.prixUnitaire });
-      }
+  /** Total des produits du panier (prix x quantité). */
+  get produitsTotal(): number {
+    return this.panier.reduce((t, l) => t + (l.prix * l.quantite), 0);
+  }
+
+  ajouterAuPanier(): void {
+    const produit = this.produits.find(p => p.id === this.selProduitId);
+    if (!produit) { return; }
+    const qte = this.selQuantite && this.selQuantite > 0 ? this.selQuantite : 1;
+    const existant = this.panier.find(l => l.produitId === produit.id);
+    if (existant) {
+      existant.quantite += qte;
+    } else {
+      this.panier.push({
+        produitId: produit.id, nom: produit.nom,
+        prix: produit.prixUnitaire || 0, quantite: qte
+      });
+    }
+    this.selProduitId = null;
+    this.selQuantite = 1;
+    this.syncPanier();
+  }
+
+  retirerDuPanier(index: number): void {
+    this.panier.splice(index, 1);
+    this.syncPanier();
+  }
+
+  /** Recalcule le montant produit + la description à partir du panier. */
+  private syncPanier(): void {
+    if (this.panier.length > 0) {
+      this.livraisonForm.patchValue({
+        montantProduit: this.produitsTotal,
+        descriptionProduit: this.panier.map(l => `${l.quantite}x ${l.nom}`).join(', ')
+      });
     }
   }
 
@@ -108,8 +139,6 @@ export class CreerLivraisonVendeurComponent implements OnInit {
       pointRepere: [''],
       // Infos colis
       descriptionProduit: ['', Validators.required],
-      produitId: [null],
-      quantite: [1],
       fragile: [false],
       poidsEstime: [null],
       montantProduit: [0, [Validators.required, Validators.min(1)]],
@@ -411,8 +440,9 @@ export class CreerLivraisonVendeurComponent implements OnInit {
       adresseComplete: formValue.adresseComplete,
       pointRepere: formValue.pointRepere || undefined,
       descriptionProduit: formValue.descriptionProduit,
-      produitId: formValue.produitId || undefined,
-      quantite: formValue.produitId ? (formValue.quantite || 1) : undefined,
+      items: this.panier.length > 0
+        ? this.panier.map(l => ({ produitId: l.produitId, quantite: l.quantite }))
+        : undefined,
       fragile: formValue.fragile,
       poids: formValue.poidsEstime || undefined,
       montantCOD: montantCOD,
@@ -476,6 +506,9 @@ export class CreerLivraisonVendeurComponent implements OnInit {
     this.searchVendeurTerm = '';
     this.vendeurs = [];
     this.hasSearched = false;
+    this.panier = [];
+    this.selProduitId = null;
+    this.selQuantite = 1;
     this.livraisonForm.reset({
       urgence: 'NORMAL',
       fragile: false,

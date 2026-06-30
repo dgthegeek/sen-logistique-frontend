@@ -5,6 +5,11 @@ export interface Zone {
   tarifBase: number;
 }
 
+export interface LigneCommandeItem {
+  produitId: number;
+  quantite: number;
+}
+
 export interface Quartier {
   id: number;
   nom: string;
@@ -45,8 +50,9 @@ export interface CreateLivraisonRequest {
   
   // Infos colis
   descriptionProduit: string;
-  produitId?: number;   // Produit du stock lié (optionnel) - décrément auto à la livraison
-  quantite?: number;    // Quantité commandée du produit lié
+  produitId?: number;   // Déprécié - produit unique (compat)
+  quantite?: number;    // Déprécié - quantité produit unique
+  items?: LigneCommandeItem[]; // Multi-produits : COD = somme(prix x qté) + livraison
   fragile: boolean;
   poids?: number;
   montantCOD: number;

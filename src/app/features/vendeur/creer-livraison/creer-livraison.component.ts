@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
@@ -12,7 +12,7 @@ import { Produit } from '../../../core/models/stock.model';
 @Component({
   selector: 'app-creer-livraison',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, HeaderComponent, SidebarComponent, FcfaPipe],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, HeaderComponent, SidebarComponent, FcfaPipe],
   templateUrl: './creer-livraison.component.html',
   styleUrls: ['./creer-livraison.component.css']
 })
@@ -37,6 +37,11 @@ export class CreerLivraisonComponent implements OnInit {
 
   produits: Produit[] = [];
 
+  // Panier multi-produits (optionnel)
+  panier: { produitId: number; nom: string; prix: number; quantite: number }[] = [];
+  selProduitId: number | null = null;
+  selQuantite = 1;
+
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
@@ -56,8 +61,6 @@ export class CreerLivraisonComponent implements OnInit {
       
       // Étape 2: Détails colis
       descriptionProduit: ['', Validators.required],
-      produitId: [null],
-      quantite: [1],
       fragile: [false],
       poidsEstime: [''],
       montantProduit: [0, [Validators.required, Validators.min(0)]], // ← RENOMMÉ
@@ -118,14 +121,39 @@ export class CreerLivraisonComponent implements OnInit {
     });
   }
 
-  onProduitChange() {
-    const id = this.livraisonForm.get('produitId')?.value;
-    const produit = this.produits.find(p => p.id === id);
-    if (produit) {
-      this.livraisonForm.patchValue({ descriptionProduit: produit.nom, quantite: 1 });
-      if (produit.prixUnitaire) {
-        this.livraisonForm.patchValue({ montantProduit: produit.prixUnitaire });
-      }
+  get produitsTotal(): number {
+    return this.panier.reduce((t, l) => t + (l.prix * l.quantite), 0);
+  }
+
+  ajouterAuPanier() {
+    const produit = this.produits.find(p => p.id === this.selProduitId);
+    if (!produit) { return; }
+    const qte = this.selQuantite && this.selQuantite > 0 ? this.selQuantite : 1;
+    const existant = this.panier.find(l => l.produitId === produit.id);
+    if (existant) {
+      existant.quantite += qte;
+    } else {
+      this.panier.push({
+        produitId: produit.id, nom: produit.nom,
+        prix: produit.prixUnitaire || 0, quantite: qte
+      });
+    }
+    this.selProduitId = null;
+    this.selQuantite = 1;
+    this.syncPanier();
+  }
+
+  retirerDuPanier(index: number) {
+    this.panier.splice(index, 1);
+    this.syncPanier();
+  }
+
+  private syncPanier() {
+    if (this.panier.length > 0) {
+      this.livraisonForm.patchValue({
+        montantProduit: this.produitsTotal,
+        descriptionProduit: this.panier.map(l => `${l.quantite}x ${l.nom}`).join(', ')
+      });
     }
   }
 
@@ -302,8 +330,9 @@ export class CreerLivraisonComponent implements OnInit {
       adresseComplete: formValue.adresseComplete,
       pointRepere: formValue.pointRepere || undefined,
       descriptionProduit: formValue.descriptionProduit,
-      produitId: formValue.produitId || undefined,
-      quantite: formValue.produitId ? (formValue.quantite || 1) : undefined,
+      items: this.panier.length > 0
+        ? this.panier.map(l => ({ produitId: l.produitId, quantite: l.quantite }))
+        : undefined,
       fragile: formValue.fragile,
       poids: formValue.poidsEstime || undefined,
       montantCOD: montantCOD, // ← COD TOTAL
