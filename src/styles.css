@@ -115,35 +115,40 @@
 @layer components {
   /* Boutons */
   .btn-primary {
-    @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
+           bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium
            hover:bg-primary/90 transition-colors shadow-sm
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
            disabled:pointer-events-none disabled:opacity-50;
   }
-  
+
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-medium
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
+           bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-medium
            hover:bg-secondary/90 transition-colors shadow-sm
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
            disabled:pointer-events-none disabled:opacity-50;
   }
-  
+
   .btn-outline {
-    @apply border-2 border-primary text-primary px-6 py-3 rounded-lg font-medium
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
+           border-2 border-primary text-primary px-6 py-3 rounded-lg font-medium
            hover:bg-primary hover:text-primary-foreground transition-colors
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
            disabled:pointer-events-none disabled:opacity-50;
   }
-  
+
   .btn-ghost {
-    @apply text-foreground px-6 py-3 rounded-lg font-medium
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
+           text-foreground px-6 py-3 rounded-lg font-medium
            hover:bg-accent hover:text-accent-foreground transition-colors
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
            disabled:pointer-events-none disabled:opacity-50;
   }
-  
+
   .btn-danger {
-    @apply bg-destructive text-destructive-foreground px-6 py-3 rounded-lg font-medium
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
+           bg-destructive text-destructive-foreground px-6 py-3 rounded-lg font-medium
            hover:bg-destructive/90 transition-colors shadow-sm
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
            disabled:pointer-events-none disabled:opacity-50;

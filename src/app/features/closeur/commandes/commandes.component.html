@@ -52,50 +52,54 @@
         </div>
 
         <!-- Liste -->
-        <div *ngIf="!loading && commandes.length > 0" class="space-y-3">
-          <div *ngFor="let c of commandes" class="card">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        <div *ngIf="!loading && !loadError && commandes.length > 0" class="space-y-3">
+          <div *ngFor="let c of commandes" class="card p-4 sm:p-5">
+            <!-- En-tête -->
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="font-mono text-xs text-muted-foreground">{{ c.numeroTracking }}</span>
+              <span class="badge" [ngClass]="badgeClass(c.statut)">{{ statutLabels[c.statut] }}</span>
+            </div>
+
+            <!-- Client + appel -->
+            <div class="flex items-start justify-between gap-3 mb-3">
               <div class="min-w-0">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="font-mono text-sm text-muted-foreground">{{ c.numeroTracking }}</span>
-                  <span class="badge" [ngClass]="badgeClass(c.statut)">{{ statutLabels[c.statut] }}</span>
-                </div>
-                <p class="font-semibold text-foreground">{{ c.nomClient }}
-                  <a href="tel:{{ c.telephoneClient }}" class="text-primary ml-2">
-                    <i class="fa-solid fa-phone"></i> {{ c.telephoneClient }}
-                  </a>
-                </p>
-                <p class="text-sm text-muted-foreground">
+                <p class="font-semibold text-foreground text-base truncate">{{ c.nomClient }}</p>
+                <p class="text-sm text-muted-foreground mt-0.5">
                   <i class="fa-solid fa-location-dot"></i> {{ c.adresse }}<span *ngIf="c.zone"> — {{ c.zone }}</span>
                 </p>
-                <p class="text-sm text-muted-foreground">
-                  <i class="fa-solid fa-box"></i> {{ c.produit }} ·
-                  <strong>{{ c.montantCOD | fcfa }}</strong>
+                <p class="text-sm text-muted-foreground mt-0.5">
+                  <i class="fa-solid fa-box"></i> {{ c.produit }} · <strong>{{ c.montantCOD | fcfa }}</strong>
                 </p>
               </div>
+              <a href="tel:{{ c.telephoneClient }}"
+                 class="shrink-0 w-11 h-11 rounded-full bg-primary/10 text-primary flex items-center justify-center"
+                 title="Appeler {{ c.telephoneClient }}">
+                <i class="fa-solid fa-phone"></i>
+              </a>
+            </div>
 
-              <!-- Actions selon statut -->
-              <div class="flex flex-wrap gap-2 shrink-0">
-                <button *ngIf="c.statut === 'NOUVELLE'" class="btn-secondary"
-                        [disabled]="actionEnCours === c.id" (click)="appeler(c)">
-                  <i class="fa-solid fa-phone-volume"></i> Prendre / Appeler
-                </button>
-                <button *ngIf="c.statut === 'NOUVELLE' || c.statut === 'A_APPELER'" class="btn-primary"
-                        [disabled]="actionEnCours === c.id" (click)="confirmer(c)">
-                  <i class="fa-solid fa-check"></i> Confirmer
-                </button>
-                <button *ngIf="c.statut === 'CONFIRMEE'" class="btn-primary"
-                        [disabled]="actionEnCours === c.id" (click)="preteALivrer(c)">
-                  <i class="fa-solid fa-truck-fast"></i> Prête à livrer
-                </button>
-                <button *ngIf="c.statut !== 'CONFIRMEE'" class="btn-outline"
-                        [disabled]="actionEnCours === c.id" (click)="reporter(c)">
-                  <i class="fa-solid fa-clock"></i> Reporter
-                </button>
-                <button class="btn-danger" [disabled]="actionEnCours === c.id" (click)="annuler(c)">
-                  <i class="fa-solid fa-xmark"></i> Annuler
-                </button>
-              </div>
+            <!-- Actions : pleine largeur mobile, alignées desktop -->
+            <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+              <button *ngIf="c.statut === 'NOUVELLE'" class="btn-secondary w-full sm:w-auto"
+                      [disabled]="actionEnCours === c.id" (click)="appeler(c)">
+                <i class="fa-solid fa-phone-volume"></i> Appeler
+              </button>
+              <button *ngIf="c.statut === 'NOUVELLE' || c.statut === 'A_APPELER'" class="btn-primary w-full sm:w-auto"
+                      [disabled]="actionEnCours === c.id" (click)="confirmer(c)">
+                <i class="fa-solid fa-check"></i> Confirmer
+              </button>
+              <button *ngIf="c.statut === 'CONFIRMEE'" class="btn-primary w-full sm:w-auto"
+                      [disabled]="actionEnCours === c.id" (click)="preteALivrer(c)">
+                <i class="fa-solid fa-truck-fast"></i> Prête à livrer
+              </button>
+              <button *ngIf="c.statut !== 'CONFIRMEE'" class="btn-outline w-full sm:w-auto"
+                      [disabled]="actionEnCours === c.id" (click)="reporter(c)">
+                <i class="fa-solid fa-clock"></i> Reporter
+              </button>
+              <button class="btn-danger w-full sm:w-auto col-span-2 sm:col-auto"
+                      [disabled]="actionEnCours === c.id" (click)="annuler(c)">
+                <i class="fa-solid fa-xmark"></i> Annuler
+              </button>
             </div>
           </div>
         </div>
