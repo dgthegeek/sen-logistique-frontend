@@ -22,11 +22,11 @@
 
         <!-- Onglets -->
         <div class="flex gap-2 mb-4">
-          <button class="btn-outline" [class.btn-primary]="onglet === 'closeurs'"
+          <button [ngClass]="onglet === 'closeurs' ? 'chip-active' : 'chip'"
                   (click)="changerOnglet('closeurs')">
             Closeurs ({{ closeurs.length }})
           </button>
-          <button class="btn-outline" [class.btn-primary]="onglet === 'livreurs'"
+          <button [ngClass]="onglet === 'livreurs' ? 'chip-active' : 'chip'"
                   (click)="changerOnglet('livreurs')">
             Livreurs ({{ livreurs.length }})
           </button>

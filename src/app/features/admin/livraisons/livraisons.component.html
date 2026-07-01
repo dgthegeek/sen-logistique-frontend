@@ -492,6 +492,29 @@
           </div>
         </div>
 
+        <!-- Livreur assigné -->
+        <div class="border rounded-lg p-4">
+          <h3 class="font-semibold text-lg mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-motorcycle text-primary"></i>
+            <span>Livreur</span>
+          </h3>
+          <div *ngIf="livraison.livreur; else pasLivreur" class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Nom:</span>
+              <span class="font-medium">{{ livraison.livreur.prenom }} {{ livraison.livreur.nom }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Téléphone:</span>
+              <a [href]="'tel:' + livraison.livreur.telephone" class="font-medium text-primary hover:underline">
+                {{ livraison.livreur.telephone }}
+              </a>
+            </div>
+          </div>
+          <ng-template #pasLivreur>
+            <p class="text-sm text-muted-foreground">Pas encore assignée à un livreur.</p>
+          </ng-template>
+        </div>
+
         <!-- Client -->
         <div class="border rounded-lg p-4">
           <h3 class="font-semibold text-lg mb-3 flex items-center gap-2">

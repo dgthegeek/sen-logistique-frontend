@@ -140,6 +140,12 @@ export interface LivraisonDetail {
   zone: string;
   urgence: 'NORMAL' | 'EXPRESS';
   commentaireLivraison: string | null;
+  livreur?: {
+    id: number;
+    nom: string;
+    prenom: string;
+    telephone: string;
+  } | null;
 }
 
 // Response paginée

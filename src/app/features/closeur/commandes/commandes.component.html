@@ -23,13 +23,13 @@
 
         <!-- Filtres -->
         <div class="flex flex-wrap gap-2 mb-4">
-          <button class="btn-outline" [class.btn-primary]="activeFiltre === 'TOUTES'"
+          <button [ngClass]="activeFiltre === 'TOUTES' ? 'chip-active' : 'chip'"
                   (click)="changerFiltre('TOUTES')">Toutes</button>
-          <button class="btn-outline" [class.btn-primary]="activeFiltre === 'NOUVELLE'"
+          <button [ngClass]="activeFiltre === 'NOUVELLE' ? 'chip-active' : 'chip'"
                   (click)="changerFiltre('NOUVELLE')">Nouvelles</button>
-          <button class="btn-outline" [class.btn-primary]="activeFiltre === 'A_APPELER'"
+          <button [ngClass]="activeFiltre === 'A_APPELER' ? 'chip-active' : 'chip'"
                   (click)="changerFiltre('A_APPELER')">À appeler</button>
-          <button class="btn-outline" [class.btn-primary]="activeFiltre === 'CONFIRMEE'"
+          <button [ngClass]="activeFiltre === 'CONFIRMEE' ? 'chip-active' : 'chip'"
                   (click)="changerFiltre('CONFIRMEE')">Confirmées</button>
         </div>
 

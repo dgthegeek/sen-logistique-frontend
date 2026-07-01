@@ -116,7 +116,7 @@
   /* Boutons */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
-           bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium
+           bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium text-sm
            hover:bg-primary/90 transition-colors shadow-sm
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
            disabled:pointer-events-none disabled:opacity-50;
@@ -124,7 +124,7 @@
 
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
-           bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-medium
+           bg-secondary text-secondary-foreground px-4 py-2 rounded-lg font-medium text-sm
            hover:bg-secondary/90 transition-colors shadow-sm
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
            disabled:pointer-events-none disabled:opacity-50;
@@ -132,7 +132,7 @@
 
   .btn-outline {
     @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
-           border-2 border-primary text-primary px-6 py-3 rounded-lg font-medium
+           border-2 border-primary text-primary px-4 py-2 rounded-lg font-medium text-sm
            hover:bg-primary hover:text-primary-foreground transition-colors
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
            disabled:pointer-events-none disabled:opacity-50;
@@ -140,7 +140,7 @@
 
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
-           text-foreground px-6 py-3 rounded-lg font-medium
+           text-foreground px-4 py-2 rounded-lg font-medium text-sm
            hover:bg-accent hover:text-accent-foreground transition-colors
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
            disabled:pointer-events-none disabled:opacity-50;
@@ -148,15 +148,33 @@
 
   .btn-danger {
     @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
-           bg-destructive text-destructive-foreground px-6 py-3 rounded-lg font-medium
+           bg-destructive text-destructive-foreground px-4 py-2 rounded-lg font-medium text-sm
            hover:bg-destructive/90 transition-colors shadow-sm
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
            disabled:pointer-events-none disabled:opacity-50;
   }
   
+  /* Chips / filtres (états mutuellement exclusifs) */
+  .chip {
+    @apply inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium
+           border border-border text-muted-foreground bg-transparent
+           hover:bg-muted transition-colors cursor-pointer;
+  }
+
+  .chip-active {
+    @apply inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium
+           border border-primary bg-primary text-primary-foreground
+           transition-colors cursor-pointer;
+  }
+
   /* Cards */
   .card {
     @apply bg-card text-card-foreground rounded-lg border shadow-sm p-6;
+  }
+
+  /* Carte compacte (listes de résultats) */
+  .card-compact {
+    @apply bg-card text-card-foreground rounded-lg border shadow-sm p-4;
   }
   
   .card-header {
