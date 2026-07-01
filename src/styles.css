@@ -154,6 +154,26 @@
            disabled:pointer-events-none disabled:opacity-50;
   }
   
+  /* Accent jaune (rappel logistique) - a utiliser avec parcimonie, le bleu reste dominant */
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
+           bg-accent text-accent-foreground px-4 py-2 rounded-lg font-semibold text-sm
+           hover:brightness-95 transition-all shadow-sm
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  /* Petite étiquette "eyebrow" jaune au-dessus d'un titre */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold
+           bg-accent/20 text-amber-700 border border-accent/40;
+  }
+
+  /* Barre d'accent (petit trait jaune sous un titre de section) */
+  .accent-bar {
+    @apply block w-16 h-1.5 rounded-full bg-accent mx-auto;
+  }
+
   /* Chips / filtres (états mutuellement exclusifs) */
   .chip {
     @apply inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium
