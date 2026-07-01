@@ -27,6 +27,7 @@ export class AdminStatsComponent implements OnInit {
   stats: DashboardStats | null = null;
   bilan: BilanJour | null = null;
   loading = true;
+  loadError = false;
   selectedDate = new Date().toISOString().substring(0, 10);
 
   constructor(
@@ -41,13 +42,14 @@ export class AdminStatsComponent implements OnInit {
 
   charger(): void {
     this.loading = true;
+    this.loadError = false;
     this.api.getDashboardStats().subscribe({
       next: (data) => {
         this.stats = data;
         this.loading = false;
       },
       error: () => {
-        this.toast.error('Impossible de charger les statistiques');
+        this.loadError = true;
         this.loading = false;
       }
     });
@@ -56,7 +58,7 @@ export class AdminStatsComponent implements OnInit {
   chargerBilan(): void {
     this.api.getBilan(this.selectedDate).subscribe({
       next: (b) => this.bilan = b,
-      error: () => this.toast.error('Impossible de charger le bilan')
+      error: () => { this.bilan = null; }
     });
   }
 

@@ -41,8 +41,15 @@
           <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
         </div>
 
+        <!-- Erreur de chargement -->
+        <div *ngIf="!loading && loadError" class="card text-center py-8 text-muted-foreground">
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500 mb-2"></i>
+          <p>Impossible de charger les commandes prêtes.</p>
+          <button class="btn-outline mt-3" (click)="charger()">Réessayer</button>
+        </div>
+
         <!-- Vide -->
-        <div *ngIf="!loading && commandes.length === 0" class="card text-center py-10 text-muted-foreground">
+        <div *ngIf="!loading && !loadError && commandes.length === 0" class="card text-center py-10 text-muted-foreground">
           <i class="fa-solid fa-inbox text-2xl mb-2"></i>
           <p>Aucune commande prête à livrer pour le moment.</p>
         </div>

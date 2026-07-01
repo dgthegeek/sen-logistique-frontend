@@ -36,6 +36,12 @@
           <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
         </div>
 
+        <div *ngIf="!loading && loadError" class="card text-center py-8 text-muted-foreground">
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500 mb-2"></i>
+          <p>Impossible de charger l'équipe.</p>
+          <button class="btn-outline mt-3" (click)="charger()">Réessayer</button>
+        </div>
+
         <!-- Closeurs -->
         <div *ngIf="!loading && onglet === 'closeurs'" class="card overflow-x-auto">
           <table class="w-full text-sm">

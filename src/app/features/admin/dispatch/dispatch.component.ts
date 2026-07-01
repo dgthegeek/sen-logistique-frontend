@@ -22,6 +22,7 @@ export class AdminDispatchComponent implements OnInit {
   selection = new Set<number>();
   livreurId: number | null = null;
   loading = true;
+  loadError = false;
   assigning = false;
 
   constructor(
@@ -36,6 +37,7 @@ export class AdminDispatchComponent implements OnInit {
 
   charger(): void {
     this.loading = true;
+    this.loadError = false;
     this.api.getDispatchPretes().subscribe({
       next: (data) => {
         this.commandes = data;
@@ -43,7 +45,7 @@ export class AdminDispatchComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.toast.error('Impossible de charger les commandes prêtes');
+        this.loadError = true;
         this.loading = false;
       }
     });
@@ -52,7 +54,7 @@ export class AdminDispatchComponent implements OnInit {
   chargerLivreurs(): void {
     this.api.getLivreurs().subscribe({
       next: (data) => this.livreurs = data.filter(l => l.actif),
-      error: () => this.toast.error('Impossible de charger les livreurs')
+      error: () => {}
     });
   }
 

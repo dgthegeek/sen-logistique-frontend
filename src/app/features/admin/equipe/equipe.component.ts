@@ -34,6 +34,7 @@ export class AdminEquipeComponent implements OnInit {
   closeurs: MembreResponse[] = [];
   livreurs: LivreurResponse[] = [];
   loading = true;
+  loadError = false;
 
   showModal = false;
   saving = false;
@@ -51,13 +52,14 @@ export class AdminEquipeComponent implements OnInit {
 
   charger(): void {
     this.loading = true;
+    this.loadError = false;
     this.api.getCloseurs().subscribe({
       next: (d) => { this.closeurs = d; },
-      error: () => this.toast.error('Erreur chargement closeurs')
+      error: () => { this.loadError = true; }
     });
     this.api.getLivreurs().subscribe({
       next: (d) => { this.livreurs = d; this.loading = false; },
-      error: () => { this.toast.error('Erreur chargement livreurs'); this.loading = false; }
+      error: () => { this.loadError = true; this.loading = false; }
     });
   }
 

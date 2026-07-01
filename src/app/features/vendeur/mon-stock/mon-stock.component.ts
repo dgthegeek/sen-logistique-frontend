@@ -27,6 +27,7 @@ interface ProduitForm {
 export class VendeurMonStockComponent implements OnInit {
   produits: Produit[] = [];
   loading = true;
+  loadError = false;
 
   showModal = false;
   saving = false;
@@ -44,9 +45,10 @@ export class VendeurMonStockComponent implements OnInit {
 
   charger(): void {
     this.loading = true;
+    this.loadError = false;
     this.api.getMesProduits().subscribe({
       next: (data) => { this.produits = data; this.loading = false; },
-      error: () => { this.toast.error('Impossible de charger votre stock'); this.loading = false; }
+      error: () => { this.loadError = true; this.loading = false; }
     });
   }
 

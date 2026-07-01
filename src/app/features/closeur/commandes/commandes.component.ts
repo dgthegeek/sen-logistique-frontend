@@ -22,6 +22,7 @@ type FiltreCloseur = 'TOUTES' | 'NOUVELLE' | 'A_APPELER' | 'CONFIRMEE';
 export class CloseurCommandesComponent implements OnInit {
   commandes: CommandeCloseur[] = [];
   loading = true;
+  loadError = false;
   actionEnCours: number | null = null;
   activeFiltre: FiltreCloseur = 'TOUTES';
 
@@ -38,6 +39,7 @@ export class CloseurCommandesComponent implements OnInit {
 
   charger(): void {
     this.loading = true;
+    this.loadError = false;
     const statut = this.activeFiltre === 'TOUTES' ? undefined : (this.activeFiltre as StatutLivraison);
     this.api.getCommandesCloseur(statut).subscribe({
       next: (data) => {
@@ -45,7 +47,7 @@ export class CloseurCommandesComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.toast.error('Impossible de charger les commandes');
+        this.loadError = true;
         this.loading = false;
       }
     });

@@ -20,6 +20,7 @@ import { STATUT_LABELS } from '../../../core/models/statut-labels';
 export class LivreurMesLivraisonsComponent implements OnInit {
   livraisons: CommandeLivreur[] = [];
   loading = true;
+  loadError = false;
   actionEnCours: number | null = null;
 
   readonly statutLabels = STATUT_LABELS;
@@ -55,13 +56,14 @@ export class LivreurMesLivraisonsComponent implements OnInit {
 
   charger(): void {
     this.loading = true;
+    this.loadError = false;
     this.api.getMesLivraisonsLivreur().subscribe({
       next: (data) => {
         this.livraisons = data;
         this.loading = false;
       },
       error: () => {
-        this.toast.error('Impossible de charger vos livraisons');
+        this.loadError = true;
         this.loading = false;
       }
     });

@@ -23,6 +23,7 @@ export class AdminStockComponent implements OnInit {
   produits: Produit[] = [];
   vendeurs: VendeurDTO[] = [];
   loading = true;
+  loadError = false;
   saving = false;
   search = '';
   filtreVendeurId: number | null = null;
@@ -60,6 +61,7 @@ export class AdminStockComponent implements OnInit {
 
   charger(): void {
     this.loading = true;
+    this.loadError = false;
     this.api.getProduits(this.search || undefined, this.filtreVendeurId || undefined, this.currentPage, this.pageSize).subscribe({
       next: (p) => {
         this.produits = p.content;
@@ -67,7 +69,7 @@ export class AdminStockComponent implements OnInit {
         this.totalElements = p.totalElements;
         this.loading = false;
       },
-      error: () => { this.toast.error('Erreur chargement produits'); this.loading = false; }
+      error: () => { this.loadError = true; this.loading = false; }
     });
   }
 
@@ -152,7 +154,7 @@ export class AdminStockComponent implements OnInit {
     this.loadingMouvements = true;
     this.api.getMouvements(produit.id).subscribe({
       next: (m) => { this.mouvements = m; this.loadingMouvements = false; },
-      error: () => { this.toast.error('Erreur chargement mouvements'); this.loadingMouvements = false; }
+      error: () => { this.mouvements = []; this.loadingMouvements = false; }
     });
   }
 
