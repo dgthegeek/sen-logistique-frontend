@@ -92,22 +92,36 @@
             </div>
           </div>
 
-          <!-- Finances Card (Responsive) -->
-          <div class="card mb-6 sm:mb-8">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <p class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center gap-2">
-                  <i class="fa-solid fa-wallet"></i>
-                  <span>Solde en attente</span>
-                </p>
-                <p class="text-2xl sm:text-3xl font-bold text-green-600">
-                  {{ dashboard.finances.soldeEnAttente | fcfa }} 
-                </p>
-                <p class="text-xs sm:text-sm text-muted-foreground mt-1 flex items-center gap-2">
-                  <i class="fa-solid fa-calendar-days"></i>
-                  <span>Paiement : {{ dashboard.finances.prochainPaiement }}</span>
-                </p>
-              </div>
+          <!-- Finances Cards (Responsive) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <!-- Chiffre d'affaires cumulé -->
+            <div class="card">
+              <p class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Chiffre d'affaires</span>
+              </p>
+              <p class="text-2xl sm:text-3xl font-bold text-foreground">
+                {{ (dashboard.finances.chiffreAffaires || 0) | fcfa }}
+              </p>
+              <p class="text-xs sm:text-sm text-muted-foreground mt-1 flex items-center gap-2">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Cumul des commandes livrées (hors frais)</span>
+              </p>
+            </div>
+
+            <!-- Solde disponible -->
+            <div class="card">
+              <p class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Solde disponible</span>
+              </p>
+              <p class="text-2xl sm:text-3xl font-bold text-green-600">
+                {{ dashboard.finances.soldeEnAttente | fcfa }}
+              </p>
+              <p class="text-xs sm:text-sm text-muted-foreground mt-1 flex items-center gap-2">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span>Paiement : {{ dashboard.finances.prochainPaiement }}</span>
+              </p>
             </div>
           </div>
 

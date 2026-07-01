@@ -144,6 +144,7 @@ export interface DemandePaiementPending {
   montant: number;
   nombreLivraisons: number;
   dateDemande: string;
+  aDemande?: boolean;
 }
 
 export interface PaiementsPending {

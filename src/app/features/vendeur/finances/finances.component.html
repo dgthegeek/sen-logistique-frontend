@@ -41,6 +41,34 @@
 
         <!-- Content -->
         <div *ngIf="finances && !loading" class="space-y-4 sm:space-y-6">
+          <!-- Bannière : chiffre d'affaires cumulé + solde disponible -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div class="card">
+              <p class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-primary"></i>
+                <span>Chiffre d'affaires cumulé</span>
+              </p>
+              <p class="text-2xl sm:text-3xl font-bold text-foreground">
+                {{ (finances.chiffreAffaires || 0) | fcfa }}
+              </p>
+              <p class="text-xs text-muted-foreground mt-1">
+                Cumul des commandes livrées (hors frais) — jamais remis à zéro
+              </p>
+            </div>
+            <div class="card">
+              <p class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-wallet text-green-600"></i>
+                <span>Solde disponible</span>
+              </p>
+              <p class="text-2xl sm:text-3xl font-bold text-green-600">
+                {{ finances.soldeEnAttente | fcfa }}
+              </p>
+              <p class="text-xs text-muted-foreground mt-1">
+                Montant que la plateforme vous doit actuellement
+              </p>
+            </div>
+          </div>
+
           <!-- Stats Cards (Responsive Grid) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <!-- Solde en attente -->

@@ -7,6 +7,7 @@ export interface VendeurDashboard {
   };
   finances: {
     soldeEnAttente: number;
+    chiffreAffaires?: number;
     prochainPaiement: string;
   };
   dernieresLivraisons: LivraisonResume[];

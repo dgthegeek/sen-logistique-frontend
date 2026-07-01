@@ -1,5 +1,6 @@
 export interface VendeurFinances {
   soldeEnAttente: number;
+  chiffreAffaires?: number;
   statistiquesMois: {
     nombreLivraisons: number;
     caGenere: number;

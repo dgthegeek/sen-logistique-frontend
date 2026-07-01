@@ -177,13 +177,16 @@
 
           <!-- Demandes de paiement en attente -->
           <div class="card">
-            <h2 class="text-lg sm:text-xl font-bold text-foreground mb-4 sm:mb-6 flex items-center gap-2">
+            <h2 class="text-lg sm:text-xl font-bold text-foreground mb-2 flex items-center gap-2">
               <i class="fa-solid fa-money-bill-wave"></i>
-              <span>Demandes de paiement en attente</span>
+              <span>Vendeurs à payer</span>
               <span class="text-sm font-normal text-muted-foreground">
                 ({{ paiementsPending.demandes.length }})
               </span>
             </h2>
+            <p class="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">
+              Soldes disponibles à verser. Les vendeurs marqués <span class="font-semibold text-primary">« A demandé »</span> ont explicitement réclamé leur paiement.
+            </p>
 
             <div *ngIf="paiementsPending.demandes.length > 0" class="space-y-3">
               <div
@@ -193,8 +196,11 @@
                 <div class="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
                   <i class="fa-solid fa-user-circle text-xl sm:text-2xl text-primary flex-shrink-0 mt-1"></i>
                   <div class="flex-1 min-w-0">
-                    <div class="font-semibold text-foreground text-sm sm:text-base truncate">
-                      {{ demande.vendeur.prenom }} {{ demande.vendeur.nom }}
+                    <div class="font-semibold text-foreground text-sm sm:text-base truncate flex items-center gap-2">
+                      <span class="truncate">{{ demande.vendeur.prenom }} {{ demande.vendeur.nom }}</span>
+                      <span *ngIf="demande.aDemande" class="badge badge-pending text-[10px] whitespace-nowrap flex-shrink-0">
+                        <i class="fa-solid fa-bell mr-1"></i>A demandé
+                      </span>
                     </div>
                     <div class="text-xs sm:text-sm text-muted-foreground truncate">
                       <i class="fa-solid fa-store mr-1"></i>{{ demande.vendeur.nomBoutique }} • <i class="fa-solid fa-phone mr-1"></i>{{ demande.vendeur.telephone }}
@@ -474,7 +480,7 @@
       </div>
 
       <div class="border-t pt-3 sm:pt-4">
-        <div class="text-xs sm:text-sm text-muted-foreground mb-1">Solde à payer</div>
+        <div class="text-xs sm:text-sm text-muted-foreground mb-1">Solde à solder (remis à zéro)</div>
         <div class="text-2xl sm:text-3xl font-bold text-primary">
           {{ selectedDemande.montant | fcfa }}
         </div>
@@ -483,24 +489,13 @@
 
     <!-- Form -->
     <div class="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
-      <!-- Montant -->
-      <div>
-        <label class="form-label text-xs sm:text-sm">Montant à payer *</label>
-        <div class="relative">
-          <input
-            [(ngModel)]="montantAPayer"
-            type="number"
-            class="form-input pr-16 text-base sm:text-lg font-bold"
-            min="0"
-            [max]="selectedDemande.montant"
-          />
-          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-muted-foreground">
-            FCFA
-          </span>
-        </div>
-        <p class="form-helper text-xs">
-          Maximum: {{ selectedDemande.montant | fcfa }}
-        </p>
+      <!-- Info : le paiement solde la totalité -->
+      <div class="p-3 bg-primary/5 border border-primary/20 rounded-lg text-xs sm:text-sm text-muted-foreground flex items-start gap-2">
+        <i class="fa-solid fa-circle-info text-primary mt-0.5"></i>
+        <span>
+          Le paiement verse la totalité du solde disponible et le remet à zéro.
+          Le chiffre d'affaires cumulé du vendeur n'est pas affecté.
+        </span>
       </div>
 
       <!-- Commentaire -->
@@ -528,12 +523,12 @@
       <button
         (click)="payerVendeur()"
         class="btn-primary flex-1 text-sm sm:text-base py-2 sm:py-3"
-        [disabled]="submittingPaiement || montantAPayer <= 0"
+        [disabled]="submittingPaiement || selectedDemande.montant <= 0"
       >
         <span *ngIf="!submittingPaiement">
           <i class="fa-solid fa-money-bill-wave mr-1 sm:mr-2"></i>
-          <span class="hidden sm:inline">Payer {{ montantAPayer | fcfa }}</span>
-          <span class="sm:hidden">Payer</span>
+          <span class="hidden sm:inline">Solder {{ selectedDemande.montant | fcfa }}</span>
+          <span class="sm:hidden">Solder</span>
         </span>
         <span *ngIf="submittingPaiement">
           <i class="fa-solid fa-spinner fa-spin mr-2"></i>

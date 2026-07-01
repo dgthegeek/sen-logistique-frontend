@@ -151,31 +151,16 @@ export class AdminFinancesComponent implements OnInit {
   payerVendeur() {
     if (!this.selectedDemande) return;
 
-    if (this.montantAPayer <= 0) {
-      this.toastService.warning('Le montant doit être supérieur à 0');
+    if (this.selectedDemande.montant <= 0) {
+      this.toastService.warning('Aucun solde à payer pour ce vendeur');
       return;
     }
 
-    // ✅ Vérification montant supérieur
-    if (this.montantAPayer > this.selectedDemande.montant) {
-      this.confirmationService.confirm({
-        title: 'Montant supérieur au solde',
-        message: `Le montant (${this.montantAPayer} FCFA) est supérieur au solde (${this.selectedDemande.montant} FCFA). Confirmer quand même ?`,
-        confirmText: 'Confirmer',
-        cancelText: 'Annuler',
-        type: 'warning',
-        onConfirm: () => {
-          this.executePayerVendeur();
-        }
-      });
-      return;
-    }
-
-    // ✅ Confirmation normale
+    // L'admin solde la totalité du disponible : le solde du vendeur est remis à 0 et tracé.
     this.confirmationService.confirm({
       title: 'Confirmer le paiement',
-      message: `Payer ${this.montantAPayer} FCFA à ${this.selectedDemande.vendeur.prenom} ${this.selectedDemande.vendeur.nom} ?`,
-      confirmText: 'Payer',
+      message: `Solder ${this.selectedDemande.montant.toLocaleString('fr-FR')} FCFA à ${this.selectedDemande.vendeur.prenom} ${this.selectedDemande.vendeur.nom} ? Son solde disponible sera remis à zéro.`,
+      confirmText: 'Solder',
       cancelText: 'Annuler',
       type: 'success',
       onConfirm: () => {
@@ -191,7 +176,7 @@ export class AdminFinancesComponent implements OnInit {
     this.submittingPaiement = true;
 
     this.apiService.payerVendeur(this.selectedDemande.vendeur.id, {
-      montant: this.montantAPayer,
+      montant: this.selectedDemande.montant,
       commentaire: this.commentairePaiement || undefined
     }).subscribe({
       next: (response) => {
