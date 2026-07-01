@@ -291,6 +291,46 @@
                     <a href="mailto:dioks&#64;gmail.com" class="text-primary hover:underline">dioks&#64;gmail.com</a>
                 </div>
             </div>
+
+            <!-- Formulaire de contact -->
+            <div class="max-w-2xl mx-auto mt-12">
+                <div class="card">
+                    <h3 class="text-xl font-bold text-foreground mb-1">Envoyez-nous un message</h3>
+                    <p class="text-sm text-muted-foreground mb-6">
+                        Remplissez le formulaire, nous vous répondrons rapidement.
+                    </p>
+                    <form (ngSubmit)="envoyerContact()" #contactForm="ngForm" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="form-label">Nom complet <span class="text-destructive">*</span></label>
+                                <input type="text" name="nom" class="form-input" required
+                                       [(ngModel)]="contact.nom" placeholder="Votre nom" />
+                            </div>
+                            <div>
+                                <label class="form-label">Email <span class="text-destructive">*</span></label>
+                                <input type="email" name="email" class="form-input" required
+                                       [(ngModel)]="contact.email" placeholder="vous@exemple.com" />
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Sujet</label>
+                            <input type="text" name="sujet" class="form-input"
+                                   [(ngModel)]="contact.sujet" placeholder="Objet de votre message" />
+                        </div>
+                        <div>
+                            <label class="form-label">Message <span class="text-destructive">*</span></label>
+                            <textarea name="message" rows="5" class="form-textarea" required
+                                      [(ngModel)]="contact.message"
+                                      placeholder="Écrivez votre message..."></textarea>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn-primary" [disabled]="!contactForm.form.valid">
+                                <i class="fa-solid fa-paper-plane"></i> Envoyer le message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </section>
 </main>

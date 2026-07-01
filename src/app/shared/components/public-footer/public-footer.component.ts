@@ -123,11 +123,11 @@ import { RouterModule } from '@angular/router';
             <span>{{ currentYear }} Dioks. Tous droits réservés.</span>
           </p>
           <div class="flex gap-6 text-sm">
-            <a href="#" class="hover:text-white transition-colors flex items-center gap-1">
+            <a routerLink="/conditions-utilisation" class="hover:text-white transition-colors flex items-center gap-1">
               <i class="fa-solid fa-file-contract text-primary"></i>
               <span>Conditions d'utilisation</span>
             </a>
-            <a href="#" class="hover:text-white transition-colors flex items-center gap-1">
+            <a routerLink="/politique-confidentialite" class="hover:text-white transition-colors flex items-center gap-1">
               <i class="fa-solid fa-shield-halved text-primary"></i>
               <span>Politique de confidentialité</span>
             </a>

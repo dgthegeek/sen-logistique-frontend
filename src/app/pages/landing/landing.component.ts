@@ -1,17 +1,42 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { PublicHeaderComponent } from '../../shared/components/public-header/public-header.component';
 import { PublicFooterComponent } from '../../shared/components/public-footer/public-footer.component';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterModule, PublicHeaderComponent, PublicFooterComponent],
+  imports: [CommonModule, RouterModule, FormsModule, PublicHeaderComponent, PublicFooterComponent],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css']
 })
 export class LandingComponent {
+  private readonly contactEmail = 'dioks@gmail.com';
+
+  contact = { nom: '', email: '', sujet: '', message: '' };
+
+  constructor(private toast: ToastService) {}
+
+  /** Ouvre le client mail de l'utilisateur avec le message pré-rempli. */
+  envoyerContact(): void {
+    if (!this.contact.nom || !this.contact.email || !this.contact.message) {
+      this.toast.warning('Merci de remplir votre nom, votre email et votre message.');
+      return;
+    }
+    const sujet = this.contact.sujet || `Contact site Dioks — ${this.contact.nom}`;
+    const corps =
+      `Nom: ${this.contact.nom}\n` +
+      `Email: ${this.contact.email}\n\n` +
+      `${this.contact.message}`;
+    const mailto = `mailto:${this.contactEmail}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(corps)}`;
+    window.location.href = mailto;
+    this.toast.success('Votre messagerie va s\'ouvrir pour envoyer le message. Merci !');
+    this.contact = { nom: '', email: '', sujet: '', message: '' };
+  }
+
   services = [
     {
       icon: 'fa-solid fa-truck-fast',

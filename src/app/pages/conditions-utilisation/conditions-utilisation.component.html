@@ -1,0 +1,115 @@
+<app-public-header></app-public-header>
+
+<main class="bg-background">
+  <!-- En-tête -->
+  <section class="bg-gradient-to-br from-primary/10 via-background to-primary/5 py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl sm:text-4xl font-bold text-foreground mb-2">Conditions d'utilisation</h1>
+      <p class="text-sm text-muted-foreground">Dernière mise à jour : {{ derniereMaj }}</p>
+    </div>
+  </section>
+
+  <section class="py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 text-foreground">
+
+      <div>
+        <h2 class="text-xl font-bold mb-2">1. Objet</h2>
+        <p class="text-muted-foreground">
+          Les présentes conditions générales d'utilisation (les « Conditions ») encadrent l'accès et
+          l'utilisation de la plateforme Dioks (le « Service »), une solution de logistique et de
+          livraison de colis avec paiement à la livraison (COD) opérant principalement dans la région
+          de Dakar, Sénégal. En créant un compte ou en utilisant le Service, vous acceptez les
+          présentes Conditions.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold mb-2">2. Description du Service</h2>
+        <p class="text-muted-foreground">
+          Dioks permet aux vendeurs et partenaires de confier des commandes à livrer à leurs clients
+          finaux. Le Service couvre notamment : l'enregistrement des commandes, la confirmation des
+          commandes auprès des clients, la gestion et l'entreposage de la marchandise des partenaires,
+          l'attribution des livraisons à des livreurs, le suivi des colis, la collecte du paiement à la
+          livraison et le reversement des sommes dues aux partenaires.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold mb-2">3. Comptes et rôles</h2>
+        <p class="text-muted-foreground">
+          L'accès au Service se fait via un compte personnel. Différents rôles existent (vendeur/partenaire,
+          administrateur, closeur, livreur). Vous êtes responsable de la confidentialité de vos identifiants
+          et de toute activité réalisée depuis votre compte. Les comptes des membres de l'équipe (closeurs,
+          livreurs) sont créés et gérés par l'administrateur.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold mb-2">4. Obligations de l'utilisateur</h2>
+        <ul class="list-disc pl-6 text-muted-foreground space-y-1">
+          <li>Fournir des informations exactes sur les commandes, les clients et la marchandise.</li>
+          <li>Ne pas expédier de produits illégaux, dangereux ou interdits par la réglementation en vigueur.</li>
+          <li>Respecter les tarifs, délais et modalités affichés dans le Service.</li>
+          <li>Utiliser le Service de bonne foi et ne pas nuire à son bon fonctionnement.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold mb-2">5. Paiement à la livraison (COD)</h2>
+        <p class="text-muted-foreground">
+          Le montant à encaisser auprès du client (COD) est défini lors de la création de la commande.
+          Après une livraison réussie, Dioks reverse au partenaire le montant collecté, déduction faite
+          des frais de livraison et de la commission éventuelle. Les modalités et délais de reversement
+          sont indiqués dans l'espace « Finances » du partenaire.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold mb-2">6. Livraison et échecs</h2>
+        <p class="text-muted-foreground">
+          Dioks met tout en œuvre pour livrer dans les délais annoncés. Une livraison peut échouer pour
+          divers motifs (client injoignable, client absent, adresse incorrecte, refus du client, report).
+          Dans ces cas, le colis est traité selon les procédures internes et le partenaire en est informé
+          via le suivi.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold mb-2">7. Responsabilité</h2>
+        <p class="text-muted-foreground">
+          La responsabilité de Dioks ne saurait être engagée en cas d'informations erronées fournies par
+          l'utilisateur, de cas de force majeure, ou d'une utilisation non conforme du Service. Dioks
+          s'engage à une obligation de moyens dans l'exécution des livraisons.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold mb-2">8. Données personnelles</h2>
+        <p class="text-muted-foreground">
+          Le traitement des données personnelles est décrit dans notre
+          <a routerLink="/politique-confidentialite" class="text-primary hover:underline">Politique de confidentialité</a>.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold mb-2">9. Modification des Conditions</h2>
+        <p class="text-muted-foreground">
+          Dioks peut modifier les présentes Conditions à tout moment. Les modifications prennent effet dès
+          leur publication sur cette page. Il vous appartient de les consulter régulièrement.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold mb-2">10. Contact</h2>
+        <p class="text-muted-foreground">
+          Pour toute question relative aux présentes Conditions, contactez-nous à l'adresse
+          <a href="mailto:dioks@gmail.com" class="text-primary hover:underline">dioks&#64;gmail.com</a>
+          ou au +221 78 108 23 73.
+        </p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<app-public-footer></app-public-footer>
