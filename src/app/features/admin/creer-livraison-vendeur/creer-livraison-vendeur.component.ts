@@ -120,12 +120,13 @@ export class CreerLivraisonVendeurComponent implements OnInit {
 
   /** Recalcule le montant produit + la description à partir du panier. */
   private syncPanier(): void {
-    if (this.panier.length > 0) {
-      this.livraisonForm.patchValue({
-        montantProduit: this.produitsTotal,
-        descriptionProduit: this.panier.map(l => `${l.quantite}x ${l.nom}`).join(', ')
-      });
-    }
+    // Le prix de la commande est toujours le total des produits sélectionnés.
+    this.livraisonForm.patchValue({
+      montantProduit: this.produitsTotal,
+      descriptionProduit: this.panier.length > 0
+        ? this.panier.map(l => `${l.quantite}x ${l.nom}`).join(', ')
+        : ''
+    });
   }
 
   initForm() {
@@ -340,9 +341,15 @@ export class CreerLivraisonVendeurComponent implements OnInit {
 
     // Validation étape 2 + calcul tarif
     if (this.currentStep === 2) {
+      // Le prix vient des produits : il faut au moins un produit dans le panier
+      if (this.panier.length === 0) {
+        this.errorMessage = 'Ajoutez au moins un produit à la commande. Le prix est calculé automatiquement.';
+        return;
+      }
+
       const step2Controls = ['descriptionProduit', 'montantProduit'];
       const step2Valid = step2Controls.every(control => this.livraisonForm.get(control)?.valid);
-      
+
       if (!step2Valid) {
         step2Controls.forEach(control => this.livraisonForm.get(control)?.markAsTouched());
         this.errorMessage = 'Veuillez remplir tous les champs obligatoires';

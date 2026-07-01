@@ -63,7 +63,8 @@ export class CreerLivraisonComponent implements OnInit {
       descriptionProduit: ['', Validators.required],
       fragile: [false],
       poidsEstime: [''],
-      montantProduit: [0, [Validators.required, Validators.min(0)]], // ← RENOMMÉ
+      // Prix calculé automatiquement à partir des produits sélectionnés (panier)
+      montantProduit: [0, [Validators.required, Validators.min(1)]],
       urgence: ['NORMAL', Validators.required],
       creneauSouhaite: [''],
       notesLivreur: ['']
@@ -149,12 +150,14 @@ export class CreerLivraisonComponent implements OnInit {
   }
 
   private syncPanier() {
-    if (this.panier.length > 0) {
-      this.livraisonForm.patchValue({
-        montantProduit: this.produitsTotal,
-        descriptionProduit: this.panier.map(l => `${l.quantite}x ${l.nom}`).join(', ')
-      });
-    }
+    // Le prix de la commande est toujours le total des produits sélectionnés.
+    // Si le panier est vidé, on remet le montant et la description à zéro.
+    this.livraisonForm.patchValue({
+      montantProduit: this.produitsTotal,
+      descriptionProduit: this.panier.length > 0
+        ? this.panier.map(l => `${l.quantite}x ${l.nom}`).join(', ')
+        : ''
+    });
   }
 
   loadZones() {
@@ -243,14 +246,21 @@ export class CreerLivraisonComponent implements OnInit {
         this.calculerTarifPreview();
       }
     } else if (this.currentStep === 2) {
+      // Le prix vient des produits : il faut au moins un produit dans le panier
+      if (this.panier.length === 0) {
+        this.errorMessage = 'Ajoutez au moins un produit à la commande. Le prix est calculé automatiquement.';
+        return;
+      }
+
       const step2Fields = ['descriptionProduit', 'montantProduit', 'urgence'];
       const step2Valid = step2Fields.every(field => this.livraisonForm.get(field)?.valid);
-      
+
       if (!step2Valid) {
         this.markFieldsAsTouched(step2Fields);
         return;
       }
-      
+
+      this.errorMessage = '';
       this.currentStep = 3;
       this.calculerTarif();
     }
