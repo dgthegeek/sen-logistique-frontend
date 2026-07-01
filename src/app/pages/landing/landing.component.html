@@ -1,118 +1,102 @@
 <app-public-header></app-public-header>
 
 <main class="bg-background">
-    <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-primary/10 via-background to-primary/5 py-20 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Hero Section (futuriste) -->
+    <section class="hero-dark relative py-24 overflow-hidden">
+        <!-- grille + orbes lumineux -->
+        <div class="grid-overlay absolute inset-0 pointer-events-none"></div>
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl animate-glow pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
-                    <span class="eyebrow mb-5">
-                        <i class="fa-solid fa-bolt"></i> Logistique &amp; livraison au Sénégal
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold
+                                 text-cyan-300 glass mb-6">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        Logistique &amp; livraison nouvelle génération
                     </span>
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 mt-4 leading-tight">
-                        Livraison rapide et fiable pour vos clients
-                        <span class="relative text-primary">Partout&nbsp;!
-                            <span class="absolute left-0 -bottom-1 w-full h-1.5 bg-accent/70 rounded-full"></span>
-                        </span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+                        Livraison rapide et fiable
+                        <span class="text-gradient">partout au Sénégal</span>
                     </h1>
-                    <p class="text-lg text-muted-foreground mb-8">
-                        La plateforme de livraison pensée pour vos business. Gérez vos livraisons en toute simplicité
-                        avec paiement à la livraison (COD).
+                    <p class="text-lg text-slate-300/90 mb-8 max-w-xl">
+                        La plateforme de livraison pensée pour vos business. Gérez vos commandes en toute
+                        simplicité avec le paiement à la livraison (COD) et un suivi en temps réel.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a routerLink="/register" class="btn-primary text-lg px-8 py-4 text-center">
-                            <i class="fa-solid fa-rocket mr-2"></i>Commencer maintenant
+                        <a routerLink="/register" class="btn-neon text-base px-7 py-3.5">
+                            <i class="fa-solid fa-rocket"></i> Commencer maintenant
                         </a>
-                        <a routerLink="/tracking" class="btn-outline text-lg px-8 py-4 text-center">
-                            <i class="fa-solid fa-box mr-2"></i>Suivre un colis
+                        <a routerLink="/tracking" class="btn-glass text-base px-7 py-3.5">
+                            <i class="fa-solid fa-location-crosshairs"></i> Suivre un colis
                         </a>
                     </div>
-                    <p class="text-sm text-muted-foreground mt-6">
-                        <i class="fa-solid fa-check text-green-600 mr-1"></i>Sans engagement • 
-                        <i class="fa-solid fa-check text-green-600 mr-1"></i>Gratuit à l'inscription • 
-                        <i class="fa-solid fa-check text-green-600 mr-1"></i>Support inclus
-                    </p>
+                    <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400 mt-8">
+                        <span><i class="fa-solid fa-check text-cyan-400 mr-1"></i>Sans engagement</span>
+                        <span><i class="fa-solid fa-check text-cyan-400 mr-1"></i>Gratuit à l'inscription</span>
+                        <span><i class="fa-solid fa-check text-cyan-400 mr-1"></i>Support inclus</span>
+                    </div>
                 </div>
                 <div class="hidden lg:block">
-                    <div class="relative">
-                        <div class="absolute -top-4 -right-4 w-72 h-72 bg-primary/20 rounded-full blur-3xl"></div>
-                        <div class="absolute -bottom-4 -left-4 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
-                        <div class="hidden lg:block">
-                            <div class="relative">
-                                <!-- Effet de fond animé -->
-                                <div
-                                    class="absolute -top-4 -right-4 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse">
+                    <div class="relative animate-floaty">
+                        <!-- Carte "glass" avec glow -->
+                        <div class="glass glow-blue rounded-3xl p-8">
+                            <!-- Stats en temps réel -->
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="glass rounded-2xl p-4 text-center">
+                                    <div class="text-3xl font-bold text-cyan-300 mb-1">95%</div>
+                                    <div class="text-xs text-slate-300">Livraisons réussies</div>
                                 </div>
-                                <div class="absolute -bottom-4 -left-4 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"
-                                    style="animation-delay: 1s;"></div>
+                                <div class="glass rounded-2xl p-4 text-center">
+                                    <div class="text-3xl font-bold text-blue-300 mb-1">24h</div>
+                                    <div class="text-xs text-slate-300">Délai max</div>
+                                </div>
+                            </div>
 
-                                <!-- Card principale -->
-                                <div class="relative bg-white rounded-2xl shadow-2xl p-8 border-2 border-primary/10">
-                                    <!-- Stats en temps réel -->
-                                    <div class="grid grid-cols-2 gap-4 mb-6">
-                                        <div class="bg-green-50 rounded-xl p-4 text-center">
-                                            <div class="text-3xl font-bold text-green-600 mb-1">95%</div>
-                                            <div class="text-xs text-green-700">Livraisons réussies</div>
+                            <!-- Timeline de livraison -->
+                            <div class="space-y-5">
+                                <div class="flex items-start gap-4">
+                                    <div class="relative">
+                                        <div class="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-cyan-400 to-blue-500 shadow-lg">
+                                            <i class="fa-solid fa-check text-white"></i>
                                         </div>
-                                        <div class="bg-blue-50 rounded-xl p-4 text-center">
-                                            <div class="text-3xl font-bold text-blue-600 mb-1">24h</div>
-                                            <div class="text-xs text-blue-700">Délai max</div>
-                                        </div>
+                                        <div class="absolute top-11 left-1/2 w-0.5 h-8 bg-gradient-to-b from-cyan-400/70 to-blue-500/40 -translate-x-1/2"></div>
                                     </div>
-
-                                    <!-- Timeline de livraison -->
-                                    <div class="space-y-4">
-                                        <div class="flex items-start gap-4">
-                                            <div class="relative">
-                                                <div
-                                                    class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                                                    <i class="fa-solid fa-check text-white text-xl"></i>
-                                                </div>
-                                                <div
-                                                    class="absolute top-12 left-1/2 w-0.5 h-12 bg-gradient-to-b from-green-500 to-blue-500 -translate-x-1/2">
-                                                </div>
-                                            </div>
-                                            <div class="flex-1 pt-2">
-                                                <p class="font-semibold text-foreground">Commande créée</p>
-                                                <p class="text-sm text-muted-foreground">En quelques clics</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex items-start gap-4">
-                                            <div class="relative">
-                                                <div
-                                                    class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                                                    <i class="fa-solid fa-box text-white text-xl"></i>
-                                                </div>
-                                                <div
-                                                    class="absolute top-12 left-1/2 w-0.5 h-12 bg-gradient-to-b from-blue-500 to-purple-500 -translate-x-1/2">
-                                                </div>
-                                            </div>
-                                            <div class="flex-1 pt-2">
-                                                <p class="font-semibold text-foreground">Ramassage</p>
-                                                <p class="text-sm text-muted-foreground">À votre domicile</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex items-start gap-4">
-                                            <div
-                                                class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center shadow-lg">
-                                                <i class="fa-solid fa-truck text-white text-xl"></i>
-                                            </div>
-                                            <div class="flex-1 pt-2">
-                                                <p class="font-semibold text-foreground">Livraison</p>
-                                                <p class="text-sm text-muted-foreground">Paiement collecté</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Badge confiance -->
-                                    <div
-                                        class="mt-6 pt-6 border-t flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                                        <i class="fa-solid fa-shield-check text-green-500 text-xl"></i>
-                                        <span>200+ vendeurs font confiance à Dioks</span>
+                                    <div class="flex-1 pt-1.5">
+                                        <p class="font-semibold text-white">Commande créée</p>
+                                        <p class="text-sm text-slate-400">En quelques clics</p>
                                     </div>
                                 </div>
+
+                                <div class="flex items-start gap-4">
+                                    <div class="relative">
+                                        <div class="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-500 shadow-lg animate-pulse">
+                                            <i class="fa-solid fa-headset text-white"></i>
+                                        </div>
+                                        <div class="absolute top-11 left-1/2 w-0.5 h-8 bg-gradient-to-b from-blue-500/70 to-indigo-500/40 -translate-x-1/2"></div>
+                                    </div>
+                                    <div class="flex-1 pt-1.5">
+                                        <p class="font-semibold text-white">Confirmée &amp; préparée</p>
+                                        <p class="text-sm text-slate-400">Appel du client, prête à livrer</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-4">
+                                    <div class="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-500 shadow-lg">
+                                        <i class="fa-solid fa-truck-fast text-white"></i>
+                                    </div>
+                                    <div class="flex-1 pt-1.5">
+                                        <p class="font-semibold text-white">Livrée</p>
+                                        <p class="text-sm text-slate-400">Paiement collecté (COD)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Badge confiance -->
+                            <div class="mt-6 pt-6 border-t border-white/10 flex items-center justify-center gap-2 text-sm text-slate-300">
+                                <i class="fa-solid fa-shield-halved text-cyan-400"></i>
+                                <span>200+ vendeurs font confiance à Dioks</span>
                             </div>
                         </div>
                     </div>

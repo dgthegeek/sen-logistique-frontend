@@ -351,3 +351,91 @@
     }
   }
 }
+/* ============================================================
+   THEME FUTURISTE (utilitaires) - fond sombre, verre, glow
+   ============================================================ */
+.text-gradient {
+  background-image: linear-gradient(90deg, #60a5fa 0%, #22d3ee 55%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-dark {
+  background:
+    radial-gradient(1100px 550px at 18% -10%, rgba(37, 99, 235, 0.40), transparent 60%),
+    radial-gradient(900px 520px at 100% 0%, rgba(34, 211, 238, 0.20), transparent 55%),
+    linear-gradient(180deg, #060b1a 0%, #0a1024 55%, #070c1c 100%);
+}
+
+.section-dark {
+  background: linear-gradient(180deg, #070c1c 0%, #0a1024 100%);
+}
+
+.grid-overlay {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 40%, transparent 85%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 40%, transparent 85%);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glass-hover:hover {
+  border-color: rgba(56, 189, 248, 0.55);
+  box-shadow: 0 0 50px -16px rgba(56, 189, 248, 0.55);
+}
+
+.glow-blue { box-shadow: 0 0 70px -14px rgba(56, 189, 248, 0.55); }
+.glow-ring { box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.25), 0 0 60px -18px rgba(56, 189, 248, 0.6); }
+
+/* Bouton futuriste (dégradé + glow) */
+.btn-neon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  padding: 0.7rem 1.4rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  background-image: linear-gradient(90deg, #2563eb, #06b6d4);
+  box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.7);
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.btn-neon:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 16px 40px -12px rgba(6, 182, 212, 0.7); }
+
+.btn-glass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  padding: 0.7rem 1.4rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: border-color .2s ease, background .2s ease;
+}
+.btn-glass:hover { border-color: rgba(56, 189, 248, 0.6); background: rgba(255, 255, 255, 0.1); }
+
+@keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+.animate-floaty { animation: floaty 6s ease-in-out infinite; }
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 40px -18px rgba(56, 189, 248, 0.5); }
+  50% { box-shadow: 0 0 70px -10px rgba(56, 189, 248, 0.8); }
+}
+.animate-glow { animation: glowPulse 4s ease-in-out infinite; }
