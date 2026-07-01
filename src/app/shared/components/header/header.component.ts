@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/user.model';
 import { ToastService } from '../../../core/services/toast.service';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -19,8 +20,13 @@ export class HeaderComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private confirmationService: ConfirmationService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    public theme: ThemeService
   ) { }
+
+  toggleTheme() {
+    this.theme.toggle();
+  }
 
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {

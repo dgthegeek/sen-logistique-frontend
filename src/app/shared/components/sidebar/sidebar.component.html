@@ -19,13 +19,13 @@
 ></div>
 
 <!-- Sidebar Desktop -->
-<aside class="bg-[#0a1024]/70 backdrop-blur-md border-r border-white/10 h-screen w-64 hidden md:block sticky top-16">
+<aside class="bg-white/85 dark:bg-[#0a1024]/70 backdrop-blur-md border-r border-gray-200 dark:border-white/10 h-screen w-64 hidden md:block sticky top-16">
   <nav class="p-4 space-y-1.5">
     <a
       *ngFor="let item of menuItems"
       [routerLink]="item.route"
       routerLinkActive="!bg-primary !text-primary-foreground shadow-[0_0_24px_-6px_rgba(56,189,248,0.6)]"
-      class="flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:bg-white/5 hover:text-foreground transition-colors text-sm font-medium"
+      class="flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors text-sm font-medium"
     >
       <i [class]="item.icon + ' text-lg'"></i>
       <span>{{ item.label }}</span>
@@ -36,7 +36,7 @@
 <!-- Sidebar Mobile (Slide-in) -->
 <aside
   *ngIf="isMobileMenuOpen"
-  class="md:hidden fixed left-0 top-16 bottom-0 w-64 bg-[#0a1024]/95 backdrop-blur-md border-r border-white/10 z-40 animate-slideInLeft overflow-y-auto"
+  class="md:hidden fixed left-0 top-16 bottom-0 w-64 bg-white dark:bg-[#0a1024]/95 backdrop-blur-md border-r border-gray-200 dark:border-white/10 z-40 animate-slideInLeft overflow-y-auto"
 >
   <nav class="p-4 space-y-1.5">
     <a
@@ -44,7 +44,7 @@
       [routerLink]="item.route"
       routerLinkActive="!bg-primary !text-primary-foreground"
       (click)="closeMobileMenu()"
-      class="flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:bg-white/5 hover:text-foreground transition-colors text-sm font-medium"
+      class="flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors text-sm font-medium"
     >
       <i [class]="item.icon + ' text-lg'"></i>
       <span>{{ item.label }}</span>

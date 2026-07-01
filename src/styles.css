@@ -84,10 +84,6 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    background-image:
-      radial-gradient(1100px 520px at 12% -8%, rgba(56, 189, 248, 0.10), transparent 60%),
-      radial-gradient(950px 520px at 100% 0%, rgba(37, 99, 235, 0.10), transparent 55%);
-    background-attachment: fixed;
   }
   
   /* Typographie */
@@ -191,23 +187,14 @@
            transition-colors cursor-pointer;
   }
 
-  /* Cards - verre dépoli (futuriste) */
+  /* Cards - solide en clair, verre dépoli en mode futuriste */
   .card {
-    @apply text-card-foreground rounded-xl border p-6;
-    background: rgba(255, 255, 255, 0.045);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border-color: rgba(255, 255, 255, 0.09);
-    box-shadow: 0 10px 34px -18px rgba(0, 0, 0, 0.7);
+    @apply bg-card text-card-foreground rounded-xl border shadow-sm p-6;
   }
 
   /* Carte compacte (listes de résultats) */
   .card-compact {
-    @apply text-card-foreground rounded-xl border p-4;
-    background: rgba(255, 255, 255, 0.045);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border-color: rgba(255, 255, 255, 0.09);
+    @apply bg-card text-card-foreground rounded-xl border shadow-sm p-4;
   }
   
   .card-header {
@@ -454,9 +441,28 @@
 .animate-glow { animation: glowPulse 4s ease-in-out infinite; }
 
 /* ============================================================
-   THEME DARK - neutralisation des fonds clairs codes en dur
-   (le texte etant en tokens clairs, on assombrit ces surfaces)
+   THEME DARK (futuriste) - overrides appliques uniquement en .dark
    ============================================================ */
+/* Fond global avec halos lumineux */
+.dark body {
+  background-image:
+    radial-gradient(1100px 520px at 12% -8%, rgba(56, 189, 248, 0.10), transparent 60%),
+    radial-gradient(950px 520px at 100% 0%, rgba(37, 99, 235, 0.10), transparent 55%);
+  background-attachment: fixed;
+}
+
+/* Cartes en verre depoli */
+.dark .card,
+.dark .card-compact {
+  background: rgba(255, 255, 255, 0.045) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-color: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 10px 34px -18px rgba(0, 0, 0, 0.7);
+}
+
+/* Neutralisation des fonds clairs codes en dur
+   (le texte etant en tokens clairs, on assombrit ces surfaces) */
 .dark .bg-white {
   background-color: rgba(255, 255, 255, 0.045) !important;
   -webkit-backdrop-filter: blur(12px);
