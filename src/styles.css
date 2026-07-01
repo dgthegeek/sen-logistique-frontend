@@ -361,7 +361,13 @@
   color: transparent;
 }
 
+/* Bande hero - clair par defaut, futuriste en .dark */
 .hero-dark {
+  background:
+    radial-gradient(1000px 500px at 18% -10%, rgba(37, 99, 235, 0.10), transparent 60%),
+    linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%);
+}
+.dark .hero-dark {
   background:
     radial-gradient(1100px 550px at 18% -10%, rgba(37, 99, 235, 0.40), transparent 60%),
     radial-gradient(900px 520px at 100% 0%, rgba(34, 211, 238, 0.20), transparent 55%),
@@ -382,10 +388,14 @@
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.65);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+.dark .glass {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .glass-hover:hover {
@@ -422,14 +432,20 @@
   padding: 0.7rem 1.4rem;
   border-radius: 0.75rem;
   font-weight: 600;
-  color: #e2e8f0;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #0f172a;
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(15, 23, 42, 0.14);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   transition: border-color .2s ease, background .2s ease;
 }
-.btn-glass:hover { border-color: rgba(56, 189, 248, 0.6); background: rgba(255, 255, 255, 0.1); }
+.btn-glass:hover { border-color: rgba(37, 99, 235, 0.6); background: rgba(15, 23, 42, 0.06); }
+.dark .btn-glass {
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+.dark .btn-glass:hover { border-color: rgba(56, 189, 248, 0.6); background: rgba(255, 255, 255, 0.1); }
 
 @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
 .animate-floaty { animation: floaty 6s ease-in-out infinite; }

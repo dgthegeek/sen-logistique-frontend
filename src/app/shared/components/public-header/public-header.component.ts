@@ -34,11 +34,6 @@ import { ThemeService } from '../../../core/services/theme.service';
 
           <!-- Actions -->
           <div class="hidden md:flex items-center gap-4">
-            <button (click)="theme.toggle()"
-                    class="w-9 h-9 rounded-full flex items-center justify-center border border-border hover:bg-muted transition-colors"
-                    [title]="theme.isDark ? 'Mode clair' : 'Mode futuriste'">
-              <i class="fa-solid" [ngClass]="theme.isDark ? 'fa-sun text-accent' : 'fa-moon text-primary'"></i>
-            </button>
             <a routerLink="/tracking" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary rounded-lg hover:bg-primary hover:text-white transition-all">
               <i class="fa-solid fa-location-dot"></i>
               <span>Suivre un colis</span>

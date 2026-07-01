@@ -2,15 +2,17 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ConfirmationModalComponent } from './shared/components/confirmation-modal/confirmation-modal.component';
 import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
+import { ThemeToggleComponent } from './shared/components/theme-toggle/theme-toggle.component';
 import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet, 
+    RouterOutlet,
     ConfirmationModalComponent,  // ← Modal de confirmation
-    ToastContainerComponent      // ← Toasts (notifications)
+    ToastContainerComponent,     // ← Toasts (notifications)
+    ThemeToggleComponent         // ← Bouton flottant de thème (global)
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

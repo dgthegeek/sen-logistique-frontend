@@ -10,14 +10,7 @@
       </div>
 
       <!-- User Menu -->
-      <div class="flex items-center gap-3">
-        <!-- Toggle thème -->
-        <button (click)="toggleTheme()"
-                class="w-9 h-9 rounded-full flex items-center justify-center border border-border hover:bg-muted transition-colors"
-                [title]="theme.isDark ? 'Passer en mode clair' : 'Passer en mode futuriste'">
-          <i class="fa-solid" [ngClass]="theme.isDark ? 'fa-sun text-accent' : 'fa-moon text-primary'"></i>
-        </button>
-
+      <div class="flex items-center gap-4">
         <!-- User Info -->
         <div class="hidden md:block text-right">
           <p class="text-sm font-medium text-foreground">
