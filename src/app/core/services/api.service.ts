@@ -23,6 +23,7 @@ import {
   Produit, PageProduit, CreateProduitRequest, UpdateProduitRequest,
   MouvementStockRequest, AjustementStockRequest, Mouvement, CreateMonProduitRequest
 } from '../models/stock.model';
+import { BilanVendeur } from '../models/bilan-vendeur.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -81,6 +82,37 @@ export class ApiService {
 
   demanderPaiement(demande: DemandePaiement): Observable<DemandePaiementResponse> {
     return this.http.post<DemandePaiementResponse>(`${this.baseUrl}/vendeur/demande-paiement`, null);
+  }
+
+  // ========== BILAN VENDEUR ==========
+
+  private bilanParams(debut?: string, fin?: string): HttpParams {
+    let params = new HttpParams();
+    if (debut) { params = params.set('debut', debut); }
+    if (fin) { params = params.set('fin', fin); }
+    return params;
+  }
+
+  getVendeurBilan(debut?: string, fin?: string): Observable<BilanVendeur> {
+    return this.http.get<BilanVendeur>(`${this.baseUrl}/vendeur/bilan`, { params: this.bilanParams(debut, fin) });
+  }
+
+  downloadVendeurBilanPdf(debut?: string, fin?: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/vendeur/bilan/pdf`, {
+      params: this.bilanParams(debut, fin), responseType: 'blob'
+    });
+  }
+
+  getAdminVendeurBilan(vendeurId: number, debut?: string, fin?: string): Observable<BilanVendeur> {
+    return this.http.get<BilanVendeur>(`${this.baseUrl}/admin/vendeurs/${vendeurId}/bilan`, {
+      params: this.bilanParams(debut, fin)
+    });
+  }
+
+  downloadAdminVendeurBilanPdf(vendeurId: number, debut?: string, fin?: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/admin/vendeurs/${vendeurId}/bilan/pdf`, {
+      params: this.bilanParams(debut, fin), responseType: 'blob'
+    });
   }
 
   // ========== ADMIN ==========

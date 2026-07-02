@@ -61,6 +61,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Nouvelle livraison', route: '/vendeur/creer-livraison', icon: 'fa-solid fa-circle-plus' },
         { label: 'Mes livraisons', route: '/vendeur/livraisons', icon: 'fa-solid fa-boxes-stacked' },
         { label: 'Mon stock', route: '/vendeur/mon-stock', icon: 'fa-solid fa-warehouse' },
+        { label: 'Mon bilan', route: '/vendeur/bilan', icon: 'fa-solid fa-file-invoice' },
         { label: 'Mes finances', route: '/vendeur/finances', icon: 'fa-solid fa-wallet' },
         { label: 'Mon compte', route: '/vendeur/profil', icon: 'fa-solid fa-user-circle' },
       ];
