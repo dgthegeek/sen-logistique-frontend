@@ -1,0 +1,208 @@
+<div #confettiLayer class="confetti-layer"></div>
+
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-5xl mx-auto">
+
+        <!-- Loading -->
+        <div *ngIf="loading" class="card text-center py-16 text-muted-foreground">
+          <i class="fa-solid fa-trophy fa-bounce text-3xl text-primary mb-3"></i>
+          <p class="text-sm">Chargement de la ligue...</p>
+        </div>
+
+        <!-- Erreur -->
+        <div *ngIf="errorMessage && !loading" class="card">
+          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+            <i class="fa-solid fa-circle-exclamation mr-2"></i>{{ errorMessage }}
+          </div>
+        </div>
+
+        <!-- ============ ÉCRAN D'ADHÉSION (vendeur non inscrit) ============ -->
+        <div *ngIf="!loading && data && !adminMode && !data.participe" class="space-y-5">
+          <div class="league-hero p-6 sm:p-10 text-center text-white">
+            <div class="text-5xl sm:text-6xl mb-3 crown-bounce">🏆</div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">DIOKS LEAGUE</h1>
+            <p class="text-white/80 max-w-xl mx-auto text-sm sm:text-base">
+              Compare-toi aux autres partenaires, grimpe les paliers et deviens une Légende.
+            </p>
+
+            <!-- Teaser : niveau actuel -->
+            <div class="mt-6 inline-flex flex-col items-center gap-3 bg-white/10 backdrop-blur rounded-2xl px-6 py-5 border border-white/15">
+              <div class="tier-badge tier-glow shine w-24 h-24 text-4xl"
+                   [style.background]="gradient(data.monTier)" [style.--tier-glow]="glow(data.monTier)">
+                {{ meta(data.monTier).emoji }}
+              </div>
+              <div>
+                <div class="text-white/70 text-xs uppercase tracking-wide">Ton niveau actuel</div>
+                <div class="text-2xl font-bold">{{ meta(data.monTier).label }}</div>
+                <div class="text-white/80 text-sm">{{ data.mesLivraisons }} livraison(s) livrée(s)</div>
+              </div>
+              <div class="text-white/70 text-xs" *ngIf="data.prochainTier">
+                Plus que <strong class="text-white">{{ data.livraisonsPourProchainTier }}</strong>
+                pour atteindre {{ meta(data.prochainTier).label }} {{ meta(data.prochainTier).emoji }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Politique de partage -->
+          <div class="card">
+            <h2 class="text-lg font-bold text-foreground mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-primary"></i> Avant de rejoindre — ce que ça implique
+            </h2>
+            <ul class="space-y-2 text-sm text-muted-foreground">
+              <li class="flex gap-2"><i class="fa-solid fa-eye text-primary mt-0.5"></i>
+                <span>Les autres partenaires <strong>de la ligue</strong> verront le <strong>nom de ta boutique</strong>,
+                  ton <strong>nombre de livraisons livrées</strong> et ton <strong>palier</strong>.</span></li>
+              <li class="flex gap-2"><i class="fa-solid fa-lock text-primary mt-0.5"></i>
+                <span>Ton <strong>chiffre d'affaires reste privé</strong> : il n'est jamais montré aux autres vendeurs.</span></li>
+              <li class="flex gap-2"><i class="fa-solid fa-arrow-right-arrow-left text-primary mt-0.5"></i>
+                <span>Tu peux <strong>quitter à tout moment</strong> et <strong>revenir quand tu veux</strong> :
+                  tes statistiques ne repartent jamais de zéro, elles suivent tes vraies livraisons.</span></li>
+              <li class="flex gap-2"><i class="fa-solid fa-people-group text-primary mt-0.5"></i>
+                <span>Tu ne vois le classement des autres que <strong>si tu participes aussi</strong> (partage mutuel).</span></li>
+            </ul>
+
+            <button class="btn-primary w-full sm:w-auto mt-5 text-base" [disabled]="joining" (click)="rejoindre()">
+              <i class="fa-solid" [ngClass]="joining ? 'fa-spinner fa-spin' : 'fa-flag-checkered'"></i>
+              <span class="ml-2">{{ joining ? 'Adhésion...' : "J'accepte et je rejoins la ligue" }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ============ LEADERBOARD (participant ou admin) ============ -->
+        <div *ngIf="!loading && data && (adminMode || data.participe)" class="space-y-5 sm:space-y-6">
+
+          <!-- Hero -->
+          <div class="league-hero p-5 sm:p-8 text-white">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <div class="text-white/70 text-xs uppercase tracking-widest">{{ adminMode ? 'Vue administrateur' : 'Classement' }}</div>
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight flex items-center gap-2">
+                  🏆 DIOKS LEAGUE
+                </h1>
+                <p class="text-white/75 text-sm mt-1">{{ data.totalParticipants }} partenaire(s) en compétition</p>
+              </div>
+              <button *ngIf="!adminMode" class="btn-glass self-start" [disabled]="leaving" (click)="quitter()">
+                <i class="fa-solid fa-right-from-bracket"></i> <span class="ml-1">Quitter</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Ma carte (vendeur) -->
+          <div *ngIf="!adminMode" class="card overflow-hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+              <div class="tier-badge tier-glow shine w-24 h-24 sm:w-28 sm:h-28 text-4xl sm:text-5xl flex-shrink-0 mx-auto sm:mx-0"
+                   [style.background]="gradient(data.monTier)" [style.--tier-glow]="glow(data.monTier)">
+                {{ meta(data.monTier).emoji }}
+              </div>
+              <div class="flex-1 text-center sm:text-left">
+                <div class="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+                  <span class="text-2xl font-extrabold text-foreground">{{ meta(data.monTier).label }}</span>
+                  <span *ngIf="data.monRang" class="badge badge-transit">#{{ data.monRang }} au classement</span>
+                </div>
+                <div class="text-4xl sm:text-5xl font-black text-primary my-1 tabular-nums">{{ displayLivraisons }}</div>
+                <div class="text-xs text-muted-foreground mb-3">livraisons livrées (cumul)</div>
+
+                <!-- Progression -->
+                <div *ngIf="data.prochainTier; else legende">
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-muted-foreground">Vers {{ meta(data.prochainTier).label }} {{ meta(data.prochainTier).emoji }}</span>
+                    <span class="font-semibold text-foreground">{{ data.progressionPourcent }}%</span>
+                  </div>
+                  <div class="progress-track h-3">
+                    <div class="progress-fill" [style.width.%]="data.progressionPourcent"></div>
+                  </div>
+                  <div class="text-xs text-muted-foreground mt-1">
+                    Plus que <strong class="text-foreground">{{ data.livraisonsPourProchainTier }}</strong> livraison(s) pour débloquer le palier suivant.
+                  </div>
+                </div>
+                <ng-template #legende>
+                  <div class="text-sm font-semibold text-purple-500">👑 Palier maximum atteint — tu es une Légende !</div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Podium -->
+          <div *ngIf="reste.length > 0" class="card">
+            <div class="flex items-end justify-center gap-3 sm:gap-6 pt-4">
+              <div *ngFor="let p of podium" class="podium-col flex flex-col items-center"
+                   [ngClass]="{'p1': p.rang===1, 'p2': p.rang===2, 'p3': p.rang===3}">
+                <div class="text-2xl mb-1" *ngIf="p.rang===1">👑</div>
+                <div class="tier-badge shine w-14 h-14 sm:w-16 sm:h-16 text-xl sm:text-2xl mb-2"
+                     [style.background]="gradient(p.tier)">{{ meta(p.tier).emoji }}</div>
+                <div class="text-xs sm:text-sm font-semibold text-foreground text-center max-w-[7rem] truncate"
+                     [class.text-primary]="p.moi">{{ p.nomAffiche }}</div>
+                <div class="text-xs text-muted-foreground">{{ p.nombreLivraisons }} liv.</div>
+                <div class="w-20 sm:w-24 rounded-t-xl mt-2 flex items-start justify-center pt-2 text-white font-black text-lg"
+                     [ngClass]="podiumClass(p.rang)"
+                     [style.background]="gradient(p.tier)">#{{ p.rang }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Classement complet -->
+          <div class="card">
+            <h2 class="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-ranking-star text-primary"></i> Classement complet
+            </h2>
+            <div class="space-y-2">
+              <div *ngFor="let e of reste; let i = index"
+                   class="rank-row flex items-center gap-3 p-2.5 sm:p-3 rounded-xl border border-border"
+                   [class.me-row]="e.moi"
+                   [style.animation-delay]="(i * 0.04) + 's'">
+                <div class="w-8 text-center font-black text-lg tabular-nums"
+                     [ngClass]="e.rang<=3 ? 'text-primary' : 'text-muted-foreground'">{{ e.rang }}</div>
+                <div class="tier-badge w-10 h-10 text-lg flex-shrink-0" [style.background]="gradient(e.tier)">
+                  {{ meta(e.tier).emoji }}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="font-semibold text-foreground truncate flex items-center gap-2">
+                    {{ e.nomAffiche }}
+                    <span *ngIf="e.moi" class="badge badge-transit text-[10px]">Moi</span>
+                    <span *ngIf="adminMode && !e.participe" class="badge badge-canceled text-[10px]">Hors ligue</span>
+                  </div>
+                  <div class="text-xs text-muted-foreground">{{ meta(e.tier).label }}</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-bold text-foreground tabular-nums">{{ e.nombreLivraisons }}</div>
+                  <div class="text-[10px] text-muted-foreground">livraisons</div>
+                </div>
+                <div *ngIf="adminMode" class="text-right w-24 hidden sm:block">
+                  <div class="font-semibold text-green-600 text-sm">{{ (e.chiffreAffaires || 0) | fcfa }}</div>
+                  <div class="text-[10px] text-muted-foreground">CA</div>
+                </div>
+              </div>
+
+              <div *ngIf="reste.length === 0" class="text-center text-muted-foreground py-8 text-sm">
+                Personne dans la ligue pour l'instant. Sois le premier !
+              </div>
+            </div>
+          </div>
+
+          <!-- Légende des paliers -->
+          <div class="card">
+            <h2 class="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-medal text-primary"></i> Les paliers
+            </h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div *ngFor="let t of tiers" class="flex items-center gap-3 p-3 rounded-xl border border-border">
+                <div class="tier-badge w-11 h-11 text-xl flex-shrink-0" [style.background]="gradient(t.key)">{{ t.emoji }}</div>
+                <div>
+                  <div class="font-bold text-foreground">{{ t.label }}</div>
+                  <div class="text-xs text-muted-foreground">{{ t.seuil }}+ livraisons</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

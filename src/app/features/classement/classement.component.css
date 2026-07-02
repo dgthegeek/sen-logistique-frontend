@@ -1,0 +1,97 @@
+:host { display: block; }
+
+/* ---------- Hero animé ---------- */
+.league-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: linear-gradient(120deg, #06121f, #0a2540, #0b1e3a, #12224a);
+  background-size: 300% 300%;
+  animation: heroShift 12s ease infinite;
+}
+@keyframes heroShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.league-hero::before {
+  content: '';
+  position: absolute; inset: -50%;
+  background: radial-gradient(circle at 30% 20%, rgba(34,211,238,.25), transparent 40%),
+             radial-gradient(circle at 80% 60%, rgba(168,85,247,.22), transparent 45%);
+  animation: heroFloat 14s ease-in-out infinite alternate;
+}
+@keyframes heroFloat { from { transform: translateY(-8px) rotate(0deg); } to { transform: translateY(8px) rotate(6deg); } }
+
+/* ---------- Badge de tier ---------- */
+.tier-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 9999px;
+  color: #0a1024; font-weight: 800;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.15);
+  animation: badgeFloat 3.5s ease-in-out infinite;
+}
+@keyframes badgeFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.tier-glow { animation: glowPulse 2.4s ease-in-out infinite; }
+@keyframes glowPulse {
+  0%,100% { box-shadow: 0 0 18px 2px var(--tier-glow, rgba(90,210,240,.5)); }
+  50% { box-shadow: 0 0 34px 8px var(--tier-glow, rgba(90,210,240,.8)); }
+}
+
+/* ---------- Progression ---------- */
+.progress-track { background: rgba(148,163,184,.25); border-radius: 9999px; overflow: hidden; }
+.progress-fill {
+  height: 100%; border-radius: 9999px;
+  background-image: linear-gradient(90deg, #22d3ee, #0066cc);
+  background-size: 200% 100%;
+  animation: shimmer 2.2s linear infinite, growWidth .9s ease-out;
+  position: relative;
+}
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes growWidth { from { width: 0; } }
+
+/* ---------- Podium ---------- */
+.podium-col { animation: rise .7s cubic-bezier(.2,.9,.25,1) both; }
+.podium-col.p1 { animation-delay: .15s; }
+.podium-col.p2 { animation-delay: 0s; }
+.podium-col.p3 { animation-delay: .3s; }
+@keyframes rise { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.crown-bounce { animation: crownBounce 2.2s ease-in-out infinite; }
+@keyframes crownBounce { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-7px) rotate(4deg); } }
+
+/* ---------- Lignes du classement (stagger) ---------- */
+.rank-row { animation: popIn .5s ease both; }
+@keyframes popIn { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.me-row {
+  box-shadow: 0 0 0 2px #0066cc, 0 8px 30px -12px rgba(0,102,204,.7);
+  animation: mePulse 2.6s ease-in-out infinite;
+}
+@keyframes mePulse {
+  0%,100% { box-shadow: 0 0 0 2px #0066cc, 0 8px 30px -14px rgba(0,102,204,.6); }
+  50% { box-shadow: 0 0 0 2px #22d3ee, 0 10px 34px -10px rgba(34,211,238,.75); }
+}
+
+/* ---------- Confettis ---------- */
+.confetti-layer { position: fixed; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; }
+.confetti-piece {
+  position: absolute; top: -12px;
+  width: 9px; height: 14px; border-radius: 2px;
+  opacity: .9;
+  animation-name: confettiFall; animation-timing-function: cubic-bezier(.3,.7,.5,1); animation-fill-mode: forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* ---------- Divers ---------- */
+.shine { position: relative; overflow: hidden; }
+.shine::after {
+  content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.45), transparent);
+  animation: shine 3.5s ease-in-out infinite;
+}
+@keyframes shine { 0% { left: -60%; } 60%,100% { left: 130%; } }

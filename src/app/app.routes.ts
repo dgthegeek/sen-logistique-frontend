@@ -9,6 +9,7 @@ import { closeurGuard } from './core/guards/closeur.guard';
 import { livreurGuard } from './core/guards/livreur.guard';
 import { dispatcheurGuard } from './core/guards/dispatcheur.guard';
 import { BilanComponent } from './features/bilan/bilan.component';
+import { ClassementComponent } from './features/classement/classement.component';
 
 // Closing / Dispatch imports
 import { CloseurCommandesComponent } from './features/closeur/commandes/commandes.component';
@@ -86,6 +87,7 @@ export const routes: Routes = [
       { path: 'livraisons/:id', component: LivraisonDetailComponent },
       { path: 'mon-stock', component: VendeurMonStockComponent },
       { path: 'bilan', component: BilanComponent },
+      { path: 'classement', component: ClassementComponent },
       { path: 'finances', component: VendeurFinancesComponent },
       { path: 'profil', component: ProfilComponent },
     ]
@@ -103,6 +105,7 @@ export const routes: Routes = [
       { path: 'finances', component: AdminFinancesComponent },
       { path: 'vendeurs', component: GestionVendeursComponent },
       { path: 'bilan', component: BilanComponent },
+      { path: 'classement', component: ClassementComponent },
       { path: 'vendeurs/:id/bilan', component: BilanComponent },
       { path: 'zones', component: ZonesComponent },      // ← NOUVEAU
       { path: 'profil', component: ProfilComponent },

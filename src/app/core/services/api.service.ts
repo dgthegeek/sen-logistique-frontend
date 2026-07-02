@@ -24,6 +24,7 @@ import {
   MouvementStockRequest, AjustementStockRequest, Mouvement, CreateMonProduitRequest
 } from '../models/stock.model';
 import { BilanVendeur } from '../models/bilan-vendeur.model';
+import { ClassementResponse } from '../models/classement.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -113,6 +114,24 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/admin/vendeurs/${vendeurId}/bilan/pdf`, {
       params: this.bilanParams(debut, fin), responseType: 'blob'
     });
+  }
+
+  // ========== DIOKS LEAGUE (classement) ==========
+
+  getClassement(): Observable<ClassementResponse> {
+    return this.http.get<ClassementResponse>(`${this.baseUrl}/vendeur/classement`);
+  }
+
+  rejoindreClassement(): Observable<ClassementResponse> {
+    return this.http.post<ClassementResponse>(`${this.baseUrl}/vendeur/classement/rejoindre`, {});
+  }
+
+  quitterClassement(): Observable<ClassementResponse> {
+    return this.http.post<ClassementResponse>(`${this.baseUrl}/vendeur/classement/quitter`, {});
+  }
+
+  getAdminClassement(): Observable<ClassementResponse> {
+    return this.http.get<ClassementResponse>(`${this.baseUrl}/admin/classement`);
   }
 
   // ========== ADMIN ==========

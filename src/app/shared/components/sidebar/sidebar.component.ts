@@ -35,6 +35,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Équipe', route: '/admin/equipe', icon: 'fa-solid fa-users-gear' },
         { label: 'Finances', route: '/admin/finances', icon: 'fa-solid fa-money-bill-trend-up' },
         { label: 'Bilan partenaires', route: '/admin/bilan', icon: 'fa-solid fa-file-invoice' },
+        { label: 'Dioks League', route: '/admin/classement', icon: 'fa-solid fa-trophy' },
         { label: 'Stock & produits', route: '/admin/stock', icon: 'fa-solid fa-boxes-stacked' },
         { label: 'Gestion vendeurs', route: '/admin/vendeurs', icon: 'fa-solid fa-store' },
         { label: 'Zones de livraison', route: '/admin/zones', icon: 'fa-solid fa-map-location-dot' },
@@ -63,6 +64,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Mes livraisons', route: '/vendeur/livraisons', icon: 'fa-solid fa-boxes-stacked' },
         { label: 'Mon stock', route: '/vendeur/mon-stock', icon: 'fa-solid fa-warehouse' },
         { label: 'Mon bilan', route: '/vendeur/bilan', icon: 'fa-solid fa-file-invoice' },
+        { label: 'Dioks League', route: '/vendeur/classement', icon: 'fa-solid fa-trophy' },
         { label: 'Mes finances', route: '/vendeur/finances', icon: 'fa-solid fa-wallet' },
         { label: 'Mon compte', route: '/vendeur/profil', icon: 'fa-solid fa-user-circle' },
       ];
