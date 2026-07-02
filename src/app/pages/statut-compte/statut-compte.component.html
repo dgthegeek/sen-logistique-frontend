@@ -1,111 +1,110 @@
-<div class="min-h-screen bg-gradient-to-br flex items-center justify-center p-4" [ngClass]="bgClass">
-    <div class="card max-w-2xl w-full text-center">
-        <!-- Icon -->
-        <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" [ngClass]="iconBgClass">
-            <i class="text-5xl" [class]="icon"></i>
-        </div>
+<div class="min-h-screen bg-background flex flex-col items-center justify-center p-4">
 
-        <!-- Titre -->
-        <h1 class="text-3xl font-bold text-foreground mb-4">
-            {{ titre }}
-        </h1>
-
-        <!-- Message selon statut -->
-        <p class="text-lg text-muted-foreground mb-6" *ngIf="isEnAttente">
-            Merci de vous être inscrit, <span class="font-semibold text-foreground">{{ user?.prenom }}</span> !
-        </p>
-
-        <p class="text-lg text-muted-foreground mb-6" *ngIf="isSuspendu">
-            Votre compte a été temporairement suspendu.
-        </p>
-
-        <p class="text-lg text-muted-foreground mb-6" *ngIf="isBloque">
-            Votre compte a été bloqué définitivement.
-        </p>
-
-        <!-- Contenu EN_ATTENTE_VALIDATION -->
-        <div *ngIf="isEnAttente" class="border rounded-lg p-6 mb-8 text-left" [ngClass]="cardBorderClass">
-            <div class="flex items-start gap-4">
-                <i class="fa-solid fa-clipboard-list text-3xl text-orange-600"></i>
-                <div>
-                    <h3 class="font-semibold text-foreground mb-2">Prochaines étapes</h3>
-                    <ul class="space-y-2 text-sm text-muted-foreground">
-                        <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-circle text-orange-600 text-xs mt-1.5"></i>
-                            <span>Notre équipe va vérifier vos informations</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-circle text-orange-600 text-xs mt-1.5"></i>
-                            <span>Vous recevrez un <strong>SMS de confirmation</strong> dès que votre compte sera
-                                activé</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-circle text-orange-600 text-xs mt-1.5"></i>
-                            <span>Délai habituel : <strong>24 à 48 heures</strong></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contenu SUSPENDU/BLOQUE -->
-        <div *ngIf="isSuspendu || isBloque" class="border rounded-lg p-6 mb-6 text-left" [ngClass]="cardBorderClass">
-            <div class="flex items-start gap-4">
-                <i class="fa-solid fa-circle-info text-3xl text-blue-600"></i>
-                <div>
-                    <h3 class="font-semibold text-foreground mb-2">
-                        {{ isBloque ? 'Raison du blocage' : 'Raison de la suspension' }}
-                    </h3>
-                    <p class="text-sm text-muted-foreground">
-                        Pour plus d'informations sur les raisons de cette décision, veuillez contacter notre équipe.
-                    </p>
-                    <p class="text-sm text-muted-foreground mt-2" *ngIf="isSuspendu">
-                        Votre compte peut être réactivé après résolution du problème.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contact -->
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
-            <div class="flex items-start gap-3">
-                <i class="text-2xl text-blue-600" [class]="isEnAttente ? 'fa-solid fa-lightbulb' : 'fa-solid fa-phone'"></i>
-                <div class="text-sm">
-                    <p class="font-semibold text-foreground mb-1">
-                        {{ isEnAttente ? 'Besoin d\'aide ?' : 'Contactez-nous' }}
-                    </p>
-                    <p class="text-muted-foreground mb-2" *ngIf="isEnAttente">
-                        Contactez notre équipe :
-                    </p>
-                    <p class="text-muted-foreground mb-2" *ngIf="!isEnAttente">
-                        Notre équipe est disponible pour vous aider.
-                    </p>
-                    <div class="space-y-1">
-                        <p>
-                            <i class="fa-solid fa-phone mr-2 text-primary"></i>
-                            <a href="tel:+221781082373" class="text-primary hover:underline">+221 78 108 23 73</a>
-                        </p>
-                        <p>
-                            <i class="fa-solid fa-envelope mr-2 text-primary"></i>
-                            <a href="mailto:dioks&#64;gmail.com" class="text-primary hover:underline">
-                                dioks&#64;gmail.com
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Buttons -->
-        <div class="flex gap-3">
-            <button (click)="logout()" class="flex-1" [class.btn-outline]="isEnAttente"
-                [class.btn-primary]="!isEnAttente">
-                <i class="fa-solid fa-right-from-bracket mr-2"></i>Se déconnecter
-            </button>
-            <a routerLink="/tracking" class="flex-1" [class.btn-secondary]="isEnAttente"
-                [class.btn-outline]="!isEnAttente">
-                <i class="fa-solid fa-magnifying-glass mr-2"></i>Suivre un colis
-            </a>
-        </div>
+  <!-- Marque Dioks -->
+  <a routerLink="/" class="flex items-center gap-3 mb-6">
+    <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+      <span class="text-white font-bold text-xl">D</span>
     </div>
+    <span class="text-2xl font-bold text-primary">Dioks</span>
+  </a>
+
+  <div class="card max-w-2xl w-full text-center">
+    <!-- Icon -->
+    <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center mx-auto mb-5" [ngClass]="iconBgClass">
+      <i class="text-4xl sm:text-5xl" [class]="icon"></i>
+    </div>
+
+    <!-- Titre -->
+    <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-3">
+      {{ titre }}
+    </h1>
+
+    <!-- Message selon statut -->
+    <p class="text-base sm:text-lg text-muted-foreground mb-6" *ngIf="isEnAttente">
+      Merci de vous être inscrit, <span class="font-semibold text-foreground">{{ user?.prenom }}</span> !
+    </p>
+    <p class="text-base sm:text-lg text-muted-foreground mb-6" *ngIf="isSuspendu">
+      Votre compte a été temporairement suspendu.
+    </p>
+    <p class="text-base sm:text-lg text-muted-foreground mb-6" *ngIf="isBloque">
+      Votre compte a été bloqué définitivement.
+    </p>
+
+    <!-- Contenu EN_ATTENTE_VALIDATION -->
+    <div *ngIf="isEnAttente" class="border rounded-xl p-5 sm:p-6 mb-6 text-left" [ngClass]="cardBorderClass">
+      <div class="flex items-start gap-4">
+        <i class="fa-solid fa-clipboard-list text-2xl sm:text-3xl text-orange-500 flex-shrink-0"></i>
+        <div>
+          <h3 class="font-semibold text-foreground mb-2">Prochaines étapes</h3>
+          <ul class="space-y-2 text-sm text-muted-foreground">
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle text-orange-500 text-[6px] mt-2"></i>
+              <span>Notre équipe va vérifier vos informations</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle text-orange-500 text-[6px] mt-2"></i>
+              <span>Vous recevrez un <strong class="text-foreground">SMS de confirmation</strong> dès que votre compte sera activé</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle text-orange-500 text-[6px] mt-2"></i>
+              <span>Délai habituel : <strong class="text-foreground">24 à 48 heures</strong></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenu SUSPENDU/BLOQUE -->
+    <div *ngIf="isSuspendu || isBloque" class="border rounded-xl p-5 sm:p-6 mb-6 text-left" [ngClass]="cardBorderClass">
+      <div class="flex items-start gap-4">
+        <i class="fa-solid fa-circle-info text-2xl sm:text-3xl text-primary flex-shrink-0"></i>
+        <div>
+          <h3 class="font-semibold text-foreground mb-2">
+            {{ isBloque ? 'Raison du blocage' : 'Raison de la suspension' }}
+          </h3>
+          <p class="text-sm text-muted-foreground">
+            Pour plus d'informations sur les raisons de cette décision, veuillez contacter notre équipe.
+          </p>
+          <p class="text-sm text-muted-foreground mt-2" *ngIf="isSuspendu">
+            Votre compte peut être réactivé après résolution du problème.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="bg-primary/10 border border-primary/20 rounded-xl p-4 mb-6 text-left">
+      <div class="flex items-start gap-3">
+        <i class="text-xl sm:text-2xl text-primary flex-shrink-0 mt-0.5" [class]="isEnAttente ? 'fa-solid fa-lightbulb' : 'fa-solid fa-phone'"></i>
+        <div class="text-sm">
+          <p class="font-semibold text-foreground mb-1">
+            {{ isEnAttente ? 'Besoin d\'aide ?' : 'Contactez-nous' }}
+          </p>
+          <p class="text-muted-foreground mb-2">
+            {{ isEnAttente ? 'Contactez notre équipe :' : 'Notre équipe est disponible pour vous aider.' }}
+          </p>
+          <div class="space-y-1">
+            <p>
+              <i class="fa-solid fa-phone mr-2 text-primary"></i>
+              <a href="tel:+221781082373" class="text-primary hover:underline">+221 78 108 23 73</a>
+            </p>
+            <p>
+              <i class="fa-solid fa-envelope mr-2 text-primary"></i>
+              <a href="mailto:dioks&#64;gmail.com" class="text-primary hover:underline">dioks&#64;gmail.com</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button (click)="logout()" class="flex-1" [class.btn-outline]="isEnAttente" [class.btn-primary]="!isEnAttente">
+        <i class="fa-solid fa-right-from-bracket mr-2"></i>Se déconnecter
+      </button>
+      <a routerLink="/tracking" class="flex-1 text-center" [class.btn-primary]="isEnAttente" [class.btn-outline]="!isEnAttente">
+        <i class="fa-solid fa-magnifying-glass mr-2"></i>Suivre un colis
+      </a>
+    </div>
+  </div>
 </div>

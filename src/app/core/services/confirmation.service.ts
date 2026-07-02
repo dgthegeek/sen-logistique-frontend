@@ -1,13 +1,22 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+export interface ConfirmationInput {
+  label?: string;
+  placeholder?: string;
+  required?: boolean;
+  value?: string;
+}
+
 export interface ConfirmationConfig {
   title: string;
   message: string;
   confirmText?: string;
   cancelText?: string;
   type?: 'info' | 'warning' | 'danger' | 'success';
-  onConfirm: () => void;
+  /** Champ de saisie optionnel affiché dans la modale (remplace les prompt() navigateur). */
+  input?: ConfirmationInput;
+  onConfirm: (inputValue?: string) => void;
   onCancel?: () => void;
 }
 
@@ -38,10 +47,10 @@ export class ConfirmationService {
     }, 300);
   }
 
-  handleConfirm() {
+  handleConfirm(inputValue?: string) {
     const config = this.configSubject.value;
     if (config?.onConfirm) {
-      config.onConfirm();
+      config.onConfirm(inputValue);
     }
     this.hide();
   }

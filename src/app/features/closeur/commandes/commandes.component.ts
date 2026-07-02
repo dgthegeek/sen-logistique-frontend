@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
@@ -30,7 +31,8 @@ export class CloseurCommandesComponent implements OnInit {
 
   constructor(
     private api: ApiService,
-    private toast: ToastService
+    private toast: ToastService,
+    private confirmation: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -71,15 +73,28 @@ export class CloseurCommandesComponent implements OnInit {
   }
 
   reporter(c: CommandeCloseur): void {
-    const commentaire = prompt('Note de relance (optionnel) :') ?? undefined;
-    this.action(c.id, this.api.closeurReporter(c.id, commentaire),
-      'Commande relancée : de nouveau disponible pour prise en charge');
+    this.confirmation.confirm({
+      title: 'Relancer la commande',
+      message: `Remettre ${c.numeroTracking} dans la file pour prise en charge ?`,
+      confirmText: 'Relancer',
+      cancelText: 'Annuler',
+      type: 'info',
+      input: { label: 'Note de relance (optionnel)', placeholder: 'Ex : client à rappeler cet après-midi' },
+      onConfirm: (note) => this.action(c.id, this.api.closeurReporter(c.id, note),
+        'Commande relancée : de nouveau disponible pour prise en charge')
+    });
   }
 
   annuler(c: CommandeCloseur): void {
-    if (!confirm(`Annuler la commande ${c.numeroTracking} ?`)) { return; }
-    const commentaire = prompt('Motif de l\'annulation (optionnel) :') ?? undefined;
-    this.action(c.id, this.api.closeurAnnuler(c.id, commentaire), 'Commande annulée');
+    this.confirmation.confirm({
+      title: 'Annuler la commande',
+      message: `Annuler définitivement la commande ${c.numeroTracking} ?`,
+      confirmText: 'Annuler la commande',
+      cancelText: 'Retour',
+      type: 'danger',
+      input: { label: 'Motif (optionnel)', placeholder: 'Ex : client injoignable, doublon...' },
+      onConfirm: (motif) => this.action(c.id, this.api.closeurAnnuler(c.id, motif), 'Commande annulée')
+    });
   }
 
   private action(id: number, obs: any, successMsg: string): void {

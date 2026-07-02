@@ -23,9 +23,20 @@
     </h2>
 
     <!-- Message -->
-    <p class="text-muted-foreground text-center mb-6">
+    <p class="text-muted-foreground text-center mb-4">
       {{ config?.message }}
     </p>
+
+    <!-- Champ de saisie optionnel -->
+    <div *ngIf="config?.input" class="mb-5 text-left">
+      <label *ngIf="config?.input?.label" class="form-label text-xs">{{ config?.input?.label }}</label>
+      <textarea
+        [(ngModel)]="inputValue"
+        class="form-textarea text-sm"
+        rows="3"
+        [placeholder]="config?.input?.placeholder || ''"
+      ></textarea>
+    </div>
 
     <!-- Buttons -->
     <div class="flex gap-3">
@@ -38,6 +49,7 @@
       <button
         (click)="onConfirm()"
         class="flex-1"
+        [disabled]="confirmDisabled"
         [ngClass]="getConfirmButtonClass()"
       >
         {{ config?.confirmText }}

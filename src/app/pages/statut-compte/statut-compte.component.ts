@@ -56,31 +56,26 @@ export class StatutCompteComponent implements OnInit {
   }
 
   get icon(): string {
-    if (this.isEnAttente) return 'fa-solid fa-clock text-orange-600';
-    if (this.isSuspendu) return 'fa-solid fa-triangle-exclamation text-red-600';
-    if (this.isBloque) return 'fa-solid fa-ban text-gray-600';
-    return 'fa-solid fa-clipboard-list text-blue-600';
+    if (this.isEnAttente) return 'fa-solid fa-clock text-orange-500';
+    if (this.isSuspendu) return 'fa-solid fa-triangle-exclamation text-red-500';
+    if (this.isBloque) return 'fa-solid fa-ban text-slate-400';
+    return 'fa-solid fa-clipboard-list text-primary';
   }
 
-  get bgClass(): string {
-    if (this.isEnAttente) return 'from-orange-50 via-background to-orange-100';
-    if (this.isSuspendu) return 'from-red-50 via-background to-red-100';
-    if (this.isBloque) return 'from-gray-50 via-background to-gray-100';
-    return 'from-blue-50 via-background to-blue-100';
-  }
-
+  /** Cercle d'icône (theme-aware via opacité). */
   get iconBgClass(): string {
-    if (this.isEnAttente) return 'bg-orange-100';
-    if (this.isSuspendu) return 'bg-red-100';
-    if (this.isBloque) return 'bg-gray-100';
-    return 'bg-blue-100';
+    if (this.isEnAttente) return 'bg-orange-500/15';
+    if (this.isSuspendu) return 'bg-red-500/15';
+    if (this.isBloque) return 'bg-slate-500/15';
+    return 'bg-primary/10';
   }
 
+  /** Encadré d'info (theme-aware). */
   get cardBorderClass(): string {
-    if (this.isEnAttente) return 'bg-orange-50 border-orange-200';
-    if (this.isSuspendu) return 'bg-red-50 border-red-200';
-    if (this.isBloque) return 'bg-gray-50 border-gray-200';
-    return 'bg-blue-50 border-blue-200';
+    if (this.isEnAttente) return 'bg-orange-500/10 border-orange-500/25';
+    if (this.isSuspendu) return 'bg-red-500/10 border-red-500/25';
+    if (this.isBloque) return 'bg-slate-500/10 border-slate-500/25';
+    return 'bg-primary/10 border-primary/20';
   }
 
   logout() {

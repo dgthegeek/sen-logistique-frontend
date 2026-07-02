@@ -62,15 +62,11 @@ export class LoginComponent {
       } else {
         console.log('➡️ Traitement vendeur...');
         
-        // Vérifier statut vendeur
-        if (response.user.statut === StatutVendeur.EN_ATTENTE_VALIDATION) {
-          console.log('➡️ Redirection en attente validation...');
-          this.router.navigate(['/en-attente-validation']);
-        } else if (response.user.statut === 'SUSPENDU' || response.user.statut === 'BLOQUE') {
-          console.log('➡️ Redirection compte suspendu...');
-          this.router.navigate(['vendeur/compte-suspendu']);
+        // Vérifier statut vendeur — page unique /statut-compte pour les comptes non actifs
+        if (response.user.statut === StatutVendeur.EN_ATTENTE_VALIDATION
+            || response.user.statut === 'SUSPENDU' || response.user.statut === 'BLOQUE') {
+          this.router.navigate(['/statut-compte']);
         } else {
-          console.log('➡️ Redirection dashboard vendeur...');
           this.router.navigate(['/vendeur/dashboard']);
         }
       }

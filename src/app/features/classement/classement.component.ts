@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
+import { ConfirmationService } from '../../core/services/confirmation.service';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../shared/pipes/fcfa.pipe';
@@ -39,7 +40,8 @@ export class ClassementComponent implements OnInit {
   constructor(
     private api: ApiService,
     private auth: AuthService,
-    private toast: ToastService
+    private toast: ToastService,
+    private confirmation: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -90,11 +92,19 @@ export class ClassementComponent implements OnInit {
   }
 
   quitter(): void {
-    if (!confirm('Quitter la Dioks League ? Tu peux revenir à tout moment, tes stats sont conservées.')) { return; }
-    this.leaving = true;
-    this.api.quitterClassement().subscribe({
-      next: (d) => { this.data = d; this.leaving = false; this.toast.success('Tu as quitté la ligue. Reviens quand tu veux !'); },
-      error: (err) => { this.leaving = false; this.toast.error(err?.error?.message || 'Action impossible'); }
+    this.confirmation.confirm({
+      title: 'Quitter la Dioks League ?',
+      message: 'Tu peux revenir à tout moment : tes statistiques sont conservées, tu ne repars jamais de zéro.',
+      confirmText: 'Quitter',
+      cancelText: 'Rester',
+      type: 'warning',
+      onConfirm: () => {
+        this.leaving = true;
+        this.api.quitterClassement().subscribe({
+          next: (d) => { this.data = d; this.leaving = false; this.toast.success('Tu as quitté la ligue. Reviens quand tu veux !'); },
+          error: (err) => { this.leaving = false; this.toast.error(err?.error?.message || 'Action impossible'); }
+        });
+      }
     });
   }
 

@@ -1,17 +1,19 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ConfirmationService, ConfirmationConfig } from '../../../core/services/confirmation.service';
 
 @Component({
   selector: 'app-confirmation-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './confirmation-modal.component.html',
   styleUrls: ['./confirmation-modal.component.css']
 })
 export class ConfirmationModalComponent {
   showModal = false;
   config: ConfirmationConfig | null = null;
+  inputValue = '';
 
   constructor(public confirmationService: ConfirmationService) {
     this.confirmationService.showModal$.subscribe(show => {
@@ -20,11 +22,17 @@ export class ConfirmationModalComponent {
 
     this.confirmationService.config$.subscribe(config => {
       this.config = config;
+      this.inputValue = config?.input?.value || '';
     });
   }
 
+  get confirmDisabled(): boolean {
+    return !!this.config?.input?.required && !this.inputValue.trim();
+  }
+
   onConfirm() {
-    this.confirmationService.handleConfirm();
+    if (this.confirmDisabled) { return; }
+    this.confirmationService.handleConfirm(this.inputValue.trim() || undefined);
   }
 
   onCancel() {

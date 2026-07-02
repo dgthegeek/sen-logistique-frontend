@@ -7,17 +7,19 @@ import { ToastService, Toast } from '../../../core/services/toast.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="fixed top-4 right-4 z-[10000] space-y-2">
+    <div class="fixed top-3 right-3 left-3 sm:left-auto z-[10000] space-y-2 pointer-events-none flex flex-col items-end">
       <div
         *ngFor="let toast of toasts"
-        class="border rounded-lg p-4 shadow-lg flex items-center gap-3 min-w-[300px] max-w-md animate-slideIn"
+        class="pointer-events-auto border rounded-lg px-3 py-2.5 shadow-lg flex items-center gap-2.5 w-full sm:w-auto sm:min-w-[240px] max-w-sm animate-slideIn"
         [ngClass]="getToastClass(toast.type)"
       >
-        <div class="text-2xl">{{ getIcon(toast.type) }}</div>
-        <div class="flex-1 text-sm font-medium">{{ toast.message }}</div>
+        <div class="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
+             [ngClass]="getIconBadgeClass(toast.type)">{{ getIcon(toast.type) }}</div>
+        <div class="flex-1 text-xs sm:text-sm font-medium leading-snug">{{ toast.message }}</div>
         <button
           (click)="remove(toast.id)"
-          class="text-xl hover:opacity-70 transition-opacity"
+          class="text-lg leading-none hover:opacity-70 transition-opacity flex-shrink-0"
+          aria-label="Fermer"
         >
           ×
         </button>
@@ -72,5 +74,15 @@ export class ToastContainerComponent {
       info: 'ℹ'
     };
     return icons[type];
+  }
+
+  getIconBadgeClass(type: Toast['type']): string {
+    const classes = {
+      success: 'bg-green-500 text-white',
+      error: 'bg-red-500 text-white',
+      warning: 'bg-orange-500 text-white',
+      info: 'bg-blue-500 text-white'
+    };
+    return classes[type];
   }
 }
