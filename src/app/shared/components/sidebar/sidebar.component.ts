@@ -34,6 +34,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Dispatch livreurs', route: '/admin/dispatch', icon: 'fa-solid fa-truck-arrow-right' },
         { label: 'Équipe', route: '/admin/equipe', icon: 'fa-solid fa-users-gear' },
         { label: 'Finances', route: '/admin/finances', icon: 'fa-solid fa-money-bill-trend-up' },
+        { label: 'Bilan partenaires', route: '/admin/bilan', icon: 'fa-solid fa-file-invoice' },
         { label: 'Stock & produits', route: '/admin/stock', icon: 'fa-solid fa-boxes-stacked' },
         { label: 'Gestion vendeurs', route: '/admin/vendeurs', icon: 'fa-solid fa-store' },
         { label: 'Zones de livraison', route: '/admin/zones', icon: 'fa-solid fa-map-location-dot' },

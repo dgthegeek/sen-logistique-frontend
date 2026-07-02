@@ -82,7 +82,7 @@
             <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
               <button *ngIf="c.statut === 'NOUVELLE'" class="btn-secondary w-full sm:w-auto"
                       [disabled]="actionEnCours === c.id" (click)="appeler(c)">
-                <i class="fa-solid fa-phone-volume"></i> Appeler
+                <i class="fa-solid fa-clipboard-check"></i> Prendre en charge
               </button>
               <button *ngIf="c.statut === 'NOUVELLE' || c.statut === 'A_APPELER'" class="btn-primary w-full sm:w-auto"
                       [disabled]="actionEnCours === c.id" (click)="confirmer(c)">
@@ -92,9 +92,9 @@
                       [disabled]="actionEnCours === c.id" (click)="preteALivrer(c)">
                 <i class="fa-solid fa-truck-fast"></i> Prête à livrer
               </button>
-              <button *ngIf="c.statut !== 'CONFIRMEE'" class="btn-outline w-full sm:w-auto"
+              <button *ngIf="c.statut === 'A_APPELER' || c.statut === 'CONFIRMEE'" class="btn-outline w-full sm:w-auto"
                       [disabled]="actionEnCours === c.id" (click)="reporter(c)">
-                <i class="fa-solid fa-clock"></i> Reporter
+                <i class="fa-solid fa-rotate-left"></i> Relancer
               </button>
               <button class="btn-danger w-full sm:w-auto col-span-2 sm:col-auto"
                       [disabled]="actionEnCours === c.id" (click)="annuler(c)">

@@ -194,12 +194,6 @@
                         <span>Détails</span>
                       </button>
 
-                      <a [routerLink]="['/admin/vendeurs', vendeur.id, 'bilan']"
-                        class="text-sm text-primary hover:underline flex items-center gap-1">
-                        <i class="fa-solid fa-file-invoice"></i>
-                        <span>Bilan</span>
-                      </a>
-
                       <button *ngIf="vendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
                         (click)="openActionModal(vendeur, 'valider')"
                         class="text-sm text-green-600 hover:underline flex items-center gap-1">
@@ -283,11 +277,6 @@
                   <i class="fa-solid fa-eye mr-1"></i>
                   Détails
                 </button>
-
-                <a [routerLink]="['/admin/vendeurs', vendeur.id, 'bilan']" class="btn-outline text-xs sm:text-sm flex-1 py-2 text-center">
-                  <i class="fa-solid fa-file-invoice mr-1"></i>
-                  Bilan
-                </a>
 
                 <button *ngIf="vendeur.statut === StatutVendeur.EN_ATTENTE_VALIDATION"
                   (click)="openActionModal(vendeur, 'valider')" class="btn-primary text-xs sm:text-sm flex-1 py-2">

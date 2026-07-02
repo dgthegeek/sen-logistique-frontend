@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
@@ -11,7 +12,8 @@ import { BilanVendeur } from '../../core/models/bilan-vendeur.model';
 
 /**
  * Page Bilan : stock actuel + ventes sur la période (défaut = aujourd'hui).
- * Utilisée par le vendeur (son propre bilan) et par l'admin (bilan d'un vendeur donné via :id).
+ * - Vendeur : son propre bilan.
+ * - Admin : sélectionne un partenaire (ou arrive via /admin/vendeurs/:id/bilan).
  */
 @Component({
   selector: 'app-bilan',
@@ -21,33 +23,66 @@ import { BilanVendeur } from '../../core/models/bilan-vendeur.model';
   styleUrls: ['./bilan.component.css']
 })
 export class BilanComponent implements OnInit {
-  vendeurId: number | null = null;   // présent => mode admin
+  adminMode = false;
+  vendeurId: number | null = null;   // partenaire ciblé (admin) ou null
   bilan: BilanVendeur | null = null;
   loading = true;
   errorMessage = '';
   downloading = false;
+
+  // Sélecteur de partenaire (admin uniquement)
+  vendeurs: { id: number; label: string }[] = [];
+  selectedVendeurId: number | null = null;
 
   debut = this.today();
   fin = this.today();
 
   constructor(
     private api: ApiService,
+    private auth: AuthService,
     private route: ActivatedRoute,
     private toast: ToastService
   ) {}
 
   ngOnInit(): void {
+    this.adminMode = this.auth.isAdmin();
     const idParam = this.route.snapshot.paramMap.get('id');
-    this.vendeurId = idParam ? Number(idParam) : null;
-    this.charger();
-  }
+    if (idParam) {
+      this.vendeurId = Number(idParam);
+      this.selectedVendeurId = this.vendeurId;
+    }
 
-  get isAdmin(): boolean {
-    return this.vendeurId !== null;
+    if (this.adminMode && this.vendeurId === null) {
+      // Mode sélection : charger la liste des partenaires, pas encore de bilan
+      this.chargerVendeurs();
+      this.loading = false;
+    } else {
+      this.charger();
+    }
   }
 
   today(): string {
     return new Date().toISOString().slice(0, 10);
+  }
+
+  chargerVendeurs(): void {
+    this.api.getVendeurs(undefined, 0, 200).subscribe({
+      next: (page) => {
+        this.vendeurs = (page.content || []).map((v: any) => ({
+          id: v.id,
+          label: (v.nomBoutique ? v.nomBoutique + ' — ' : '') + v.prenom + ' ' + v.nom
+        }));
+      },
+      error: () => { this.toast.error('Impossible de charger la liste des partenaires'); }
+    });
+  }
+
+  onSelectVendeur(): void {
+    this.vendeurId = this.selectedVendeurId;
+    this.bilan = null;
+    if (this.vendeurId !== null) {
+      this.charger();
+    }
   }
 
   raccourci(jours: number): void {
@@ -59,9 +94,10 @@ export class BilanComponent implements OnInit {
   }
 
   charger(): void {
+    if (this.adminMode && this.vendeurId === null) { return; }
     this.loading = true;
     this.errorMessage = '';
-    const obs = this.isAdmin
+    const obs = this.adminMode
       ? this.api.getAdminVendeurBilan(this.vendeurId!, this.debut, this.fin)
       : this.api.getVendeurBilan(this.debut, this.fin);
 
@@ -76,7 +112,7 @@ export class BilanComponent implements OnInit {
 
   telechargerPdf(): void {
     this.downloading = true;
-    const obs = this.isAdmin
+    const obs = this.adminMode
       ? this.api.downloadAdminVendeurBilanPdf(this.vendeurId!, this.debut, this.fin)
       : this.api.downloadVendeurBilanPdf(this.debut, this.fin);
 

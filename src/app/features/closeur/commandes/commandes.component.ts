@@ -71,8 +71,9 @@ export class CloseurCommandesComponent implements OnInit {
   }
 
   reporter(c: CommandeCloseur): void {
-    const commentaire = prompt('Motif / note du report (optionnel) :') ?? undefined;
-    this.action(c.id, this.api.closeurReporter(c.id, commentaire), 'Commande reportée');
+    const commentaire = prompt('Note de relance (optionnel) :') ?? undefined;
+    this.action(c.id, this.api.closeurReporter(c.id, commentaire),
+      'Commande relancée : de nouveau disponible pour prise en charge');
   }
 
   annuler(c: CommandeCloseur): void {

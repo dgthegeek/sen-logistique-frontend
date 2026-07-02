@@ -102,6 +102,7 @@ export const routes: Routes = [
       { path: 'livraisons', component: AdminLivraisonsComponent },
       { path: 'finances', component: AdminFinancesComponent },
       { path: 'vendeurs', component: GestionVendeursComponent },
+      { path: 'bilan', component: BilanComponent },
       { path: 'vendeurs/:id/bilan', component: BilanComponent },
       { path: 'zones', component: ZonesComponent },      // ← NOUVEAU
       { path: 'profil', component: ProfilComponent },
