@@ -11,7 +11,7 @@ import {
   CreateMembreRequest, UpdateMembreRequest, LivreurResponse, MembreResponse
 } from '../../../core/models/closing-dispatch.model';
 
-type Onglet = 'closeurs' | 'livreurs';
+type Onglet = 'closeurs' | 'livreurs' | 'dispatcheurs';
 
 interface MembreForm {
   nom: string;
@@ -33,6 +33,7 @@ export class AdminEquipeComponent implements OnInit {
   onglet: Onglet = 'closeurs';
   closeurs: MembreResponse[] = [];
   livreurs: LivreurResponse[] = [];
+  dispatcheurs: MembreResponse[] = [];
   loading = true;
   loadError = false;
 
@@ -61,6 +62,10 @@ export class AdminEquipeComponent implements OnInit {
       next: (d) => { this.livreurs = d; this.loading = false; },
       error: () => { this.loadError = true; this.loading = false; }
     });
+    this.api.getDispatcheurs().subscribe({
+      next: (d) => { this.dispatcheurs = d; },
+      error: () => { this.loadError = true; }
+    });
   }
 
   changerOnglet(o: Onglet): void {
@@ -69,6 +74,12 @@ export class AdminEquipeComponent implements OnInit {
 
   get isEdition(): boolean {
     return this.editId !== null;
+  }
+
+  get singulier(): string {
+    return this.onglet === 'closeurs' ? 'closeur'
+      : this.onglet === 'dispatcheurs' ? 'dispatcheur'
+      : 'livreur';
   }
 
   ouvrirCreate(): void {
@@ -126,8 +137,9 @@ export class AdminEquipeComponent implements OnInit {
   /** Activer/désactiver rapidement un membre. */
   toggleActif(membre: MembreResponse | LivreurResponse): void {
     const data: UpdateMembreRequest = { actif: !membre.actif };
-    const obs: Observable<MembreResponse | LivreurResponse> = this.onglet === 'closeurs'
-      ? this.api.updateCloseur(membre.id, data)
+    const obs: Observable<MembreResponse | LivreurResponse> =
+      this.onglet === 'closeurs' ? this.api.updateCloseur(membre.id, data)
+      : this.onglet === 'dispatcheurs' ? this.api.updateDispatcheur(membre.id, data)
       : this.api.updateLivreur(membre.id, data);
     obs.subscribe({
       next: () => { this.toast.success(membre.actif ? 'Compte désactivé' : 'Compte activé'); this.charger(); },
@@ -144,7 +156,9 @@ export class AdminEquipeComponent implements OnInit {
       password: this.form.password,
       zonePreferee: this.form.zonePreferee || undefined
     };
-    return this.onglet === 'closeurs' ? this.api.createCloseur(data) : this.api.createLivreur(data);
+    return this.onglet === 'closeurs' ? this.api.createCloseur(data)
+      : this.onglet === 'dispatcheurs' ? this.api.createDispatcheur(data)
+      : this.api.createLivreur(data);
   }
 
   private appelUpdate(): Observable<MembreResponse | LivreurResponse> {
@@ -156,8 +170,8 @@ export class AdminEquipeComponent implements OnInit {
       zonePreferee: this.form.zonePreferee || undefined,
       password: this.form.password || undefined
     };
-    return this.onglet === 'closeurs'
-      ? this.api.updateCloseur(this.editId!, data)
+    return this.onglet === 'closeurs' ? this.api.updateCloseur(this.editId!, data)
+      : this.onglet === 'dispatcheurs' ? this.api.updateDispatcheur(this.editId!, data)
       : this.api.updateLivreur(this.editId!, data);
   }
 

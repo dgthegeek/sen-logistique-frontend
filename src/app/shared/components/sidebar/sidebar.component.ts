@@ -50,6 +50,11 @@ export class SidebarComponent implements OnInit {
         { label: 'Mes livraisons', route: '/livreur/mes-livraisons', icon: 'fa-solid fa-motorcycle' },
         { label: 'Mon compte', route: '/livreur/profil', icon: 'fa-solid fa-user-gear' },
       ];
+    } else if (this.authService.isDispatcheur()) {
+      this.menuItems = [
+        { label: 'Dispatch', route: '/dispatcheur/dispatch', icon: 'fa-solid fa-truck-arrow-right' },
+        { label: 'Mon compte', route: '/dispatcheur/profil', icon: 'fa-solid fa-user-gear' },
+      ];
     } else {
       this.menuItems = [
         { label: 'Dashboard', route: '/vendeur/dashboard', icon: 'fa-solid fa-chart-pie' },

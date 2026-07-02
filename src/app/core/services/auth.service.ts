@@ -88,6 +88,10 @@ export class AuthService {
     return this.currentUserSubject.value?.role === 'LIVREUR';
   }
 
+  isDispatcheur(): boolean {
+    return this.currentUserSubject.value?.role === 'DISPATCHEUR';
+  }
+
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }

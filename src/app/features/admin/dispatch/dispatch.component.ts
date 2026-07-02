@@ -52,7 +52,7 @@ export class AdminDispatchComponent implements OnInit {
   }
 
   chargerLivreurs(): void {
-    this.api.getLivreurs().subscribe({
+    this.api.getDispatchLivreurs().subscribe({
       next: (data) => this.livreurs = data.filter(l => l.actif),
       error: () => {}
     });

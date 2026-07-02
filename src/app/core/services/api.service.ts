@@ -296,14 +296,19 @@ export class ApiService {
     return this.http.post<CommandeCloseur>(`${this.baseUrl}/closeur/commandes/${id}/annuler`, { commentaire });
   }
 
-  // ========== DISPATCH (Admin) ==========
+  // ========== DISPATCH (dispatcheur / admin) ==========
 
   getDispatchPretes(): Observable<CommandeDispatch[]> {
-    return this.http.get<CommandeDispatch[]>(`${this.baseUrl}/admin/dispatch/pretes`);
+    return this.http.get<CommandeDispatch[]>(`${this.baseUrl}/dispatch/pretes`);
+  }
+
+  /** Livreurs actifs pour l'assignation (accessible dispatcheur ET admin). */
+  getDispatchLivreurs(): Observable<LivreurResponse[]> {
+    return this.http.get<LivreurResponse[]>(`${this.baseUrl}/dispatch/livreurs`);
   }
 
   assignerLivreur(data: AssignerLivreurRequest): Observable<AssignerLivreurResponse> {
-    return this.http.post<AssignerLivreurResponse>(`${this.baseUrl}/admin/dispatch/assigner`, data);
+    return this.http.post<AssignerLivreurResponse>(`${this.baseUrl}/dispatch/assigner`, data);
   }
 
   // ========== EQUIPE (Admin) ==========
@@ -330,6 +335,18 @@ export class ApiService {
 
   updateLivreur(id: number, data: UpdateMembreRequest): Observable<LivreurResponse> {
     return this.http.put<LivreurResponse>(`${this.baseUrl}/admin/livreurs/${id}`, data);
+  }
+
+  getDispatcheurs(): Observable<MembreResponse[]> {
+    return this.http.get<MembreResponse[]>(`${this.baseUrl}/admin/dispatcheurs`);
+  }
+
+  createDispatcheur(data: CreateMembreRequest): Observable<MembreResponse> {
+    return this.http.post<MembreResponse>(`${this.baseUrl}/admin/dispatcheurs`, data);
+  }
+
+  updateDispatcheur(id: number, data: UpdateMembreRequest): Observable<MembreResponse> {
+    return this.http.put<MembreResponse>(`${this.baseUrl}/admin/dispatcheurs/${id}`, data);
   }
 
   // ========== LIVREUR ==========

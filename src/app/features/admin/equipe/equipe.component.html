@@ -12,19 +12,23 @@
             <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-1">
               <i class="fa-solid fa-users-gear"></i> Gestion de l'équipe
             </h1>
-            <p class="text-sm text-muted-foreground">Closeurs et livreurs.</p>
+            <p class="text-sm text-muted-foreground">Closeurs, dispatcheurs et livreurs.</p>
           </div>
           <button class="btn-primary" (click)="ouvrirCreate()">
             <i class="fa-solid fa-plus"></i>
-            Ajouter un {{ onglet === 'closeurs' ? 'closeur' : 'livreur' }}
+            Ajouter un {{ singulier }}
           </button>
         </div>
 
         <!-- Onglets -->
-        <div class="flex gap-2 mb-4">
+        <div class="flex flex-wrap gap-2 mb-4">
           <button [ngClass]="onglet === 'closeurs' ? 'chip-active' : 'chip'"
                   (click)="changerOnglet('closeurs')">
             Closeurs ({{ closeurs.length }})
+          </button>
+          <button [ngClass]="onglet === 'dispatcheurs' ? 'chip-active' : 'chip'"
+                  (click)="changerOnglet('dispatcheurs')">
+            Dispatcheurs ({{ dispatcheurs.length }})
           </button>
           <button [ngClass]="onglet === 'livreurs' ? 'chip-active' : 'chip'"
                   (click)="changerOnglet('livreurs')">
@@ -74,6 +78,46 @@
                     </button>
                     <button class="btn-ghost" title="Activer/Désactiver" (click)="toggleActif(c)">
                       <i class="fa-solid" [ngClass]="c.actif ? 'fa-toggle-on text-green-600' : 'fa-toggle-off'"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Dispatcheurs -->
+        <div *ngIf="!loading && onglet === 'dispatcheurs'" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="p-2">Nom</th>
+                <th class="p-2">Téléphone</th>
+                <th class="p-2">Email</th>
+                <th class="p-2">Statut</th>
+                <th class="p-2 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="dispatcheurs.length === 0">
+                <td colspan="5" class="p-4 text-center text-muted-foreground">Aucun dispatcheur.</td>
+              </tr>
+              <tr *ngFor="let d of dispatcheurs" class="border-b border-border/50">
+                <td class="p-2 font-medium text-foreground">{{ d.prenom }} {{ d.nom }}</td>
+                <td class="p-2">{{ d.telephone }}</td>
+                <td class="p-2">{{ d.email || '—' }}</td>
+                <td class="p-2">
+                  <span class="badge" [ngClass]="d.actif ? 'badge-delivered' : 'badge-canceled'">
+                    {{ d.actif ? 'Actif' : 'Inactif' }}
+                  </span>
+                </td>
+                <td class="p-2">
+                  <div class="flex justify-end gap-1">
+                    <button class="btn-ghost" title="Modifier" (click)="ouvrirEdit(d)">
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button class="btn-ghost" title="Activer/Désactiver" (click)="toggleActif(d)">
+                      <i class="fa-solid" [ngClass]="d.actif ? 'fa-toggle-on text-green-600' : 'fa-toggle-off'"></i>
                     </button>
                   </div>
                 </td>
@@ -132,7 +176,7 @@
 <div *ngIf="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
   <div class="card max-w-md w-full">
     <h2 class="text-lg font-bold text-foreground mb-4">
-      {{ isEdition ? 'Modifier' : 'Nouveau' }} {{ onglet === 'closeurs' ? 'closeur' : 'livreur' }}
+      {{ isEdition ? 'Modifier' : 'Nouveau' }} {{ singulier }}
     </h2>
     <div class="grid grid-cols-2 gap-3 mb-3">
       <div>

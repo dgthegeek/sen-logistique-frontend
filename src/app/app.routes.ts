@@ -7,6 +7,7 @@ import { vendeurGuard } from './core/guards/vendeur.guard';
 import { guestGuard } from './core/guards/guest.guard';
 import { closeurGuard } from './core/guards/closeur.guard';
 import { livreurGuard } from './core/guards/livreur.guard';
+import { dispatcheurGuard } from './core/guards/dispatcheur.guard';
 
 // Closing / Dispatch imports
 import { CloseurCommandesComponent } from './features/closeur/commandes/commandes.component';
@@ -128,6 +129,17 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'mes-livraisons', pathMatch: 'full' },
       { path: 'mes-livraisons', component: LivreurMesLivraisonsComponent },
+      { path: 'profil', component: ProfilComponent },
+    ]
+  },
+
+  // Dispatcheur routes (module Dispatch : prépare et assigne aux livreurs)
+  {
+    path: 'dispatcheur',
+    canActivate: [authGuard, dispatcheurGuard],
+    children: [
+      { path: '', redirectTo: 'dispatch', pathMatch: 'full' },
+      { path: 'dispatch', component: AdminDispatchComponent },
       { path: 'profil', component: ProfilComponent },
     ]
   },

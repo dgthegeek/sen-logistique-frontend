@@ -1,6 +1,6 @@
 import { StatutVendeur } from "./vendeur.model";
 
-export type UserRole = 'VENDEUR' | 'ADMIN' | 'CLOSEUR' | 'LIVREUR';
+export type UserRole = 'VENDEUR' | 'ADMIN' | 'CLOSEUR' | 'LIVREUR' | 'DISPATCHEUR';
 
 export interface User {
   id: number;

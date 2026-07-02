@@ -57,6 +57,8 @@ export class LoginComponent {
         this.router.navigate(['/closeur/commandes']);
       } else if (response.user.role === 'LIVREUR') {
         this.router.navigate(['/livreur/mes-livraisons']);
+      } else if (response.user.role === 'DISPATCHEUR') {
+        this.router.navigate(['/dispatcheur/dispatch']);
       } else {
         console.log('➡️ Traitement vendeur...');
         

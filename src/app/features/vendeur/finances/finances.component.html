@@ -70,7 +70,7 @@
           </div>
 
           <!-- Stats Cards (Responsive Grid) -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             <!-- Solde en attente -->
             <div class="stat-card bg-orange-50 border-orange-200">
               <div class="flex sm:block items-center justify-between sm:justify-start">
@@ -128,24 +128,6 @@
               </div>
             </div>
 
-            <!-- Frais livraison -->
-            <div class="stat-card bg-red-50 border-red-200">
-              <div class="flex sm:block items-center justify-between sm:justify-start">
-                <div class="sm:mb-3">
-                  <div class="stat-card-icon bg-red-100 text-red-600 inline-flex">
-                    <i class="fa-solid fa-receipt"></i>
-                  </div>
-                </div>
-                <div>
-                  <div class="stat-card-value text-destructive text-xl sm:text-2xl">
-                    {{ finances.statistiquesMois.fraisLivraison | fcfa }}
-                  </div>
-                  <div class="stat-card-label text-xs sm:text-sm">
-                    Frais ce mois
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
           <!-- Action Card (Responsive) -->
