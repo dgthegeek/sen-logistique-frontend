@@ -421,9 +421,9 @@
 </div>
 
 <!-- Detail Modal (Responsive) -->
-<div *ngIf="showDetailModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto"
+<div *ngIf="showDetailModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
   (click)="closeDetailModal()">
-  <div class="card max-w-4xl w-full my-8" (click)="$event.stopPropagation()">
+  <div class="card max-w-4xl w-full max-h-[90vh] overflow-y-auto overscroll-contain" (click)="$event.stopPropagation()">
     <!-- Loading -->
     <div *ngIf="loading && !livraison" class="flex items-center justify-center py-12">
       <div class="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
@@ -464,6 +464,51 @@
           <!-- <div *ngIf="livraison.qrCodeUrl" class="flex-shrink-0">
             <img [src]="livraison.qrCodeUrl" alt="QR Code" class="w-24 h-24 sm:w-32 sm:h-32 border-2 border-primary rounded-lg">
           </div> -->
+        </div>
+      </div>
+
+      <!-- Contrôle qualité (traçabilité) -->
+      <div *ngIf="livraison.suivi" class="border rounded-lg p-4 mb-6">
+        <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-route text-primary"></i>
+          <span>Contrôle qualité — traçabilité</span>
+        </h3>
+        <div class="relative pl-3">
+          <div class="absolute left-[1.15rem] top-1 bottom-1 w-px bg-border"></div>
+          <div *ngFor="let e of etapesSuivi" class="relative flex gap-3 pb-5 last:pb-0">
+            <div class="relative z-10 w-8 h-8 rounded-full bg-card border-2 border-border flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid text-sm" [ngClass]="[e.icon, e.color]"></i>
+            </div>
+            <div class="flex-1 min-w-0 pt-1">
+              <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <span class="font-semibold text-foreground">{{ e.label }}</span>
+                <span *ngIf="e.duree != null" class="badge badge-pending text-[10px]">
+                  <i class="fa-solid fa-clock mr-1"></i>{{ e.dureeLabel }} : {{ formatDuree(e.duree) }}
+                </span>
+              </div>
+              <div class="text-xs text-muted-foreground mt-0.5">{{ formatDateHeure(e.date) }}</div>
+              <div *ngIf="e.acteur && e.acteur !== '—'" class="text-xs text-foreground mt-0.5">
+                <i class="fa-solid fa-user mr-1 text-muted-foreground"></i>{{ e.acteur }}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="etapesSuivi.length === 0" class="text-sm text-muted-foreground">
+            Aucune étape enregistrée pour le moment.
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-border text-center">
+          <div>
+            <div class="text-[11px] text-muted-foreground">Closeur</div>
+            <div class="text-sm font-semibold text-foreground">{{ nomActeur(livraison.suivi.closeur) }}</div>
+          </div>
+          <div>
+            <div class="text-[11px] text-muted-foreground">Dispatcheur</div>
+            <div class="text-sm font-semibold text-foreground">{{ nomActeur(livraison.suivi.dispatcheur) }}</div>
+          </div>
+          <div>
+            <div class="text-[11px] text-muted-foreground">Livreur</div>
+            <div class="text-sm font-semibold text-foreground">{{ livraison.livreur ? nomActeur(livraison.livreur) : '—' }}</div>
+          </div>
         </div>
       </div>
 

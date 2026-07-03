@@ -278,6 +278,40 @@ export class AdminLivraisonsComponent implements OnInit {
     this.livraison = null;
   }
 
+  // ===== Contrôle qualité (traçabilité) =====
+
+  nomActeur(p?: { nom: string; prenom: string } | null): string {
+    return p ? `${p.prenom} ${p.nom}` : '—';
+  }
+
+  formatDateHeure(d?: string): string {
+    if (!d) return '—';
+    return new Date(d).toLocaleDateString('fr-FR', {
+      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  formatDuree(min?: number | null): string {
+    if (min == null) return '—';
+    if (min < 60) return `${min} min`;
+    const h = Math.floor(min / 60);
+    const m = min % 60;
+    return m ? `${h}h ${m}min` : `${h}h`;
+  }
+
+  get etapesSuivi() {
+    const s = this.livraison?.suivi;
+    if (!s) return [];
+    return [
+      { label: 'Commande créée', icon: 'fa-plus', date: s.dateCreation, acteur: null, dureeLabel: '', duree: null, color: 'text-blue-500' },
+      { label: 'Prise en charge', icon: 'fa-clipboard-check', date: s.datePriseEnCharge, acteur: this.nomActeur(s.closeur), dureeLabel: 'délai', duree: s.minutesPriseEnCharge, color: 'text-indigo-500' },
+      { label: 'Confirmée', icon: 'fa-check', date: s.dateConfirmation, acteur: this.nomActeur(s.closeur), dureeLabel: '', duree: null, color: 'text-emerald-500' },
+      { label: 'Prête à livrer', icon: 'fa-box-open', date: s.datePreteALivrer, acteur: this.nomActeur(s.closeur), dureeLabel: 'closing', duree: s.minutesClosing, color: 'text-teal-500' },
+      { label: 'Assignée (dispatch)', icon: 'fa-truck-arrow-right', date: s.dateAssignation, acteur: this.nomActeur(s.dispatcheur), dureeLabel: 'dispatch', duree: s.minutesDispatch, color: 'text-orange-500' },
+      { label: 'Livrée', icon: 'fa-circle-check', date: s.dateLivraison, acteur: this.livraison?.livreur ? this.nomActeur(this.livraison.livreur) : '—', dureeLabel: 'livraison', duree: s.minutesLivraison, color: 'text-green-600' },
+    ].filter(e => e.date);
+  }
+
   loadLivraison(id: number) {
     this.loading = true;
     this.apiService.getLivraisonById(id).subscribe({

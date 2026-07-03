@@ -111,7 +111,7 @@
 
 <!-- Modal création -->
 <div *ngIf="showCreateModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-  <div class="card max-w-lg w-full">
+  <div class="card max-w-lg w-full max-h-[90vh] overflow-y-auto overscroll-contain">
     <h2 class="text-lg font-bold text-foreground mb-4">Nouveau produit</h2>
     <div class="mb-3">
       <label class="form-label">Nom *</label>
@@ -153,7 +153,7 @@
 
 <!-- Modal entrée / ajustement -->
 <div *ngIf="showStockModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-  <div class="card max-w-md w-full">
+  <div class="card max-w-md w-full max-h-[90vh] overflow-y-auto overscroll-contain">
     <h2 class="text-lg font-bold text-foreground mb-1">
       {{ stockMode === 'entree' ? 'Entrée de stock' : 'Ajustement (inventaire)' }}
     </h2>

@@ -19,7 +19,7 @@
 ></div>
 
 <!-- Sidebar Desktop -->
-<aside class="bg-white/85 dark:bg-[#0a1024]/70 backdrop-blur-md border-r border-gray-200 dark:border-white/10 h-screen w-64 hidden md:block sticky top-16">
+<aside class="bg-white/85 dark:bg-[#0a1024]/70 backdrop-blur-md border-r border-gray-200 dark:border-white/10 h-[calc(100vh-4rem)] w-64 hidden md:block sticky top-16 overflow-y-auto overscroll-contain">
   <nav class="p-4 space-y-1.5">
     <a
       *ngFor="let item of menuItems"
