@@ -166,38 +166,23 @@
           </div>
         </div>
 
-        <!-- ÉTAPE 3: Adresse -->
+        <!-- ÉTAPE 3: Adresse (saisie libre) -->
         <div *ngIf="currentStep === 3" class="space-y-4">
           <div>
             <label class="form-label">
-              <i class="fa-solid fa-city mr-1"></i>Commune *
+              <i class="fa-solid fa-location-dot mr-1"></i>Adresse *
             </label>
-            <select formControlName="commune" class="form-select">
-              <option value="">Sélectionner une commune</option>
-              <option *ngFor="let commune of communes" [value]="commune">{{ commune }}</option>
-            </select>
+            <textarea formControlName="adresseComplete" class="form-textarea" rows="3"
+              placeholder="Ex : Sacré-Cœur 3, Villa 123, près de la station Total, Dakar"></textarea>
+            <p class="form-helper text-xs flex items-center gap-1">
+              <i class="fa-solid fa-lightbulb text-yellow-500"></i>
+              <span>Indiquez votre adresse (quartier, commune, repères) en texte libre.</span>
+            </p>
           </div>
 
           <div>
             <label class="form-label">
-              <i class="fa-solid fa-map-pin mr-1"></i>Quartier *
-            </label>
-            <select formControlName="quartier" class="form-select" [disabled]="!registerForm.get('commune')?.value">
-              <option value="">Sélectionner un quartier</option>
-              <option *ngFor="let quartier of filteredQuartiers" [value]="quartier.nom">{{ quartier.nom }}</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="form-label">
-              <i class="fa-solid fa-location-dot mr-1"></i>Adresse complète *
-            </label>
-            <textarea formControlName="adresseComplete" class="form-textarea" rows="3" placeholder="Villa 123, Rue SC-45..."></textarea>
-          </div>
-
-          <div>
-            <label class="form-label">
-              <i class="fa-solid fa-landmark mr-1"></i>Point de repère
+              <i class="fa-solid fa-landmark mr-1"></i>Point de repère (optionnel)
             </label>
             <input formControlName="pointRepere" type="text" class="form-input" placeholder="Près de la station Total..." />
           </div>

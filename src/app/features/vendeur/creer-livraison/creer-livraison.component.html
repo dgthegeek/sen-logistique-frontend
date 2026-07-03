@@ -132,23 +132,26 @@
                                 </p>
                             </div>
 
-                            <!-- Quartier -->
+                            <!-- Quartier (saisie libre + suggestions) -->
                             <div>
                                 <label class="form-label text-xs sm:text-sm flex items-center gap-1">
                                     <i class="fa-solid fa-map-pin text-muted-foreground"></i>
                                     <span>Quartier *</span>
                                 </label>
-                                <select formControlName="quartier" class="form-select text-sm sm:text-base"
+                                <input formControlName="quartier" type="text" list="quartiersDispo"
+                                    class="form-input text-sm sm:text-base"
                                     [class.border-destructive]="livraisonForm.get('quartier')?.invalid && livraisonForm.get('quartier')?.touched"
-                                    [disabled]="!livraisonForm.get('commune')?.value">
-                                    <option value="">Sélectionner un quartier</option>
-                                    <option *ngFor="let quartier of filteredQuartiers" [value]="quartier.nom">
-                                        {{ quartier.nom }}
-                                    </option>
-                                </select>
+                                    placeholder="Choisir dans la liste ou saisir librement" />
+                                <datalist id="quartiersDispo">
+                                    <option *ngFor="let quartier of filteredQuartiers" [value]="quartier.nom"></option>
+                                </datalist>
                                 <p *ngIf="livraisonForm.get('quartier')?.invalid && livraisonForm.get('quartier')?.touched"
                                     class="form-error text-xs">
                                     Le quartier est requis
+                                </p>
+                                <p class="form-helper text-xs flex items-center gap-1">
+                                    <i class="fa-solid fa-lightbulb text-yellow-500"></i>
+                                    <span>Si le quartier n'est pas dans la liste, saisissez-le directement.</span>
                                 </p>
                             </div>
 

@@ -53,8 +53,9 @@ export class RegisterComponent implements OnInit {
       facebook: [''],
       
       // Étape 3: Adresse
-      commune: ['', Validators.required],
-      quartier: ['', Validators.required],
+      // Adresse en texte libre : commune/quartier ne sont plus imposés
+      commune: [''],
+      quartier: [''],
       adresseComplete: ['', Validators.required],
       pointRepere: ['']
     }, {
@@ -138,7 +139,7 @@ export class RegisterComponent implements OnInit {
 
       // Vérifier statut après inscription
       if (response.user.statut === StatutVendeur.EN_ATTENTE_VALIDATION) {
-        this.router.navigate(['/en-attente-validation']);
+        this.router.navigate(['/statut-compte']);
       } else {
         // Cas rare : compte directement actif
         this.router.navigate(['/vendeur/dashboard']);

@@ -171,10 +171,12 @@
 
               <div>
                 <label class="form-label text-xs sm:text-sm">Quartier *</label>
-                <select formControlName="quartier" class="form-select text-sm sm:text-base" [disabled]="!livraisonForm.get('commune')?.value">
-                  <option value="">Sélectionner</option>
-                  <option *ngFor="let q of filteredQuartiers" [value]="q.nom">{{ q.nom }}</option>
-                </select>
+                <input formControlName="quartier" type="text" list="quartiersDispoAdmin"
+                  class="form-input text-sm sm:text-base" placeholder="Choisir ou saisir librement" />
+                <datalist id="quartiersDispoAdmin">
+                  <option *ngFor="let q of filteredQuartiers" [value]="q.nom"></option>
+                </datalist>
+                <p class="form-helper text-xs">Si le quartier n'est pas dans la liste, saisissez-le directement.</p>
               </div>
 
               <div>
