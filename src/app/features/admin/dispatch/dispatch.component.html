@@ -70,6 +70,7 @@
                 <th class="p-2">Zone</th>
                 <th class="p-2">Produit</th>
                 <th class="p-2 text-right">Montant</th>
+                <th class="p-2 text-center">Détails</th>
               </tr>
             </thead>
             <tbody>
@@ -85,6 +86,11 @@
                 <td class="p-2">{{ c.zone }}</td>
                 <td class="p-2">{{ c.produit }}</td>
                 <td class="p-2 text-right font-semibold">{{ c.montantCOD | fcfa }}</td>
+                <td class="p-2 text-center">
+                  <a [routerLink]="['/commande', c.id]" class="text-primary hover:underline" title="Voir le détail">
+                    <i class="fa-solid fa-eye"></i>
+                  </a>
+                </td>
               </tr>
             </tbody>
           </table>

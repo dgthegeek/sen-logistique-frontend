@@ -25,6 +25,7 @@ import {
 } from '../models/stock.model';
 import { BilanVendeur } from '../models/bilan-vendeur.model';
 import { ClassementResponse } from '../models/classement.model';
+import { PerformanceResponse } from '../models/performance.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -74,6 +75,15 @@ export class ApiService {
 
   getLivraisonById(id: number): Observable<LivraisonDetail> {
     return this.http.get<LivraisonDetail>(`${this.baseUrl}/vendeur/livraisons/${id}`);
+  }
+
+  /** Détail d'une commande partagé (closeur / dispatcheur / livreur / admin). */
+  getCommandeDetail(id: number): Observable<LivraisonDetail> {
+    return this.http.get<LivraisonDetail>(`${this.baseUrl}/commandes/${id}`);
+  }
+
+  getPerformance(periode: string = 'mois'): Observable<PerformanceResponse> {
+    return this.http.get<PerformanceResponse>(`${this.baseUrl}/admin/performance`, { params: { periode } });
   }
 
   // Finances

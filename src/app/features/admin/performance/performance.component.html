@@ -1,0 +1,140 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-6xl mx-auto">
+
+        <!-- En-tête -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-1">
+              <i class="fa-solid fa-gauge-high text-primary"></i> Performances de l'équipe
+            </h1>
+            <p class="text-sm text-muted-foreground">Contrôle qualité : prise en charge, dispatch et livraison.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <select [(ngModel)]="periode" (change)="charger()" class="form-select w-full sm:w-44">
+              <option *ngFor="let p of periodes" [value]="p.value">{{ p.label }}</option>
+            </select>
+            <button class="btn-outline" (click)="charger()" title="Actualiser"><i class="fa-solid fa-rotate-right"></i></button>
+          </div>
+        </div>
+
+        <div *ngIf="loading" class="card text-center py-12 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin text-xl mb-2"></i><p class="text-sm">Chargement...</p>
+        </div>
+
+        <div *ngIf="errorMessage && !loading" class="card">
+          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">{{ errorMessage }}</div>
+        </div>
+
+        <div *ngIf="data && !loading" class="space-y-5 sm:space-y-6">
+          <!-- Moyennes globales -->
+          <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+            <div class="stat-card">
+              <div class="stat-card-icon bg-indigo-100 text-indigo-600"><i class="fa-solid fa-clipboard-check"></i></div>
+              <div class="stat-card-value text-lg sm:text-xl">{{ formatDuree(data.tempsMoyenPriseEnChargeMin) }}</div>
+              <div class="stat-card-label text-xs">Prise en charge (moy.)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon bg-orange-100 text-orange-600"><i class="fa-solid fa-truck-arrow-right"></i></div>
+              <div class="stat-card-value text-lg sm:text-xl">{{ formatDuree(data.tempsMoyenDispatchMin) }}</div>
+              <div class="stat-card-label text-xs">Dispatch (moy.)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon bg-green-100 text-green-600"><i class="fa-solid fa-motorcycle"></i></div>
+              <div class="stat-card-value text-lg sm:text-xl">{{ formatDuree(data.tempsMoyenLivraisonMin) }}</div>
+              <div class="stat-card-label text-xs">Livraison (moy.)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon bg-emerald-100 text-emerald-600"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="stat-card-value text-xl">{{ data.totalLivrees }}</div>
+              <div class="stat-card-label text-xs">Livrées</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon bg-red-100 text-red-600"><i class="fa-solid fa-circle-xmark"></i></div>
+              <div class="stat-card-value text-xl">{{ data.totalEchecs }}</div>
+              <div class="stat-card-label text-xs">Échecs</div>
+            </div>
+          </div>
+
+          <!-- Closeurs -->
+          <div class="card overflow-x-auto">
+            <h2 class="text-lg font-bold text-foreground mb-3 flex items-center gap-2"><i class="fa-solid fa-headset text-primary"></i> Closeurs</h2>
+            <table class="w-full text-sm">
+              <thead><tr class="text-left text-muted-foreground border-b border-border">
+                <th class="p-2">Closeur</th>
+                <th class="p-2 text-center">Prises en charge</th>
+                <th class="p-2 text-center">Prêtes à livrer</th>
+                <th class="p-2 text-center">Délai prise en charge</th>
+                <th class="p-2 text-center">Temps closing</th>
+              </tr></thead>
+              <tbody>
+                <tr *ngIf="data.closeurs.length === 0"><td colspan="5" class="p-4 text-center text-muted-foreground">Aucune activité.</td></tr>
+                <tr *ngFor="let c of data.closeurs" class="border-b border-border/50">
+                  <td class="p-2 font-medium text-foreground">{{ c.prenom }} {{ c.nom }}</td>
+                  <td class="p-2 text-center font-semibold">{{ c.nombrePrisEnCharge }}</td>
+                  <td class="p-2 text-center">{{ c.nombrePretes }}</td>
+                  <td class="p-2 text-center">{{ formatDuree(c.tempsMoyenPriseEnChargeMin) }}</td>
+                  <td class="p-2 text-center">{{ formatDuree(c.tempsMoyenClosingMin) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Dispatcheurs -->
+          <div class="card overflow-x-auto">
+            <h2 class="text-lg font-bold text-foreground mb-3 flex items-center gap-2"><i class="fa-solid fa-truck-arrow-right text-primary"></i> Dispatcheurs</h2>
+            <table class="w-full text-sm">
+              <thead><tr class="text-left text-muted-foreground border-b border-border">
+                <th class="p-2">Dispatcheur</th>
+                <th class="p-2 text-center">Commandes dispatchées</th>
+                <th class="p-2 text-center">Délai de dispatch (moy.)</th>
+              </tr></thead>
+              <tbody>
+                <tr *ngIf="data.dispatcheurs.length === 0"><td colspan="3" class="p-4 text-center text-muted-foreground">Aucune activité.</td></tr>
+                <tr *ngFor="let d of data.dispatcheurs" class="border-b border-border/50">
+                  <td class="p-2 font-medium text-foreground">{{ d.prenom }} {{ d.nom }}</td>
+                  <td class="p-2 text-center font-semibold">{{ d.nombreDispatchees }}</td>
+                  <td class="p-2 text-center">{{ formatDuree(d.tempsMoyenDispatchMin) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Livreurs -->
+          <div class="card overflow-x-auto">
+            <h2 class="text-lg font-bold text-foreground mb-3 flex items-center gap-2"><i class="fa-solid fa-motorcycle text-primary"></i> Livreurs</h2>
+            <table class="w-full text-sm">
+              <thead><tr class="text-left text-muted-foreground border-b border-border">
+                <th class="p-2">Livreur</th>
+                <th class="p-2 text-center">Livrées</th>
+                <th class="p-2 text-center">Échecs</th>
+                <th class="p-2 text-center">Taux réussite</th>
+                <th class="p-2 text-center">Temps livraison (moy.)</th>
+              </tr></thead>
+              <tbody>
+                <tr *ngIf="data.livreurs.length === 0"><td colspan="5" class="p-4 text-center text-muted-foreground">Aucune activité.</td></tr>
+                <tr *ngFor="let v of data.livreurs" class="border-b border-border/50">
+                  <td class="p-2 font-medium text-foreground">{{ v.prenom }} {{ v.nom }}</td>
+                  <td class="p-2 text-center font-semibold text-green-600">{{ v.nombreLivrees }}</td>
+                  <td class="p-2 text-center text-red-600">{{ v.nombreEchecs }}</td>
+                  <td class="p-2 text-center">
+                    <span class="badge" [ngClass]="v.tauxReussite >= 80 ? 'badge-delivered' : v.tauxReussite >= 50 ? 'badge-pending' : 'badge-canceled'">
+                      {{ v.tauxReussite }}%
+                    </span>
+                  </td>
+                  <td class="p-2 text-center">{{ formatDuree(v.tempsMoyenLivraisonMin) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>

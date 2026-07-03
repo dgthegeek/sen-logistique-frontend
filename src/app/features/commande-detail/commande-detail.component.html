@@ -1,0 +1,115 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-3xl mx-auto">
+
+        <button class="btn-ghost mb-4" (click)="retour()">
+          <i class="fa-solid fa-arrow-left mr-2"></i> Retour
+        </button>
+
+        <div *ngIf="loading" class="card text-center py-12 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin text-xl mb-2"></i>
+          <p class="text-sm">Chargement...</p>
+        </div>
+
+        <div *ngIf="errorMessage && !loading" class="card">
+          <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+            <i class="fa-solid fa-circle-exclamation mr-2"></i>{{ errorMessage }}
+          </div>
+        </div>
+
+        <div *ngIf="livraison && !loading" class="space-y-4 sm:space-y-6">
+          <!-- En-tête -->
+          <div class="card">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="font-mono text-sm text-muted-foreground">{{ livraison.numeroTracking }}</div>
+                <h1 class="text-xl sm:text-2xl font-bold text-foreground">{{ livraison.client.nom }}</h1>
+                <p class="text-sm text-muted-foreground">
+                  <i class="fa-solid fa-location-dot mr-1"></i>{{ livraison.client.adresse }}
+                  <span *ngIf="livraison.zone"> — {{ livraison.zone }}</span>
+                </p>
+              </div>
+              <span class="badge badge-transit whitespace-nowrap">{{ statutLabels[livraison.statut] || livraison.statut }}</span>
+            </div>
+          </div>
+
+          <!-- Traçabilité qualité -->
+          <div class="card">
+            <h2 class="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-route text-primary"></i> Traçabilité qualité
+            </h2>
+            <div class="relative pl-3">
+              <div class="absolute left-[1.15rem] top-1 bottom-1 w-px bg-border"></div>
+              <div *ngFor="let e of etapes" class="relative flex gap-3 pb-5 last:pb-0">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-card border-2 border-border flex items-center justify-center flex-shrink-0">
+                  <i class="fa-solid text-sm" [ngClass]="[e.icon, e.color]"></i>
+                </div>
+                <div class="flex-1 min-w-0 pt-1">
+                  <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span class="font-semibold text-foreground">{{ e.label }}</span>
+                    <span *ngIf="e.duree != null" class="badge badge-pending text-[10px]">
+                      <i class="fa-solid fa-clock mr-1"></i>{{ e.dureeLabel }} : {{ formatDuree(e.duree) }}
+                    </span>
+                  </div>
+                  <div class="text-xs text-muted-foreground mt-0.5">{{ formatDate(e.date) }}</div>
+                  <div *ngIf="e.acteur && e.acteur !== '—'" class="text-xs text-foreground mt-0.5">
+                    <i class="fa-solid fa-user mr-1 text-muted-foreground"></i>{{ e.acteur }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acteurs -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="card">
+              <div class="text-xs text-muted-foreground mb-1"><i class="fa-solid fa-headset mr-1"></i>Closeur</div>
+              <div class="font-semibold text-foreground">{{ nom(livraison.suivi?.closeur) }}</div>
+            </div>
+            <div class="card">
+              <div class="text-xs text-muted-foreground mb-1"><i class="fa-solid fa-truck-arrow-right mr-1"></i>Dispatcheur</div>
+              <div class="font-semibold text-foreground">{{ nom(livraison.suivi?.dispatcheur) }}</div>
+            </div>
+            <div class="card">
+              <div class="text-xs text-muted-foreground mb-1"><i class="fa-solid fa-motorcycle mr-1"></i>Livreur</div>
+              <div class="font-semibold text-foreground">{{ livraison.livreur ? nom(livraison.livreur) : '—' }}</div>
+            </div>
+          </div>
+
+          <!-- Infos -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="card">
+              <h3 class="font-semibold text-foreground mb-2"><i class="fa-solid fa-user mr-2 text-primary"></i>Client</h3>
+              <div class="text-sm space-y-1">
+                <div><span class="text-muted-foreground">Nom :</span> {{ livraison.client.nom }}</div>
+                <div><span class="text-muted-foreground">Tél :</span>
+                  <a [href]="'tel:' + livraison.client.telephone" class="text-primary hover:underline">{{ livraison.client.telephone }}</a>
+                </div>
+                <div *ngIf="livraison.client.pointRepere"><span class="text-muted-foreground">Repère :</span> {{ livraison.client.pointRepere }}</div>
+              </div>
+            </div>
+            <div class="card">
+              <h3 class="font-semibold text-foreground mb-2"><i class="fa-solid fa-box mr-2 text-primary"></i>Produit & montant</h3>
+              <div class="text-sm space-y-1">
+                <div>{{ livraison.produit.description }}</div>
+                <div><span class="text-muted-foreground">À collecter (COD) :</span> <strong>{{ livraison.financier.montantCOD | fcfa }}</strong></div>
+                <div *ngIf="livraison.financier.cashCollecte != null"><span class="text-muted-foreground">Encaissé :</span> {{ livraison.financier.cashCollecte | fcfa }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="livraison.commentaireLivraison" class="card">
+            <h3 class="font-semibold text-foreground mb-1"><i class="fa-solid fa-comment-dots mr-2 text-primary"></i>Commentaire</h3>
+            <p class="text-sm text-muted-foreground">{{ livraison.commentaireLivraison }}</p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>

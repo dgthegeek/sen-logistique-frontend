@@ -33,6 +33,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Livraisons', route: '/admin/livraisons', icon: 'fa-solid fa-truck' },
         { label: 'Dispatch livreurs', route: '/admin/dispatch', icon: 'fa-solid fa-truck-arrow-right' },
         { label: 'Équipe', route: '/admin/equipe', icon: 'fa-solid fa-users-gear' },
+        { label: 'Performances équipe', route: '/admin/performance', icon: 'fa-solid fa-gauge-high' },
         { label: 'Finances', route: '/admin/finances', icon: 'fa-solid fa-money-bill-trend-up' },
         { label: 'Bilan partenaires', route: '/admin/bilan', icon: 'fa-solid fa-file-invoice' },
         { label: 'Dioks League', route: '/admin/classement', icon: 'fa-solid fa-trophy' },

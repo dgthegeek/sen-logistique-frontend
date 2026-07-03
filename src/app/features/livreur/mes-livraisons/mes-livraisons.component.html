@@ -75,6 +75,9 @@
 
             <!-- Actions : pleine largeur sur mobile -->
             <div class="grid grid-cols-1 sm:flex sm:flex-wrap gap-2">
+              <a [routerLink]="['/commande', l.id]" class="btn-outline w-full sm:w-auto text-center">
+                <i class="fa-solid fa-eye"></i> Détails
+              </a>
               <button *ngIf="l.statut === 'ASSIGNEE'" class="btn-primary w-full sm:w-auto"
                       [disabled]="actionEnCours === l.id" (click)="commencer(l)">
                 <i class="fa-solid fa-play"></i> Commencer la livraison

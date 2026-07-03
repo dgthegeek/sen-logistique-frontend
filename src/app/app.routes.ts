@@ -10,6 +10,8 @@ import { livreurGuard } from './core/guards/livreur.guard';
 import { dispatcheurGuard } from './core/guards/dispatcheur.guard';
 import { BilanComponent } from './features/bilan/bilan.component';
 import { ClassementComponent } from './features/classement/classement.component';
+import { CommandeDetailComponent } from './features/commande-detail/commande-detail.component';
+import { AdminPerformanceComponent } from './features/admin/performance/performance.component';
 
 // Closing / Dispatch imports
 import { CloseurCommandesComponent } from './features/closeur/commandes/commandes.component';
@@ -106,6 +108,7 @@ export const routes: Routes = [
       { path: 'vendeurs', component: GestionVendeursComponent },
       { path: 'bilan', component: BilanComponent },
       { path: 'classement', component: ClassementComponent },
+      { path: 'performance', component: AdminPerformanceComponent },
       { path: 'vendeurs/:id/bilan', component: BilanComponent },
       { path: 'zones', component: ZonesComponent },      // ← NOUVEAU
       { path: 'profil', component: ProfilComponent },
@@ -139,6 +142,9 @@ export const routes: Routes = [
       { path: 'profil', component: ProfilComponent },
     ]
   },
+
+  // Détail commande partagé (staff : closeur, dispatcheur, livreur, admin)
+  { path: 'commande/:id', canActivate: [authGuard], component: CommandeDetailComponent },
 
   // Dispatcheur routes (module Dispatch : prépare et assigne aux livreurs)
   {

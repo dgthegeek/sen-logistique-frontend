@@ -146,6 +146,23 @@ export interface LivraisonDetail {
     prenom: string;
     telephone: string;
   } | null;
+  suivi?: SuiviQualite;
+}
+
+export interface SuiviQualite {
+  closeur?: { nom: string; prenom: string } | null;
+  dispatcheur?: { nom: string; prenom: string } | null;
+  dateCreation?: string;
+  datePriseEnCharge?: string;
+  dateConfirmation?: string;
+  datePreteALivrer?: string;
+  dateAssignation?: string;
+  dateLivraison?: string;
+  dateEchec?: string;
+  minutesPriseEnCharge?: number;
+  minutesClosing?: number;
+  minutesDispatch?: number;
+  minutesLivraison?: number;
 }
 
 // Response paginée

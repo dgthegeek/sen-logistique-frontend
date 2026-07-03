@@ -80,6 +80,9 @@
 
             <!-- Actions : pleine largeur mobile, alignées desktop -->
             <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+              <a [routerLink]="['/commande', c.id]" class="btn-outline w-full sm:w-auto text-center">
+                <i class="fa-solid fa-eye"></i> Détails
+              </a>
               <button *ngIf="c.statut === 'NOUVELLE'" class="btn-secondary w-full sm:w-auto"
                       [disabled]="actionEnCours === c.id" (click)="appeler(c)">
                 <i class="fa-solid fa-clipboard-check"></i> Prendre en charge
