@@ -26,6 +26,7 @@ import {
 import { BilanVendeur } from '../models/bilan-vendeur.model';
 import { ClassementResponse } from '../models/classement.model';
 import { PerformanceResponse } from '../models/performance.model';
+import { TelegramStatut } from '../models/telegram.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -142,6 +143,16 @@ export class ApiService {
 
   getAdminClassement(): Observable<ClassementResponse> {
     return this.http.get<ClassementResponse>(`${this.baseUrl}/admin/classement`);
+  }
+
+  // ========== NOTIFICATIONS TELEGRAM ==========
+
+  getTelegramStatut(): Observable<TelegramStatut> {
+    return this.http.get<TelegramStatut>(`${this.baseUrl}/vendeur/telegram`);
+  }
+
+  delierTelegram(): Observable<TelegramStatut> {
+    return this.http.post<TelegramStatut>(`${this.baseUrl}/vendeur/telegram/delier`, {});
   }
 
   // ========== ADMIN ==========

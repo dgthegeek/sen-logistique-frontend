@@ -56,6 +56,39 @@
             </div>
           </div>
 
+          <!-- Notifications Telegram (vendeur) -->
+          <div *ngIf="isVendeur && telegram?.enabled" class="card mb-4 sm:mb-6">
+            <h3 class="text-lg font-semibold flex items-center gap-2 mb-2">
+              <i class="fa-brands fa-telegram text-[#229ED9]"></i>Notifications Telegram
+            </h3>
+            <p class="text-sm text-muted-foreground mb-4">
+              Recevez une notification à chaque commande confirmée, livrée, paiement approuvé et alerte de stock.
+            </p>
+
+            <!-- Lié -->
+            <div *ngIf="telegram?.lie" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div class="flex items-center gap-2 text-green-600 font-medium">
+                <i class="fa-solid fa-circle-check"></i> Compte Telegram lié
+              </div>
+              <button class="btn-outline text-sm" [disabled]="telegramLoading" (click)="delierTelegram()">
+                <i class="fa-solid fa-link-slash mr-2"></i>Délier
+              </button>
+            </div>
+
+            <!-- Non lié -->
+            <div *ngIf="!telegram?.lie" class="flex flex-col sm:flex-row sm:items-center gap-2">
+              <button class="btn-primary text-sm" [disabled]="telegramLoading || !telegram?.deepLink" (click)="ouvrirTelegram()">
+                <i class="fa-brands fa-telegram mr-2"></i>Lier mon Telegram
+              </button>
+              <button class="btn-outline text-sm" [disabled]="telegramLoading" (click)="rafraichirTelegram()">
+                <i class="fa-solid fa-rotate-right mr-2"></i>J'ai lié, actualiser
+              </button>
+            </div>
+            <p *ngIf="!telegram?.lie" class="text-xs text-muted-foreground mt-2">
+              Ouvrez le bot, cliquez sur <strong>Démarrer</strong>, puis revenez ici et actualisez.
+            </p>
+          </div>
+
           <!-- Profile Form -->
           <div class="card mb-4 sm:mb-6">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">

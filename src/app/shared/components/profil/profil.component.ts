@@ -6,7 +6,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ProfilService } from '../../../core/services/profile.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ApiService } from '../../../core/services/api.service';
 import { ProfilResponse } from '../../../core/models/profile.model';
+import { TelegramStatut } from '../../../core/models/telegram.model';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 
@@ -27,11 +29,16 @@ export class ProfilComponent implements OnInit {
 
   showPasswordModal = false;
 
+  // Telegram
+  telegram: TelegramStatut | null = null;
+  telegramLoading = false;
+
   constructor(
     private profilService: ProfilService,
     private fb: FormBuilder,
     private toastService: ToastService,
-    private authService: AuthService
+    private authService: AuthService,
+    private api: ApiService
   ) {
     this.initForms();
   }
@@ -39,6 +46,36 @@ export class ProfilComponent implements OnInit {
   ngOnInit() {
     this.isVendeur = this.authService.isVendeur();
     this.loadProfil();
+    if (this.isVendeur) {
+      this.loadTelegram();
+    }
+  }
+
+  loadTelegram() {
+    this.telegramLoading = true;
+    this.api.getTelegramStatut().subscribe({
+      next: (t) => { this.telegram = t; this.telegramLoading = false; },
+      error: () => { this.telegramLoading = false; }
+    });
+  }
+
+  ouvrirTelegram() {
+    if (this.telegram?.deepLink) {
+      window.open(this.telegram.deepLink, '_blank');
+      this.toastService.info('Cliquez sur "Démarrer" dans Telegram, puis actualisez.');
+    }
+  }
+
+  rafraichirTelegram() {
+    this.loadTelegram();
+  }
+
+  delierTelegram() {
+    this.telegramLoading = true;
+    this.api.delierTelegram().subscribe({
+      next: (t) => { this.telegram = t; this.telegramLoading = false; this.toastService.success('Compte Telegram délié'); },
+      error: () => { this.telegramLoading = false; this.toastService.error('Action impossible'); }
+    });
   }
 
   initForms() {
