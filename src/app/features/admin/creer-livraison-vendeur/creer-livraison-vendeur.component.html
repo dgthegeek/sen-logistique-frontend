@@ -155,9 +155,9 @@
 
               <div>
                 <label class="form-label text-xs sm:text-sm">Téléphone *</label>
-                <input formControlName="telephoneClient" type="tel" class="form-input text-sm sm:text-base" placeholder="77 123 45 67" />
+                <input formControlName="telephoneClient" type="tel" class="form-input text-sm sm:text-base" placeholder="Ex : 771234567" />
                 <p *ngIf="livraisonForm.get('telephoneClient')?.invalid && livraisonForm.get('telephoneClient')?.touched" class="form-error text-xs sm:text-sm">
-                  Format invalide (77 XXX XX XX)
+                  Numéro invalide (au moins 9 chiffres)
                 </p>
               </div>
 
@@ -275,12 +275,13 @@
               </div>
 
               <div>
-                <label class="form-label text-xs sm:text-sm">Prix de la commande (calculé automatiquement)</label>
-                <div class="form-input flex items-center justify-between bg-muted/40 cursor-not-allowed">
-                  <span class="text-lg sm:text-xl font-bold text-green-600">{{ produitsTotal | fcfa }}</span>
-                  <i class="fa-solid fa-lock text-muted-foreground text-sm"></i>
+                <label class="form-label text-xs sm:text-sm">Prix de la commande (modifiable)</label>
+                <div class="relative">
+                  <input formControlName="montantProduit" type="number" min="0"
+                    class="form-input pr-16 text-lg sm:text-xl font-bold text-green-600" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-muted-foreground">FCFA</span>
                 </div>
-                <p class="form-helper text-xs">Total des produits sélectionnés — le vendeur recevra ce montant.</p>
+                <p class="form-helper text-xs">Calculé auto depuis les produits ({{ produitsTotal | fcfa }}) — ajustable. Le vendeur recevra ce montant.</p>
               </div>
 
               <div>

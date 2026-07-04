@@ -40,7 +40,7 @@ export class RegisterComponent implements OnInit {
       prenom: ['', Validators.required],
       telephone: ['', [
         Validators.required,
-        Validators.pattern(/^(77|78|76|70|75)\d{7}$/)
+        Validators.pattern(/^\+?[0-9]{9,}$/)
       ]],
       email: ['', [Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],

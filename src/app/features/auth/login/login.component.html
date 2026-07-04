@@ -29,12 +29,12 @@
             formControlName="telephone"
             class="form-input pl-10"
             [class.border-destructive]="telephone?.invalid && telephone?.touched"
-            placeholder="77 123 45 67"
+            placeholder="Ex : 771234567"
           />
           <i class="fa-solid fa-mobile-screen-button absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
         </div>
         <p *ngIf="telephone?.invalid && telephone?.touched" class="form-error">
-          <i class="fa-solid fa-triangle-exclamation mr-1"></i>Numéro de téléphone invalide (ex: 77 123 45 67)
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>Numéro invalide (au moins 9 chiffres)
         </p>
       </div>
 

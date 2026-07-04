@@ -52,7 +52,7 @@ export class CreerLivraisonComponent implements OnInit {
       nomClient: ['', Validators.required],
       telephoneClient: ['', [
         Validators.required,
-        Validators.pattern(/^(77|78|76|70|75)\d{7}$/)
+        Validators.pattern(/^\+?[0-9]{9,}$/)
       ]],
       commune: ['', Validators.required],
       quartier: ['', Validators.required],

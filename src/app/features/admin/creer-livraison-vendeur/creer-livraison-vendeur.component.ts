@@ -133,7 +133,7 @@ export class CreerLivraisonVendeurComponent implements OnInit {
     this.livraisonForm = this.fb.group({
       // Infos client
       nomClient: ['', [Validators.required, Validators.minLength(2)]],
-      telephoneClient: ['', [Validators.required, Validators.pattern(/^(77|78|76|70|75)[0-9]{7}$/)]],
+      telephoneClient: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{9,}$/)]],
       commune: ['', Validators.required],
       quartier: ['', Validators.required],
       adresseComplete: ['', Validators.required],

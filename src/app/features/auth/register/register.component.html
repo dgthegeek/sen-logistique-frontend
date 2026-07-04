@@ -91,9 +91,9 @@
             <label class="form-label">
               <i class="fa-solid fa-phone mr-1"></i>Téléphone *
             </label>
-            <input formControlName="telephone" type="tel" class="form-input" placeholder="77 123 45 67" />
+            <input formControlName="telephone" type="tel" class="form-input" placeholder="Ex : 771234567" />
             <p *ngIf="registerForm.get('telephone')?.invalid && registerForm.get('telephone')?.touched" class="form-error">
-              <i class="fa-solid fa-triangle-exclamation mr-1"></i>Format invalide (ex: 77 123 45 67)
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i>Numéro invalide (au moins 9 chiffres)
             </p>
           </div>
 
