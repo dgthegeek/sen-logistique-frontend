@@ -31,6 +31,7 @@ export interface VendeurDTO {
   valideLe?: string;
   soldeEnAttente: number;
   raisonSuspension?: string;
+  commissionFixe?: number;
 }
 
 export interface VendeurDetailDTO {
@@ -51,6 +52,7 @@ export interface VendeurDetailDTO {
   valideLe?: string;
   soldeEnAttente: number;
   raisonSuspension?: string;
+  commissionFixe?: number;
   validePar?: {
     id: number;
     nom: string;

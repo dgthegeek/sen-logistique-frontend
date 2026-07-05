@@ -503,6 +503,18 @@
             }}</span>
         </div>
 
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-money-bill-wave text-primary"></i>
+          <span class="text-muted-foreground">Commission (prix livraison):</span>
+          <span class="ml-auto font-semibold text-primary">
+            {{ selectedVendeur.commissionFixe != null ? (selectedVendeur.commissionFixe | fcfa) : 'Non définie' }}
+          </span>
+          <button (click)="openCommissionModal(selectedVendeur)"
+            class="ml-2 text-primary hover:underline text-xs" title="Modifier la commission">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+        </div>
+
         <div *ngIf="selectedVendeur.raisonSuspension" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
           <div class="text-xs sm:text-sm font-semibold text-red-800 mb-1 flex items-center gap-2">
             <i class="fa-solid fa-triangle-exclamation"></i>
@@ -565,6 +577,19 @@
         required></textarea>
     </div>
 
+    <!-- Champ commission (validation) -->
+    <div *ngIf="actionType === 'valider'" class="mb-4 sm:mb-6">
+      <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+        <i class="fa-solid fa-money-bill-wave text-muted-foreground"></i>
+        <span>Commission / prix de livraison (FCFA) *</span>
+      </label>
+      <input type="number" min="0" step="100" [(ngModel)]="commissionAction" class="form-input text-sm"
+        placeholder="Ex: 2000" required>
+      <p class="text-[11px] sm:text-xs text-muted-foreground mt-1">
+        Cette commission est le prix fixe appliqué à chaque livraison de ce vendeur.
+      </p>
+    </div>
+
     <!-- Confirmation message -->
     <div class="p-3 sm:p-4 rounded-lg mb-4 sm:mb-6"
       [class.bg-green-50]="actionType === 'valider' || actionType === 'reactiver'"
@@ -578,7 +603,8 @@
         <i *ngIf="actionType === 'reactiver'" class="fa-solid fa-circle-check text-green-600 mt-0.5"></i>
         <span>
           <span *ngIf="actionType === 'valider'">
-            Le vendeur pourra accéder à la plateforme et créer des livraisons.
+            Le vendeur pourra accéder à la plateforme et créer des livraisons. La commission saisie
+            servira de prix de livraison fixe pour toutes ses commandes.
           </span>
           <span *ngIf="actionType === 'suspendre'">
             Le vendeur sera suspendu temporairement. Il pourra être réactivé plus tard.
@@ -612,6 +638,47 @@
           <i class="fa-solid fa-spinner fa-spin mr-2"></i>
           En cours...
         </span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal commission -->
+<div *ngIf="showCommissionModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+  (click)="closeCommissionModal()">
+  <div class="card max-w-md w-full" (click)="$event.stopPropagation()">
+    <h2 class="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-money-bill-wave text-primary"></i>
+      <span>Commission du vendeur</span>
+    </h2>
+
+    <p class="text-sm sm:text-base text-muted-foreground mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-user-circle"></i>
+      <span>{{ commissionVendeur?.prenom }} {{ commissionVendeur?.nom }}</span>
+    </p>
+
+    <div class="mb-4 sm:mb-6">
+      <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+        <i class="fa-solid fa-money-bill-wave text-muted-foreground"></i>
+        <span>Commission / prix de livraison (FCFA) *</span>
+      </label>
+      <input type="number" min="0" step="100" [(ngModel)]="commissionValue" class="form-input text-sm"
+        placeholder="Ex: 2000" required>
+      <p class="text-[11px] sm:text-xs text-muted-foreground mt-1">
+        Prix fixe appliqué à chaque livraison de ce vendeur.
+      </p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+      <button (click)="closeCommissionModal()" class="btn-outline text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
+        [disabled]="submittingCommission">
+        <i class="fa-solid fa-xmark mr-2"></i>
+        Annuler
+      </button>
+      <button (click)="saveCommission()" class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1"
+        [disabled]="submittingCommission">
+        <span *ngIf="!submittingCommission"><i class="fa-solid fa-check mr-2"></i>Enregistrer</span>
+        <span *ngIf="submittingCommission"><i class="fa-solid fa-spinner fa-spin mr-2"></i>En cours...</span>
       </button>
     </div>
   </div>

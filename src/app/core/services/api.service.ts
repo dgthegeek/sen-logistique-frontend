@@ -320,9 +320,15 @@ export class ApiService {
     return this.http.get<VendeurDetailDTO>(`${this.baseUrl}/admin/vendeurs/${id}`);
   }
 
-  // Valider un vendeur
-  validerVendeur(id: number): Observable<AdminVendeurActionResponse> {
-    return this.http.post<AdminVendeurActionResponse>(`${this.baseUrl}/admin/vendeurs/${id}/valider`, {});
+  // Valider un vendeur (avec commission fixe = prix de livraison du vendeur)
+  validerVendeur(id: number, commission?: number): Observable<AdminVendeurActionResponse> {
+    const body = commission != null ? { commission } : {};
+    return this.http.post<AdminVendeurActionResponse>(`${this.baseUrl}/admin/vendeurs/${id}/valider`, body);
+  }
+
+  // Régler / modifier la commission fixe d'un vendeur
+  setCommissionVendeur(id: number, commission: number): Observable<VendeurDetailDTO> {
+    return this.http.put<VendeurDetailDTO>(`${this.baseUrl}/admin/vendeurs/${id}/commission`, { commission });
   }
 
   // Suspendre un vendeur

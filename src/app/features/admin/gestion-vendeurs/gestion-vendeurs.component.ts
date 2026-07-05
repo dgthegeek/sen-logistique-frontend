@@ -58,7 +58,14 @@ export class GestionVendeursComponent implements OnInit {
   showActionModal = false;
   actionType: 'valider' | 'suspendre' | 'bloquer' | 'reactiver' = 'valider';
   raisonAction = '';
+  commissionAction: number | null = null;
   submittingAction = false;
+
+  // Modal commission (modifier la commission d'un vendeur déjà validé)
+  showCommissionModal = false;
+  commissionVendeur: VendeurDetailDTO | null = null;
+  commissionValue: number | null = null;
+  submittingCommission = false;
   
   StatutVendeur = StatutVendeur;
 
@@ -174,6 +181,7 @@ export class GestionVendeursComponent implements OnInit {
     this.selectedVendeur = vendeur as any; // Cast temporaire
     this.actionType = action;
     this.raisonAction = '';
+    this.commissionAction = vendeur.commissionFixe ?? null;
     this.showActionModal = true;
   }
 
@@ -181,6 +189,44 @@ export class GestionVendeursComponent implements OnInit {
     this.showActionModal = false;
     this.selectedVendeur = null;
     this.raisonAction = '';
+    this.commissionAction = null;
+  }
+
+  openCommissionModal(vendeur: VendeurDetailDTO) {
+    this.commissionVendeur = vendeur;
+    this.commissionValue = vendeur.commissionFixe ?? null;
+    this.showCommissionModal = true;
+  }
+
+  closeCommissionModal() {
+    this.showCommissionModal = false;
+    this.commissionVendeur = null;
+    this.commissionValue = null;
+  }
+
+  saveCommission() {
+    if (!this.commissionVendeur) return;
+    if (this.commissionValue == null || this.commissionValue <= 0) {
+      this.toastService.warning('Veuillez indiquer une commission valide');
+      return;
+    }
+    this.submittingCommission = true;
+    this.apiService.setCommissionVendeur(this.commissionVendeur.id, this.commissionValue).subscribe({
+      next: (vendeur) => {
+        this.toastService.success('Commission mise à jour');
+        if (this.selectedVendeur && this.selectedVendeur.id === vendeur.id) {
+          this.selectedVendeur.commissionFixe = vendeur.commissionFixe;
+        }
+        this.closeCommissionModal();
+        this.loadVendeurs();
+        this.submittingCommission = false;
+      },
+      error: (error) => {
+        console.error('Erreur:', error);
+        this.toastService.error(error.error?.message || 'Erreur lors de la mise à jour');
+        this.submittingCommission = false;
+      }
+    });
   }
 
   executeAction() {
@@ -191,12 +237,17 @@ export class GestionVendeursComponent implements OnInit {
       return;
     }
 
+    if (this.actionType === 'valider' && (this.commissionAction == null || this.commissionAction <= 0)) {
+      this.toastService.warning('Veuillez indiquer la commission (prix de livraison) du vendeur');
+      return;
+    }
+
     this.submittingAction = true;
     let action$;
 
     switch (this.actionType) {
       case 'valider':
-        action$ = this.apiService.validerVendeur(this.selectedVendeur.id);
+        action$ = this.apiService.validerVendeur(this.selectedVendeur.id, this.commissionAction!);
         break;
       case 'suspendre':
         action$ = this.apiService.suspendreVendeur(this.selectedVendeur.id, { raison: this.raisonAction });
