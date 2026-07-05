@@ -46,9 +46,8 @@ export class ProfilComponent implements OnInit {
   ngOnInit() {
     this.isVendeur = this.authService.isVendeur();
     this.loadProfil();
-    if (this.isVendeur) {
-      this.loadTelegram();
-    }
+    // Telegram disponible pour tous les rôles (chacun lie son propre compte)
+    this.loadTelegram();
   }
 
   loadTelegram() {

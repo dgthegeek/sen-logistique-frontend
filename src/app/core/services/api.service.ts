@@ -147,12 +147,13 @@ export class ApiService {
 
   // ========== NOTIFICATIONS TELEGRAM ==========
 
+  // Endpoints Telegram génériques (tous les rôles peuvent lier leur compte)
   getTelegramStatut(): Observable<TelegramStatut> {
-    return this.http.get<TelegramStatut>(`${this.baseUrl}/vendeur/telegram`);
+    return this.http.get<TelegramStatut>(`${this.baseUrl}/profil/telegram`);
   }
 
   delierTelegram(): Observable<TelegramStatut> {
-    return this.http.post<TelegramStatut>(`${this.baseUrl}/vendeur/telegram/delier`, {});
+    return this.http.post<TelegramStatut>(`${this.baseUrl}/profil/telegram/delier`, {});
   }
 
   // ========== ADMIN ==========

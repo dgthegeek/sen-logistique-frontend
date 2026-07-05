@@ -57,12 +57,13 @@
           </div>
 
           <!-- Notifications Telegram (vendeur) -->
-          <div *ngIf="isVendeur && telegram?.enabled" class="card mb-4 sm:mb-6">
+          <div *ngIf="telegram?.enabled" class="card mb-4 sm:mb-6">
             <h3 class="text-lg font-semibold flex items-center gap-2 mb-2">
               <i class="fa-brands fa-telegram text-[#229ED9]"></i>Notifications Telegram
             </h3>
             <p class="text-sm text-muted-foreground mb-4">
-              Recevez une notification à chaque commande confirmée, livrée, paiement approuvé et alerte de stock.
+              Liez votre compte pour recevoir sur Telegram les notifications qui vous concernent
+              (nouvelles commandes, commandes à traiter, livraisons assignées, paiements…).
             </p>
 
             <!-- Lié -->
