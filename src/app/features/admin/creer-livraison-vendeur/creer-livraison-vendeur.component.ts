@@ -223,11 +223,10 @@ export class CreerLivraisonVendeurComponent implements OnInit {
   }
 
   setupFormListeners() {
-    // Listener changement commune
+    // Adresses en saisie libre : plus de dépendance zone/quartier pour le tarif.
+    // On propose seulement des suggestions de quartiers pour la commune saisie.
     this.livraisonForm.get('commune')?.valueChanges.subscribe(commune => {
       this.filteredQuartiers = [];
-      this.livraisonForm.patchValue({ quartier: '' });
-      
       if (commune) {
         this.zoneService.getZones(true, '', 0, 100).subscribe({
           next: (data) => {
@@ -244,86 +243,16 @@ export class CreerLivraisonVendeurComponent implements OnInit {
         });
       }
     });
-
-    // Listener changement quartier
-    this.livraisonForm.get('quartier')?.valueChanges.subscribe(() => {
-      setTimeout(() => this.calculatePreviewTarif(), 100);
-    });
-
-    // Listener changement urgence
-    this.livraisonForm.get('urgence')?.valueChanges.subscribe(() => {
-      this.calculatePreviewTarif();
-    });
   }
 
-  calculatePreviewTarif() {
-    const quartier = this.livraisonForm.get('quartier')?.value;
-    const commune = this.livraisonForm.get('commune')?.value;
-    const urgence = this.livraisonForm.get('urgence')?.value;
-
-    if (!quartier || !commune) {
-      this.tarifPreview = null;
-      return;
-    }
-
-    this.calculatingPreview = true;
-    
-    // Trouver le zoneId pour la commune destination
-    this.zoneService.getZones(true, '', 0, 100).subscribe({
-      next: (data) => {
-        let zoneId: number | null = null;
-        let zonesChecked = 0;
-        
-        data.content.forEach(zone => {
-          this.zoneService.getZoneDetail(zone.id).subscribe({
-            next: (detail) => {
-              zonesChecked++;
-              const hasCommune = detail.quartiers.some(q => q.commune === commune);
-              
-              if (hasCommune && !zoneId) {
-                zoneId = zone.id;
-                
-                // Appel API avec tous les champs requis
-                const request: CalculTarifRequest = {
-                  zoneId: zoneId,
-                  communeDepart: 'Dakar',          // Warehouse admin
-                  quartierDepart: 'Plateau',       // Warehouse admin
-                  communeDestination: commune,
-                  quartierDestination: quartier,
-                  montantCOD: 0,                   // Juste pour calculer frais
-                  urgence: urgence
-                };
-
-                this.apiService.calculerTarif(request).subscribe({
-                  next: (tarif) => {
-                    this.tarifPreview = tarif;
-                    this.calculatingPreview = false;
-                  },
-                  error: () => {
-                    this.tarifPreview = null;
-                    this.calculatingPreview = false;
-                  }
-                });
-              } else if (zonesChecked === data.content.length && !zoneId) {
-                // Toutes les zones vérifiées, aucune trouvée
-                this.tarifPreview = null;
-                this.calculatingPreview = false;
-              }
-            }
-          });
-        });
-      },
-      error: () => {
-        this.tarifPreview = null;
-        this.calculatingPreview = false;
-      }
-    });
+  // Commission fixe du vendeur sélectionné = prix de livraison (ajouté au COD)
+  get commissionFixe(): number {
+    return this.selectedVendeur?.commissionFixe || 0;
   }
 
   get montantCODTotal(): number {
     const montantProduit = this.livraisonForm.get('montantProduit')?.value || 0;
-    const fraisLivraison = this.tarifPreview?.montant || 0;
-    return montantProduit + fraisLivraison;
+    return montantProduit + this.commissionFixe;
   }
 
   nextStep() {
@@ -339,9 +268,8 @@ export class CreerLivraisonVendeurComponent implements OnInit {
       }
     }
 
-    // Validation étape 2 + calcul tarif
+    // Validation étape 2 (le tarif = commission fixe, aucun calcul de zone requis)
     if (this.currentStep === 2) {
-      // Le prix vient des produits : il faut au moins un produit dans le panier
       if (this.panier.length === 0) {
         this.errorMessage = 'Ajoutez au moins un produit à la commande. Le prix est calculé automatiquement.';
         return;
@@ -355,67 +283,6 @@ export class CreerLivraisonVendeurComponent implements OnInit {
         this.errorMessage = 'Veuillez remplir tous les champs obligatoires';
         return;
       }
-
-      // Recalculer tarif pour étape 3
-      this.calculatingTarif = true;
-      const commune = this.livraisonForm.get('commune')?.value;
-      const quartier = this.livraisonForm.get('quartier')?.value;
-      const urgence = this.livraisonForm.get('urgence')?.value;
-
-      // Trouver le zoneId
-      this.zoneService.getZones(true, '', 0, 100).subscribe({
-        next: (data) => {
-          let zoneId: number | null = null;
-          let zonesChecked = 0;
-          
-          data.content.forEach(zone => {
-            this.zoneService.getZoneDetail(zone.id).subscribe({
-              next: (detail) => {
-                zonesChecked++;
-                const hasCommune = detail.quartiers.some(q => q.commune === commune);
-                
-                if (hasCommune && !zoneId) {
-                  zoneId = zone.id;
-                  this.ZoneId = zone.id
-                  
-                  const request: CalculTarifRequest = {
-                    zoneId: zoneId,
-                    communeDepart: 'Dakar',
-                    quartierDepart: 'Plateau',
-                    communeDestination: commune,
-                    quartierDestination: quartier,
-                    montantCOD: 0,
-                    urgence: urgence
-                  };
-
-                  this.apiService.calculerTarif(request).subscribe({
-                    next: (tarif) => {
-                      this.tarif = tarif;
-                      this.calculatingTarif = false;
-                      this.currentStep++;
-                      this.errorMessage = '';
-
-                      console.log('TARIFFFF :', this.tarif)
-                    },
-                    error: () => {
-                      this.toastService.error('Erreur lors du calcul du tarif');
-                      this.calculatingTarif = false;
-                    }
-                  });
-                } else if (zonesChecked === data.content.length && !zoneId) {
-                  this.toastService.error('Zone non trouvée pour cette commune');
-                  this.calculatingTarif = false;
-                }
-              }
-            });
-          });
-        },
-        error: () => {
-          this.toastService.error('Erreur lors du calcul du tarif');
-          this.calculatingTarif = false;
-        }
-      });
-      return;
     }
 
     this.currentStep++;
@@ -430,7 +297,7 @@ export class CreerLivraisonVendeurComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.livraisonForm.invalid || !this.tarif || !this.selectedVendeur) {
+    if (this.livraisonForm.invalid || !this.selectedVendeur) {
       this.errorMessage = 'Veuillez remplir correctement le formulaire';
       return;
     }
@@ -439,7 +306,7 @@ export class CreerLivraisonVendeurComponent implements OnInit {
     const montantCOD = this.montantCODTotal;
 
     const request: CreateLivraisonRequest = {
-      telephoneVendeur: this.selectedVendeur.telephone, 
+      telephoneVendeur: this.selectedVendeur.telephone,
       nomClient: formValue.nomClient,
       telephoneClient: formValue.telephoneClient,
       commune: formValue.commune,
@@ -453,7 +320,6 @@ export class CreerLivraisonVendeurComponent implements OnInit {
       fragile: formValue.fragile,
       poids: formValue.poidsEstime || undefined,
       montantCOD: montantCOD,
-      zoneId: this.ZoneId,
       urgence: formValue.urgence,
       creneauSouhaite: formValue.creneauSouhaite || undefined,
       notesPourLivreur: formValue.notesLivreur || undefined

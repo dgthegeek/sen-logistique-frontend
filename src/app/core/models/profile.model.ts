@@ -18,6 +18,7 @@ export interface ProfilResponse {
   adresseComplete?: string;
   statut?: 'EN_ATTENTE_VALIDATION' | 'ACTIF' | 'SUSPENDU' | 'BLOQUE';
   soldeEnAttente?: number;
+  commissionFixe?: number;
 }
 
 export interface UpdateProfilRequest {

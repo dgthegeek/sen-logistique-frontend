@@ -56,7 +56,7 @@ export interface CreateLivraisonRequest {
   fragile: boolean;
   poids?: number;
   montantCOD: number;
-  zoneId: number;
+  zoneId?: number;  // Optionnel : adresses en saisie libre, tarif = commission fixe du vendeur
   urgence: 'NORMAL' | 'EXPRESS';
   creneauSouhaite?: 'MATIN' | 'APRES_MIDI' | 'SOIR';
   notesPourLivreur?: string;

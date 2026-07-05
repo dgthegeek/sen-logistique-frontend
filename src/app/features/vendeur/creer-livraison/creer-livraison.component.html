@@ -121,11 +121,13 @@
                                     <i class="fa-solid fa-map text-muted-foreground"></i>
                                     <span>Commune *</span>
                                 </label>
-                                <select formControlName="commune" class="form-select text-sm sm:text-base"
-                                    [class.border-destructive]="livraisonForm.get('commune')?.invalid && livraisonForm.get('commune')?.touched">
-                                    <option value="">Sélectionner une commune</option>
-                                    <option *ngFor="let commune of communes" [value]="commune">{{ commune }}</option>
-                                </select>
+                                <input formControlName="commune" type="text" list="communesDispo"
+                                    class="form-input text-sm sm:text-base"
+                                    [class.border-destructive]="livraisonForm.get('commune')?.invalid && livraisonForm.get('commune')?.touched"
+                                    placeholder="Saisir la commune (ex : Dakar, Pikine...)" />
+                                <datalist id="communesDispo">
+                                    <option *ngFor="let commune of communes" [value]="commune"></option>
+                                </datalist>
                                 <p *ngIf="livraisonForm.get('commune')?.invalid && livraisonForm.get('commune')?.touched"
                                     class="form-error text-xs">
                                     La commune est requise

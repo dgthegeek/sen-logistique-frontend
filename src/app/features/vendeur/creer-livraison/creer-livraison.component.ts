@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
+import { ProfilService } from '../../../core/services/profile.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
@@ -25,11 +26,9 @@ export class CreerLivraisonComponent implements OnInit {
   quartiers: Quartier[] = [];
   filteredQuartiers: Quartier[] = [];
   
-  tarif: CalculTarifResponse | null = null;
-  calculatingTarif = false;
-  tarifPreview: CalculTarifResponse | null = null;
-  calculatingPreview = false;
-  
+  // Commission fixe du vendeur = prix de livraison (ajouté au COD, invisible pour lui)
+  commissionFixe = 0;
+
   loading = false;
   errorMessage = '';
   
@@ -45,6 +44,7 @@ export class CreerLivraisonComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
+    private profilService: ProfilService,
     private router: Router
   ) {
     this.livraisonForm = this.fb.group({
@@ -74,44 +74,21 @@ export class CreerLivraisonComponent implements OnInit {
   ngOnInit() {
     this.loadZones();
     this.loadMesProduits();
+    this.loadCommission();
 
-    // WATCH: Commune → Load quartiers
+    // WATCH: Commune → suggestions de quartiers (facultatif, saisie libre)
     this.livraisonForm.get('commune')?.valueChanges.subscribe(commune => {
       if (commune) {
         this.loadQuartiers(commune);
-        this.livraisonForm.patchValue({ quartier: '' }, { emitEvent: false });
-        this.tarifPreview = null;
       }
     });
-    
-    // WATCH: Quartier → Calculer preview (avec setTimeout pour forcer le trigger)
-    this.livraisonForm.get('quartier')?.valueChanges.subscribe(quartier => {
-      if (quartier && this.livraisonForm.get('commune')?.value) {
-        // ✅ CORRECTION: setTimeout pour forcer le trigger après le render
-        setTimeout(() => {
-          this.calculerTarifPreview();
-        }, 100);
-      }
-    });
-    
-    // WATCH: Montant produit → Recalculer
-    this.livraisonForm.get('montantProduit')?.valueChanges.subscribe(() => {
-      if (this.currentStep === 2 && this.livraisonForm.get('quartier')?.value) {
-        this.calculerTarifPreview();
-      }
-      if (this.currentStep === 3) {
-        this.calculerTarif();
-      }
-    });
-    
-    // WATCH: Urgence → Recalculer
-    this.livraisonForm.get('urgence')?.valueChanges.subscribe(() => {
-      if (this.currentStep === 2 && this.livraisonForm.get('quartier')?.value) {
-        this.calculerTarifPreview();
-      }
-      if (this.currentStep === 3) {
-        this.calculerTarif();
-      }
+  }
+
+  /** Charge la commission fixe du vendeur (prix de livraison ajouté au COD). */
+  loadCommission() {
+    this.profilService.getProfil().subscribe({
+      next: (p) => { this.commissionFixe = p.commissionFixe || 0; },
+      error: () => { this.commissionFixe = 0; }
     });
   }
 
@@ -206,43 +183,11 @@ export class CreerLivraisonComponent implements OnInit {
     return zone ? zone.id : null;
   }
 
-  calculerTarifPreview() {
-    const formValue = this.livraisonForm.value;
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    const zoneId = this.getZoneIdByCommune(formValue.commune);
-    
-    if (!zoneId || !formValue.quartier) {
-      return;
-    }
-    
-    this.calculatingPreview = true;
-    
-    // ✅ CORRECTION: COD = montantProduit + frais (temporaire 0 pour calculer les frais)
-    this.apiService.calculerTarif({
-      zoneId: zoneId,
-      communeDepart: currentUser.commune || 'Dakar',
-      quartierDepart: currentUser.quartier || 'Plateau',
-      communeDestination: formValue.commune,
-      quartierDestination: formValue.quartier,
-      montantCOD: 0, // On met 0 juste pour récupérer les frais
-      urgence: formValue.urgence
-    }).subscribe({
-      next: (response) => {
-        this.tarifPreview = response;
-        this.calculatingPreview = false;
-      },
-      error: (error) => {
-        console.error('❌ Erreur calcul tarif preview:', error);
-        this.calculatingPreview = false;
-      }
-    });
-  }
-
-  // ✅ GETTER: Calcul COD total
+  // COD total = prix produit (ce que le vendeur reçoit) + commission fixe (prix de
+  // livraison, payé en plus par le client). La commission n'est pas montrée au vendeur.
   get montantCODTotal(): number {
     const montantProduit = this.livraisonForm.get('montantProduit')?.value || 0;
-    const fraisLivraison = this.tarifPreview?.montant || 0;
-    return montantProduit + fraisLivraison;
+    return montantProduit + (this.commissionFixe || 0);
   }
 
   nextStep() {
@@ -256,9 +201,6 @@ export class CreerLivraisonComponent implements OnInit {
       }
       
       this.currentStep = 2;
-      if (this.livraisonForm.get('quartier')?.value) {
-        this.calculerTarifPreview();
-      }
     } else if (this.currentStep === 2) {
       // Le prix vient des produits : il faut au moins un produit dans le panier
       if (this.panier.length === 0) {
@@ -276,7 +218,6 @@ export class CreerLivraisonComponent implements OnInit {
 
       this.errorMessage = '';
       this.currentStep = 3;
-      this.calculerTarif();
     }
   }
 
@@ -292,57 +233,19 @@ export class CreerLivraisonComponent implements OnInit {
     });
   }
 
-  calculerTarif() {
-    const formValue = this.livraisonForm.value;
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    const zoneId = this.getZoneIdByCommune(formValue.commune);
-    
-    if (!zoneId) {
-      this.errorMessage = `Impossible de trouver la zone pour la commune: ${formValue.commune}`;
-      return;
-    }
-    
-    this.calculatingTarif = true;
-    this.errorMessage = '';
-    
-    this.apiService.calculerTarif({
-      zoneId: zoneId,
-      communeDepart: currentUser.commune,
-      quartierDepart: currentUser.quartier,
-      communeDestination: formValue.commune,
-      quartierDestination: formValue.quartier,
-      montantCOD: 0, // Juste pour récupérer les frais
-      urgence: formValue.urgence
-    }).subscribe({
-      next: (response) => {
-        this.tarif = response;
-        this.calculatingTarif = false;
-      },
-      error: (error) => {
-        console.error('❌ Erreur calcul tarif:', error);
-        this.calculatingTarif = false;
-        this.errorMessage = error.error?.message || 'Impossible de calculer le tarif';
-      }
-    });
-  }
-
   onSubmit() {
     if (this.livraisonForm.invalid) {
       return;
     }
 
     const formValue = this.livraisonForm.value;
-    const zoneId = this.getZoneIdByCommune(formValue.commune);
-    
-    if (!zoneId) {
-      this.errorMessage = `Zone introuvable pour la commune: ${formValue.commune}`;
-      return;
-    }
+    // Adresses en saisie libre : la zone n'est plus requise (tarif = commission fixe).
+    const zoneId = this.getZoneIdByCommune(formValue.commune) || undefined;
 
     this.loading = true;
     this.errorMessage = '';
 
-    // ✅ CORRECTION: COD = montantProduit + fraisLivraison
+    // COD = montantProduit + commission (prix de livraison)
     const montantCOD = this.montantCODTotal;
 
     const request: CreateLivraisonRequest = {
