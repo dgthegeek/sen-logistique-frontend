@@ -115,49 +115,7 @@
                                 </p>
                             </div>
 
-                            <!-- Commune -->
-                            <div>
-                                <label class="form-label text-xs sm:text-sm flex items-center gap-1">
-                                    <i class="fa-solid fa-map text-muted-foreground"></i>
-                                    <span>Commune *</span>
-                                </label>
-                                <input formControlName="commune" type="text" list="communesDispo"
-                                    class="form-input text-sm sm:text-base"
-                                    [class.border-destructive]="livraisonForm.get('commune')?.invalid && livraisonForm.get('commune')?.touched"
-                                    placeholder="Saisir la commune (ex : Dakar, Pikine...)" />
-                                <datalist id="communesDispo">
-                                    <option *ngFor="let commune of communes" [value]="commune"></option>
-                                </datalist>
-                                <p *ngIf="livraisonForm.get('commune')?.invalid && livraisonForm.get('commune')?.touched"
-                                    class="form-error text-xs">
-                                    La commune est requise
-                                </p>
-                            </div>
-
-                            <!-- Quartier (saisie libre + suggestions) -->
-                            <div>
-                                <label class="form-label text-xs sm:text-sm flex items-center gap-1">
-                                    <i class="fa-solid fa-map-pin text-muted-foreground"></i>
-                                    <span>Quartier *</span>
-                                </label>
-                                <input formControlName="quartier" type="text" list="quartiersDispo"
-                                    class="form-input text-sm sm:text-base"
-                                    [class.border-destructive]="livraisonForm.get('quartier')?.invalid && livraisonForm.get('quartier')?.touched"
-                                    placeholder="Choisir dans la liste ou saisir librement" />
-                                <datalist id="quartiersDispo">
-                                    <option *ngFor="let quartier of filteredQuartiers" [value]="quartier.nom"></option>
-                                </datalist>
-                                <p *ngIf="livraisonForm.get('quartier')?.invalid && livraisonForm.get('quartier')?.touched"
-                                    class="form-error text-xs">
-                                    Le quartier est requis
-                                </p>
-                                <p class="form-helper text-xs flex items-center gap-1">
-                                    <i class="fa-solid fa-lightbulb text-yellow-500"></i>
-                                    <span>Si le quartier n'est pas dans la liste, saisissez-le directement.</span>
-                                </p>
-                            </div>
-
-                            <!-- Adresse complète -->
+                            <!-- Adresse complète (saisie libre) -->
                             <div>
                                 <label class="form-label text-xs sm:text-sm flex items-center gap-1">
                                     <i class="fa-solid fa-location-dot text-muted-foreground"></i>
@@ -387,7 +345,7 @@
                                                 <span>Adresse:</span>
                                             </span>
                                             <span class="text-foreground break-words">
-                                                {{ livraisonForm.value.adresseComplete }}, {{ livraisonForm.value.quartier }}, {{ livraisonForm.value.commune }}
+                                                {{ livraisonForm.value.adresseComplete }}
                                             </span>
                                         </div>
                                         <div *ngIf="livraisonForm.value.pointRepere" class="flex flex-col sm:flex-row">

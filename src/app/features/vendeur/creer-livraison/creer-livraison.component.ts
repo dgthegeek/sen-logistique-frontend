@@ -54,8 +54,6 @@ export class CreerLivraisonComponent implements OnInit {
         Validators.required,
         Validators.pattern(/^\+?[0-9]{9,}$/)
       ]],
-      commune: ['', Validators.required],
-      quartier: ['', Validators.required],
       adresseComplete: ['', Validators.required],
       pointRepere: [''],
       
@@ -72,16 +70,8 @@ export class CreerLivraisonComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadZones();
     this.loadMesProduits();
     this.loadCommission();
-
-    // WATCH: Commune → suggestions de quartiers (facultatif, saisie libre)
-    this.livraisonForm.get('commune')?.valueChanges.subscribe(commune => {
-      if (commune) {
-        this.loadQuartiers(commune);
-      }
-    });
   }
 
   /** Charge la commission fixe du vendeur (prix de livraison ajouté au COD). */
@@ -192,7 +182,7 @@ export class CreerLivraisonComponent implements OnInit {
 
   nextStep() {
     if (this.currentStep === 1) {
-      const step1Fields = ['nomClient', 'telephoneClient', 'commune', 'quartier', 'adresseComplete'];
+      const step1Fields = ['nomClient', 'telephoneClient', 'adresseComplete'];
       const step1Valid = step1Fields.every(field => this.livraisonForm.get(field)?.valid);
       
       if (!step1Valid) {
@@ -239,8 +229,6 @@ export class CreerLivraisonComponent implements OnInit {
     }
 
     const formValue = this.livraisonForm.value;
-    // Adresses en saisie libre : la zone n'est plus requise (tarif = commission fixe).
-    const zoneId = this.getZoneIdByCommune(formValue.commune) || undefined;
 
     this.loading = true;
     this.errorMessage = '';
@@ -248,12 +236,10 @@ export class CreerLivraisonComponent implements OnInit {
     // COD = montantProduit + commission (prix de livraison)
     const montantCOD = this.montantCODTotal;
 
+    // Adresse en saisie libre : plus de commune/quartier/zone.
     const request: CreateLivraisonRequest = {
-      
       nomClient: formValue.nomClient,
       telephoneClient: formValue.telephoneClient,
-      commune: formValue.commune,
-      quartier: formValue.quartier,
       adresseComplete: formValue.adresseComplete,
       pointRepere: formValue.pointRepere || undefined,
       descriptionProduit: formValue.descriptionProduit,
@@ -262,8 +248,7 @@ export class CreerLivraisonComponent implements OnInit {
         : undefined,
       fragile: formValue.fragile,
       poids: formValue.poidsEstime || undefined,
-      montantCOD: montantCOD, // ← COD TOTAL
-      zoneId: zoneId,
+      montantCOD: montantCOD,
       urgence: formValue.urgence,
       notesPourLivreur: formValue.notesLivreur || undefined
     };

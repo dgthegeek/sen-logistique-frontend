@@ -43,8 +43,8 @@ export interface CreateLivraisonRequest {
   // Infos client
   nomClient: string;
   telephoneClient: string;
-  commune: string;
-  quartier: string;
+  commune?: string;   // Optionnel : adresses en saisie libre
+  quartier?: string;  // Optionnel : adresses en saisie libre
   adresseComplete: string;
   pointRepere?: string;
   

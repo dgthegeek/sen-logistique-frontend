@@ -162,27 +162,9 @@
               </div>
 
               <div>
-                <label class="form-label text-xs sm:text-sm">Commune *</label>
-                <input formControlName="commune" type="text" list="communesDispoAdmin"
-                  class="form-input text-sm sm:text-base" placeholder="Saisir la commune (ex : Dakar, Pikine...)" />
-                <datalist id="communesDispoAdmin">
-                  <option *ngFor="let commune of communes" [value]="commune"></option>
-                </datalist>
-              </div>
-
-              <div>
-                <label class="form-label text-xs sm:text-sm">Quartier *</label>
-                <input formControlName="quartier" type="text" list="quartiersDispoAdmin"
-                  class="form-input text-sm sm:text-base" placeholder="Choisir ou saisir librement" />
-                <datalist id="quartiersDispoAdmin">
-                  <option *ngFor="let q of filteredQuartiers" [value]="q.nom"></option>
-                </datalist>
-                <p class="form-helper text-xs">Si le quartier n'est pas dans la liste, saisissez-le directement.</p>
-              </div>
-
-              <div>
                 <label class="form-label text-xs sm:text-sm">Adresse complète *</label>
-                <textarea formControlName="adresseComplete" class="form-textarea text-sm sm:text-base" rows="3"></textarea>
+                <textarea formControlName="adresseComplete" class="form-textarea text-sm sm:text-base" rows="3"
+                  placeholder="Quartier, commune, rue, villa, repères..."></textarea>
               </div>
 
               <div>
@@ -330,7 +312,7 @@
                     </div>
                     <div class="flex flex-col sm:flex-row gap-1 sm:gap-0">
                       <span class="sm:w-32 text-muted-foreground">Adresse:</span>
-                      <span>{{ livraisonForm.value.adresseComplete }}, {{ livraisonForm.value.quartier }}, {{ livraisonForm.value.commune }}</span>
+                      <span>{{ livraisonForm.value.adresseComplete }}</span>
                     </div>
                   </div>
                 </div>

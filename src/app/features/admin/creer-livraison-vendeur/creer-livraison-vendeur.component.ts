@@ -71,8 +71,6 @@ export class CreerLivraisonVendeurComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadCommunes();
-    this.setupFormListeners();
     this.setupSearchDebounce();
     this.loadProduits();
   }
@@ -134,8 +132,6 @@ export class CreerLivraisonVendeurComponent implements OnInit {
       // Infos client
       nomClient: ['', [Validators.required, Validators.minLength(2)]],
       telephoneClient: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{9,}$/)]],
-      commune: ['', Validators.required],
-      quartier: ['', Validators.required],
       adresseComplete: ['', Validators.required],
       pointRepere: [''],
       // Infos colis
@@ -223,26 +219,7 @@ export class CreerLivraisonVendeurComponent implements OnInit {
   }
 
   setupFormListeners() {
-    // Adresses en saisie libre : plus de dépendance zone/quartier pour le tarif.
-    // On propose seulement des suggestions de quartiers pour la commune saisie.
-    this.livraisonForm.get('commune')?.valueChanges.subscribe(commune => {
-      this.filteredQuartiers = [];
-      if (commune) {
-        this.zoneService.getZones(true, '', 0, 100).subscribe({
-          next: (data) => {
-            data.content.forEach(zone => {
-              this.zoneService.getZoneDetail(zone.id).subscribe({
-                next: (detail) => {
-                  const quartiers = detail.quartiers.filter(q => q.commune === commune && q.actif);
-                  this.filteredQuartiers = [...this.filteredQuartiers, ...quartiers]
-                    .filter((q, i, arr) => arr.findIndex(qt => qt.nom === q.nom) === i);
-                }
-              });
-            });
-          }
-        });
-      }
-    });
+    // Adresses en saisie libre : plus aucune dépendance zone/quartier/commune.
   }
 
   // Commission fixe du vendeur sélectionné = prix de livraison (ajouté au COD)
@@ -258,7 +235,7 @@ export class CreerLivraisonVendeurComponent implements OnInit {
   nextStep() {
     // Validation étape 1
     if (this.currentStep === 1) {
-      const step1Controls = ['nomClient', 'telephoneClient', 'commune', 'quartier', 'adresseComplete'];
+      const step1Controls = ['nomClient', 'telephoneClient', 'adresseComplete'];
       const step1Valid = step1Controls.every(control => this.livraisonForm.get(control)?.valid);
       
       if (!step1Valid) {
@@ -309,8 +286,6 @@ export class CreerLivraisonVendeurComponent implements OnInit {
       telephoneVendeur: this.selectedVendeur.telephone,
       nomClient: formValue.nomClient,
       telephoneClient: formValue.telephoneClient,
-      commune: formValue.commune,
-      quartier: formValue.quartier,
       adresseComplete: formValue.adresseComplete,
       pointRepere: formValue.pointRepere || undefined,
       descriptionProduit: formValue.descriptionProduit,
