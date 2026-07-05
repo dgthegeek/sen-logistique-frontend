@@ -111,13 +111,8 @@
                         <i class="fa-solid fa-eye mr-1"></i>
                         Détails
                       </button>
-                      <button (click)="openScannerModalWithTracking(livraison.numeroTracking)"
-                        class="btn-outline text-xs px-2 py-1" *ngIf="livraison.statut === 'RAMASSE'">
-                        <i class="fa-solid fa-truck mr-1"></i>
-                        Livrer
-                      </button>
                     </div>
-                    <span *ngIf="livraison.statut !== 'RAMASSE'" class="text-xs text-muted-foreground">
+                    <span class="text-xs text-muted-foreground">
                       {{ livraison.message }}
                     </span>
                   </td>
@@ -169,14 +164,7 @@
                   <i class="fa-solid fa-eye mr-1"></i>
                   Détails
                 </button>
-                <button *ngIf="livraison.statut === 'RAMASSE'"
-                  (click)="openScannerModalWithTracking(livraison.numeroTracking)"
-                  class="btn-primary text-xs sm:text-sm w-full py-2">
-                  <i class="fa-solid fa-truck mr-1"></i>
-                  Livrer
-                </button>
-                <div *ngIf="livraison.statut !== 'RAMASSE'"
-                  class="text-xs text-muted-foreground text-center break-words">
+                <div class="text-xs text-muted-foreground text-center break-words">
                   {{ livraison.message }}
                 </div>
               </div>
@@ -220,36 +208,7 @@
   </div>
 </div>
 
-<!-- Scanner Modal (Responsive) -->
-<div *ngIf="showScannerModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-  (click)="closeScannerModal()">
-  <div class="card max-w-md w-full" (click)="$event.stopPropagation()">
-    <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-2">
-      <i class="fa-solid fa-qrcode text-primary"></i>
-      <span>Scanner QR Code</span>
-    </h2>
-
-    <div class="mb-4 sm:mb-6">
-      <label class="form-label text-xs sm:text-sm flex items-center gap-1">
-        <i class="fa-solid fa-barcode text-muted-foreground"></i>
-        <span>Numéro de tracking</span>
-      </label>
-      <input [(ngModel)]="searchQuery" (keyup.enter)="scanQRCode()" type="text" class="form-input text-sm sm:text-base"
-        placeholder="Ex: DKR-20251209-00002" autofocus />
-    </div>
-
-    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-      <button (click)="closeScannerModal()" class="btn-outline text-sm sm:text-base py-2 sm:py-3">
-        <i class="fa-solid fa-xmark mr-2"></i>
-        Annuler
-      </button>
-      <button (click)="scanQRCode()" class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1">
-        <i class="fa-solid fa-magnifying-glass mr-2"></i>
-        Rechercher
-      </button>
-    </div>
-  </div>
-</div>
+<!-- Scanner QR retiré du front (livreurs valident depuis leur portail) — code TS conservé -->
 
 <!-- Confirm Modal (Responsive) -->
 <div *ngIf="showConfirmModal && selectedLivraison"

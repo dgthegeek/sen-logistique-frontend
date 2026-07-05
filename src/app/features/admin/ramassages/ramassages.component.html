@@ -18,25 +18,9 @@
             </p>
           </div>
 
-          <!-- Actions (Responsive) -->
+          <!-- Actions (Responsive) — impression QR retirée du front (code conservé) -->
           <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-            <button 
-              (click)="imprimerQRCodes()" 
-              [disabled]="selectedColis.size === 0 || generatingQR"
-              class="btn-outline text-sm sm:text-base py-2 sm:py-3" 
-              [class.opacity-50]="selectedColis.size === 0 || generatingQR"
-            >
-              <span *ngIf="!generatingQR">
-                <i class="fa-solid fa-qrcode mr-2"></i>
-                <span class="hidden sm:inline">Imprimer</span> QR ({{ selectedColis.size }})
-              </span>
-              <span *ngIf="generatingQR">
-                <i class="fa-solid fa-spinner fa-spin mr-2"></i>
-                Génération...
-              </span>
-            </button>
-
-            <button 
+            <button
               (click)="marquerRamasse()" 
               [disabled]="selectedColis.size === 0 || processingRamassage"
               class="btn-primary text-sm sm:text-base py-2 sm:py-3 sm:flex-1" 
