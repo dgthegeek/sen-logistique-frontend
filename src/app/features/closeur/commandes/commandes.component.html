@@ -31,6 +31,8 @@
                   (click)="changerFiltre('A_APPELER')">À appeler</button>
           <button [ngClass]="activeFiltre === 'CONFIRMEE' ? 'chip-active' : 'chip'"
                   (click)="changerFiltre('CONFIRMEE')">Confirmées</button>
+          <button [ngClass]="activeFiltre === 'PRETE_A_LIVRER' ? 'chip-active' : 'chip'"
+                  (click)="changerFiltre('PRETE_A_LIVRER')">Prêtes à livrer</button>
         </div>
 
         <!-- Chargement -->

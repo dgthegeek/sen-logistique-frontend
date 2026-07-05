@@ -11,7 +11,7 @@ import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
 import { CommandeCloseur, StatutLivraison } from '../../../core/models/closing-dispatch.model';
 import { STATUT_LABELS } from '../../../core/models/statut-labels';
 
-type FiltreCloseur = 'TOUTES' | 'NOUVELLE' | 'A_APPELER' | 'CONFIRMEE';
+type FiltreCloseur = 'TOUTES' | 'NOUVELLE' | 'A_APPELER' | 'CONFIRMEE' | 'PRETE_A_LIVRER';
 
 @Component({
   selector: 'app-closeur-commandes',
@@ -117,6 +117,7 @@ export class CloseurCommandesComponent implements OnInit {
       case 'NOUVELLE': return 'badge-pending';
       case 'A_APPELER': return 'badge-transit';
       case 'CONFIRMEE': return 'badge-picked';
+      case 'PRETE_A_LIVRER': return 'badge-picked';
       default: return 'badge';
     }
   }
