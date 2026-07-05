@@ -129,8 +129,22 @@ export class CreerLivraisonComponent implements OnInit {
   ajouterAuPanier() {
     const produit = this.produits.find(p => p.id === this.selProduitId);
     if (!produit) { return; }
+
+    const stock = produit.quantiteStock || 0;
+    if (stock <= 0) {
+      this.errorMessage = `« ${produit.nom} » est en rupture de stock et ne peut pas être commandé.`;
+      return;
+    }
+
     const qte = this.selQuantite && this.selQuantite > 0 ? this.selQuantite : 1;
     const existant = this.panier.find(l => l.produitId === produit.id);
+    const dejaAuPanier = existant ? existant.quantite : 0;
+    if (dejaAuPanier + qte > stock) {
+      this.errorMessage = `Stock insuffisant pour « ${produit.nom} » : ${stock} disponible(s).`;
+      return;
+    }
+
+    this.errorMessage = '';
     if (existant) {
       existant.quantite += qte;
     } else {
