@@ -3,7 +3,7 @@ export interface VendeurDashboard {
     totalColis: number;
     colisLivres: number;
     colisEnCours: number;
-    colisEchec: number;
+    colisEchecs: number;
   };
   finances: {
     soldeEnAttente: number;

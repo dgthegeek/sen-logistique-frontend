@@ -29,14 +29,39 @@ export class AdminPerformanceComponent implements OnInit {
     { value: 'tout', label: 'Tout' }
   ];
 
+  // Plage de dates personnalisée (comme le bilan)
+  debut = '';
+  fin = '';
+
   constructor(private api: ApiService) {}
 
   ngOnInit(): void { this.charger(); }
 
+  /** Sélection d'une période prédéfinie : réinitialise la plage personnalisée. */
+  choisirPeriode(value: 'jour' | 'semaine' | 'mois' | 'tout'): void {
+    this.periode = value;
+    this.debut = '';
+    this.fin = '';
+    this.charger();
+  }
+
+  /** Applique la plage de dates saisie (nécessite début ET fin). */
+  appliquerPlage(): void {
+    if (this.debut && this.fin) {
+      this.charger();
+    }
+  }
+
+  get plageActive(): boolean {
+    return !!(this.debut && this.fin);
+  }
+
   charger(): void {
     this.loading = true;
     this.errorMessage = '';
-    this.api.getPerformance(this.periode).subscribe({
+    const debut = this.plageActive ? this.debut : undefined;
+    const fin = this.plageActive ? this.fin : undefined;
+    this.api.getPerformance(this.periode, debut, fin).subscribe({
       next: (d) => { this.data = d; this.loading = false; },
       error: (err) => { this.errorMessage = err?.error?.message || 'Impossible de charger les performances'; this.loading = false; }
     });

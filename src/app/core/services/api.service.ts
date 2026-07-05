@@ -83,8 +83,14 @@ export class ApiService {
     return this.http.get<LivraisonDetail>(`${this.baseUrl}/commandes/${id}`);
   }
 
-  getPerformance(periode: string = 'mois'): Observable<PerformanceResponse> {
-    return this.http.get<PerformanceResponse>(`${this.baseUrl}/admin/performance`, { params: { periode } });
+  getPerformance(periode: string = 'mois', debut?: string, fin?: string): Observable<PerformanceResponse> {
+    let params = new HttpParams();
+    if (debut && fin) {
+      params = params.set('debut', debut).set('fin', fin);
+    } else {
+      params = params.set('periode', periode);
+    }
+    return this.http.get<PerformanceResponse>(`${this.baseUrl}/admin/performance`, { params });
   }
 
   // Finances

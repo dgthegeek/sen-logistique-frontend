@@ -15,12 +15,36 @@
             </h1>
             <p class="text-sm text-muted-foreground">Contrôle qualité : prise en charge, dispatch et livraison.</p>
           </div>
-          <div class="flex items-center gap-2">
-            <select [(ngModel)]="periode" (change)="charger()" class="form-select w-full sm:w-44">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+            <select [ngModel]="periode" (ngModelChange)="choisirPeriode($event)"
+              [disabled]="plageActive" class="form-select w-full sm:w-44">
               <option *ngFor="let p of periodes" [value]="p.value">{{ p.label }}</option>
             </select>
             <button class="btn-outline" (click)="charger()" title="Actualiser"><i class="fa-solid fa-rotate-right"></i></button>
           </div>
+        </div>
+
+        <!-- Plage de dates personnalisée (comme le bilan) -->
+        <div class="card mb-4 sm:mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-end gap-3">
+            <div class="flex-1">
+              <label class="form-label text-xs sm:text-sm">Du</label>
+              <input type="date" [(ngModel)]="debut" class="form-input text-sm w-full">
+            </div>
+            <div class="flex-1">
+              <label class="form-label text-xs sm:text-sm">Au</label>
+              <input type="date" [(ngModel)]="fin" class="form-input text-sm w-full">
+            </div>
+            <button class="btn-primary text-sm py-2" [disabled]="!debut || !fin" (click)="appliquerPlage()">
+              <i class="fa-solid fa-filter mr-2"></i>Appliquer
+            </button>
+            <button *ngIf="plageActive" class="btn-outline text-sm py-2" (click)="choisirPeriode('mois')">
+              <i class="fa-solid fa-xmark mr-2"></i>Réinitialiser
+            </button>
+          </div>
+          <p *ngIf="plageActive" class="text-xs text-muted-foreground mt-2">
+            Période affichée : {{ debut }} → {{ fin }}
+          </p>
         </div>
 
         <div *ngIf="loading" class="card text-center py-12 text-muted-foreground">
