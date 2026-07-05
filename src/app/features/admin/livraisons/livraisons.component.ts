@@ -11,6 +11,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
 import { LivraisonAdmin } from '../../../core/models/admin.model';
 import { LivraisonDetail } from '../../../core/models/livraison.model';
+import { MOTIF_ECHEC_LABELS } from '../../../core/models/motif-echec-labels';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 
@@ -33,6 +34,7 @@ export class AdminLivraisonsComponent implements OnInit {
 
   showDetailModal = false;
   livraison: LivraisonDetail | null = null;
+  readonly motifLabels = MOTIF_ECHEC_LABELS;
 
   selectedStatut = '';
   searchQuery = '';

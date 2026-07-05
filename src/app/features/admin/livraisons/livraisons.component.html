@@ -467,6 +467,20 @@
         </div>
       </div>
 
+      <!-- Échec de livraison -->
+      <div *ngIf="livraison.motifEchec" class="border border-red-200 bg-red-50 rounded-lg p-4 mb-6">
+        <h3 class="font-semibold text-red-700 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-circle-xmark"></i> Échec de livraison
+        </h3>
+        <div class="text-sm">
+          <span class="font-semibold text-red-700">Motif :</span>
+          {{ motifLabels[livraison.motifEchec] || livraison.motifEchec }}
+        </div>
+        <div *ngIf="livraison.commentaireLivraison" class="text-sm mt-1">
+          <span class="font-semibold text-red-700">Note :</span> {{ livraison.commentaireLivraison }}
+        </div>
+      </div>
+
       <!-- Contrôle qualité (traçabilité) -->
       <div *ngIf="livraison.suivi" class="border rounded-lg p-4 mb-6">
         <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">

@@ -6,6 +6,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
 import { LivraisonDetail, StatutLivraison } from '../../../core/models/livraison.model';
+import { MOTIF_ECHEC_LABELS } from '../../../core/models/motif-echec-labels';
 
 @Component({
   selector: 'app-livraison-detail',
@@ -18,6 +19,7 @@ export class LivraisonDetailComponent implements OnInit {
   livraison: LivraisonDetail | null = null;
   loading = true;
   errorMessage = '';
+  readonly motifLabels = MOTIF_ECHEC_LABELS;
 
   constructor(
     private route: ActivatedRoute,

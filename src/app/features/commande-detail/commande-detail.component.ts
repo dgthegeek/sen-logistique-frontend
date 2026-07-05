@@ -7,6 +7,7 @@ import { SidebarComponent } from '../../shared/components/sidebar/sidebar.compon
 import { FcfaPipe } from '../../shared/pipes/fcfa.pipe';
 import { LivraisonDetail } from '../../core/models/livraison.model';
 import { STATUT_LABELS } from '../../core/models/statut-labels';
+import { MOTIF_ECHEC_LABELS } from '../../core/models/motif-echec-labels';
 
 /**
  * Détail d'une commande partagé par le staff (closeur, dispatcheur, livreur, admin),
@@ -24,6 +25,7 @@ export class CommandeDetailComponent implements OnInit {
   loading = true;
   errorMessage = '';
   readonly statutLabels = STATUT_LABELS;
+  readonly motifLabels = MOTIF_ECHEC_LABELS;
 
   constructor(
     private api: ApiService,

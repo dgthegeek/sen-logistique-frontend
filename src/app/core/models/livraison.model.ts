@@ -140,6 +140,7 @@ export interface LivraisonDetail {
   zone: string;
   urgence: 'NORMAL' | 'EXPRESS';
   commentaireLivraison: string | null;
+  motifEchec?: 'TELEPHONE_INJOIGNABLE' | 'CLIENT_ABSENT' | 'ADRESSE_INCORRECTE' | 'REFUS_CLIENT' | 'REPORT_CLIENT' | null;
   livreur?: {
     id: number;
     nom: string;
