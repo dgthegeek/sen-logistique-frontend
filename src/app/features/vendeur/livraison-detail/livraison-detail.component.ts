@@ -159,36 +159,45 @@ export class LivraisonDetailComponent implements OnInit {
     return (completedSteps / steps.length) * 100;
   }
 
+  /** Rang du statut dans le cycle Closing + Dispatch (pour l'avancement de la timeline). */
+  private rangStatut(statut: string): number {
+    const rangs: { [k: string]: number } = {
+      'NOUVELLE': 0,
+      'A_APPELER': 1,
+      'CONFIRMEE': 2,
+      'PRETE_A_LIVRER': 3,
+      'ASSIGNEE': 4,
+      'EN_LIVRAISON': 5,
+      'LIVREE': 6,
+      // Ancien cycle (dormant) : rattaché au nouveau pour rester cohérent
+      'EN_ATTENTE_RAMASSAGE': 0,
+      'RAMASSE': 3,
+      'EN_ROUTE': 5
+    };
+    return rangs[statut] ?? 0;
+  }
+
   getTimelineSteps() {
     if (!this.livraison) return [];
 
-    const steps = [
-      {
-        label: 'Livraison créée',
-        date: this.livraison.dateCreation,
-        completed: true,
-        active: this.livraison.statut === 'EN_ATTENTE_RAMASSAGE'
-      },
-      {
-        label: 'Colis ramassé',
-        date: this.livraison.dateRamassage,
-        completed: ['RAMASSE', 'EN_ROUTE', 'LIVREE'].includes(this.livraison.statut),
-        active: this.livraison.statut === 'RAMASSE'
-      },
-      {
-        label: 'En route',
-        date: null,
-        completed: ['EN_ROUTE', 'LIVREE'].includes(this.livraison.statut),
-        active: this.livraison.statut === 'EN_ROUTE'
-      },
-      {
-        label: 'Livré',
-        date: this.livraison.dateLivraison,
-        completed: this.livraison.statut === 'LIVREE',
-        active: this.livraison.statut === 'LIVREE'
-      }
-    ];
+    const s = this.livraison.suivi;
+    const rang = this.rangStatut(this.livraison.statut);
 
-    return steps;
+    const step = (label: string, seuil: number, date: string | null | undefined) => ({
+      label,
+      date: date ?? null,
+      completed: rang >= seuil,
+      active: rang === seuil
+    });
+
+    return [
+      step('Commande créée', 0, this.livraison.dateCreation),
+      step('Prise en charge', 1, s?.datePriseEnCharge),
+      step('Confirmée', 2, s?.dateConfirmation),
+      step('Prête à livrer', 3, s?.datePreteALivrer),
+      step('Assignée au livreur', 4, s?.dateAssignation),
+      step('En livraison', 5, null),
+      step('Livrée', 6, this.livraison.dateLivraison ?? s?.dateLivraison)
+    ];
   }
 }

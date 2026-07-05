@@ -8,7 +8,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
 import {
-  Produit, CreateProduitRequest, MouvementStockRequest, AjustementStockRequest, Mouvement
+  Produit, CreateProduitRequest, UpdateProduitRequest, MouvementStockRequest, AjustementStockRequest, Mouvement
 } from '../../../core/models/stock.model';
 import { VendeurDTO } from '../../../core/models/vendeur.model';
 
@@ -48,6 +48,12 @@ export class AdminStockComponent implements OnInit {
   showMouvementsModal = false;
   mouvements: Mouvement[] = [];
   loadingMouvements = false;
+
+  // Modal édition produit (nom, description, prix, seuil)
+  showEditModal = false;
+  editProduit: Produit | null = null;
+  editForm: { nom: string; description: string; prixUnitaire: number | null; seuilAlerte: number | null } =
+    { nom: '', description: '', prixUnitaire: null, seuilAlerte: null };
 
   constructor(
     private api: ApiService,
@@ -159,6 +165,50 @@ export class AdminStockComponent implements OnInit {
   }
 
   fermerMouvements(): void { this.showMouvementsModal = false; this.mouvements = []; }
+
+  // ---- Édition produit (prix modifiable à tout moment) ----
+  ouvrirEdit(produit: Produit): void {
+    this.editProduit = produit;
+    this.editForm = {
+      nom: produit.nom,
+      description: produit.description ?? '',
+      prixUnitaire: produit.prixUnitaire ?? null,
+      seuilAlerte: produit.seuilAlerte ?? null
+    };
+    this.showEditModal = true;
+  }
+
+  fermerEdit(): void { this.showEditModal = false; this.editProduit = null; }
+
+  enregistrerEdit(): void {
+    if (!this.editProduit) { return; }
+    if (this.editForm.prixUnitaire == null || this.editForm.prixUnitaire < 0) {
+      this.toast.warning('Prix invalide');
+      return;
+    }
+    this.saving = true;
+    const data: UpdateProduitRequest = {
+      nom: this.editForm.nom,
+      description: this.editForm.description,
+      prixUnitaire: this.editForm.prixUnitaire ?? undefined,
+      seuilAlerte: this.editForm.seuilAlerte ?? undefined
+    };
+    this.api.updateProduit(this.editProduit.id, data).subscribe({
+      next: (p) => {
+        // Mettre à jour la ligne localement
+        if (this.editProduit) {
+          this.editProduit.nom = p.nom;
+          this.editProduit.description = p.description;
+          this.editProduit.prixUnitaire = p.prixUnitaire;
+          this.editProduit.seuilAlerte = p.seuilAlerte;
+        }
+        this.toast.success('Produit mis à jour');
+        this.saving = false;
+        this.fermerEdit();
+      },
+      error: (err) => { this.toast.error(err?.error?.message || 'Modification impossible'); this.saving = false; }
+    });
+  }
 
   toggleActif(produit: Produit): void {
     this.api.updateProduit(produit.id, { actif: !produit.actif }).subscribe({

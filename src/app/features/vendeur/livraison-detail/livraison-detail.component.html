@@ -242,35 +242,13 @@
               Détails financiers
             </h2>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-              <div class="text-center sm:text-left">
-                <div class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center justify-center sm:justify-start gap-1">
-                  <i class="fa-solid fa-hand-holding-dollar"></i>
-                  <span>Montant à collecter (COD)</span>
-                </div>
-                <div class="text-xl sm:text-2xl font-bold text-foreground">
-                  {{ livraison.financier.montantCOD | fcfa }}
-                </div>
+            <div class="text-center sm:text-left">
+              <div class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center justify-center sm:justify-start gap-1">
+                <i class="fa-solid fa-money-bill-wave"></i>
+                <span>Vous recevrez</span>
               </div>
-
-              <div class="text-center sm:text-left">
-                <div class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center justify-center sm:justify-start gap-1">
-                  <i class="fa-solid fa-truck"></i>
-                  <span>Frais de livraison</span>
-                </div>
-                <div class="text-xl sm:text-2xl font-bold text-destructive">
-                  - {{ livraison.financier.fraisLivraison | fcfa }}
-                </div>
-              </div>
-
-              <div class="text-center sm:text-left">
-                <div class="text-xs sm:text-sm text-muted-foreground mb-1 flex items-center justify-center sm:justify-start gap-1">
-                  <i class="fa-solid fa-money-bill-wave"></i>
-                  <span>Vous recevrez</span>
-                </div>
-                <div class="text-2xl sm:text-3xl font-bold text-green-600">
-                  {{ (livraison.financier.montantCOD - livraison.financier.fraisLivraison) | fcfa }}
-                </div>
+              <div class="text-2xl sm:text-3xl font-bold text-green-600">
+                {{ (livraison.financier.montantCOD - livraison.financier.fraisLivraison) | fcfa }}
               </div>
             </div>
 
@@ -295,20 +273,53 @@
                 <div class="flex-1 min-w-0">
                   <div class="font-medium text-foreground text-sm sm:text-base flex items-center gap-2">
                     <i class="fa-solid fa-plus-circle text-primary"></i>
-                    <span>Livraison créée</span>
+                    <span>Commande créée</span>
                   </div>
                   <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.dateCreation) }}</div>
                 </div>
               </div>
 
-              <div *ngIf="livraison.dateRamassage" class="flex items-start gap-3 sm:gap-4">
+              <div *ngIf="livraison.suivi?.datePriseEnCharge" class="flex items-start gap-3 sm:gap-4">
+                <i class="fa-solid fa-circle text-primary text-xs mt-1.5 flex-shrink-0"></i>
+                <div class="flex-1 min-w-0">
+                  <div class="font-medium text-foreground text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-primary"></i>
+                    <span>Prise en charge</span>
+                  </div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.suivi!.datePriseEnCharge!) }}</div>
+                </div>
+              </div>
+
+              <div *ngIf="livraison.suivi?.dateConfirmation" class="flex items-start gap-3 sm:gap-4">
+                <i class="fa-solid fa-circle text-primary text-xs mt-1.5 flex-shrink-0"></i>
+                <div class="flex-1 min-w-0">
+                  <div class="font-medium text-foreground text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-check text-primary"></i>
+                    <span>Confirmée</span>
+                  </div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.suivi!.dateConfirmation!) }}</div>
+                </div>
+              </div>
+
+              <div *ngIf="livraison.suivi?.datePreteALivrer" class="flex items-start gap-3 sm:gap-4">
                 <i class="fa-solid fa-circle text-primary text-xs mt-1.5 flex-shrink-0"></i>
                 <div class="flex-1 min-w-0">
                   <div class="font-medium text-foreground text-sm sm:text-base flex items-center gap-2">
                     <i class="fa-solid fa-box-open text-primary"></i>
-                    <span>Colis ramassé</span>
+                    <span>Prête à livrer</span>
                   </div>
-                  <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.dateRamassage) }}</div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.suivi!.datePreteALivrer!) }}</div>
+                </div>
+              </div>
+
+              <div *ngIf="livraison.suivi?.dateAssignation" class="flex items-start gap-3 sm:gap-4">
+                <i class="fa-solid fa-circle text-primary text-xs mt-1.5 flex-shrink-0"></i>
+                <div class="flex-1 min-w-0">
+                  <div class="font-medium text-foreground text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-truck-arrow-right text-primary"></i>
+                    <span>Assignée au livreur</span>
+                  </div>
+                  <div class="text-xs sm:text-sm text-muted-foreground">{{ formatDate(livraison.suivi!.dateAssignation!) }}</div>
                 </div>
               </div>
 
