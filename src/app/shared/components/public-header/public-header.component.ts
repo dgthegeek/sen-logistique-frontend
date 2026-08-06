@@ -99,8 +99,7 @@ export class PublicHeaderComponent {
   }
 
   get dashboardLink(): string {
-    const user = this.authService.getCurrentUser();
-    return user?.role === 'ADMIN' ? '/admin/dashboard' : '/vendeur/dashboard';
+    return this.authService.getHomeRoute();
   }
 
   toggleMobileMenu() {
