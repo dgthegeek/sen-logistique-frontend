@@ -46,6 +46,14 @@ import { ProfilComponent } from './shared/components/profil/profil.component';
 import { CreerLivraisonVendeurComponent } from './features/admin/creer-livraison-vendeur/creer-livraison-vendeur.component';
 import { ImpressionQrComponent } from './features/admin/impression-qr/impression-qr.component';
 import { AProposComponent } from './pages/a-propos/a-propos.component';
+
+// Finances livreurs (partagé coordinateur / admin) + historiques par rôle
+import { FinancesLivreursComponent } from './features/finances-livreurs/finances-livreurs.component';
+import { CoordinateurHistoriqueComponent } from './features/dispatcheur/historique/historique.component';
+import { CoordinateurCreerCommandeComponent } from './features/dispatcheur/creer-commande/creer-commande.component';
+import { LivreurHistoriqueComponent } from './features/livreur/historique/historique.component';
+import { LivreurFinancesComponent } from './features/livreur/finances/finances.component';
+import { CloseurHistoriqueComponent } from './features/closeur/historique/historique.component';
 import { ConditionsUtilisationComponent } from './pages/conditions-utilisation/conditions-utilisation.component';
 import { PolitiqueConfidentialiteComponent } from './pages/politique-confidentialite/politique-confidentialite.component';
 
@@ -105,6 +113,7 @@ export const routes: Routes = [
       { path: 'ramassages', component: RamassagesComponent },
       { path: 'livraisons', component: AdminLivraisonsComponent },
       { path: 'finances', component: AdminFinancesComponent },
+      { path: 'finances-livreurs', component: FinancesLivreursComponent },
       { path: 'vendeurs', component: GestionVendeursComponent },
       { path: 'bilan', component: BilanComponent },
       { path: 'classement', component: ClassementComponent },
@@ -128,6 +137,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'commandes', pathMatch: 'full' },
       { path: 'commandes', component: CloseurCommandesComponent },
+      { path: 'historique', component: CloseurHistoriqueComponent },
       { path: 'profil', component: ProfilComponent },
     ]
   },
@@ -139,6 +149,8 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'mes-livraisons', pathMatch: 'full' },
       { path: 'mes-livraisons', component: LivreurMesLivraisonsComponent },
+      { path: 'historique', component: LivreurHistoriqueComponent },
+      { path: 'finances', component: LivreurFinancesComponent },
       { path: 'profil', component: ProfilComponent },
     ]
   },
@@ -153,6 +165,9 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dispatch', pathMatch: 'full' },
       { path: 'dispatch', component: AdminDispatchComponent },
+      { path: 'historique', component: CoordinateurHistoriqueComponent },
+      { path: 'creer-commande', component: CoordinateurCreerCommandeComponent },
+      { path: 'finances', component: FinancesLivreursComponent },
       { path: 'profil', component: ProfilComponent },
     ]
   },

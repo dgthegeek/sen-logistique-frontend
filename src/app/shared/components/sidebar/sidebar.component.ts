@@ -35,6 +35,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Équipe', route: '/admin/equipe', icon: 'fa-solid fa-users-gear' },
         { label: 'Performances équipe', route: '/admin/performance', icon: 'fa-solid fa-gauge-high' },
         { label: 'Finances', route: '/admin/finances', icon: 'fa-solid fa-money-bill-trend-up' },
+        { label: 'Finances livreurs', route: '/admin/finances-livreurs', icon: 'fa-solid fa-hand-holding-dollar' },
         { label: 'Bilan partenaires', route: '/admin/bilan', icon: 'fa-solid fa-file-invoice' },
         { label: 'Dioks League', route: '/admin/classement', icon: 'fa-solid fa-trophy' },
         { label: 'Stock & produits', route: '/admin/stock', icon: 'fa-solid fa-boxes-stacked' },
@@ -46,16 +47,22 @@ export class SidebarComponent implements OnInit {
     } else if (this.authService.isCloseur()) {
       this.menuItems = [
         { label: 'Commandes', route: '/closeur/commandes', icon: 'fa-solid fa-headset' },
+        { label: 'Historique', route: '/closeur/historique', icon: 'fa-solid fa-clock-rotate-left' },
         { label: 'Mon compte', route: '/closeur/profil', icon: 'fa-solid fa-user-gear' },
       ];
     } else if (this.authService.isLivreur()) {
       this.menuItems = [
         { label: 'Mes livraisons', route: '/livreur/mes-livraisons', icon: 'fa-solid fa-motorcycle' },
+        { label: 'Historique', route: '/livreur/historique', icon: 'fa-solid fa-clock-rotate-left' },
+        { label: 'Mes finances', route: '/livreur/finances', icon: 'fa-solid fa-wallet' },
         { label: 'Mon compte', route: '/livreur/profil', icon: 'fa-solid fa-user-gear' },
       ];
     } else if (this.authService.isDispatcheur()) {
       this.menuItems = [
         { label: 'Dispatch', route: '/dispatcheur/dispatch', icon: 'fa-solid fa-truck-arrow-right' },
+        { label: 'Historique commandes', route: '/dispatcheur/historique', icon: 'fa-solid fa-clock-rotate-left' },
+        { label: 'Créer une commande', route: '/dispatcheur/creer-commande', icon: 'fa-solid fa-circle-plus' },
+        { label: 'Finances livreurs', route: '/dispatcheur/finances', icon: 'fa-solid fa-hand-holding-dollar' },
         { label: 'Mon compte', route: '/dispatcheur/profil', icon: 'fa-solid fa-user-gear' },
       ];
     } else {

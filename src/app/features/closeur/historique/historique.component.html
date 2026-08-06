@@ -1,0 +1,70 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-5xl mx-auto">
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+              <i class="fa-solid fa-clock-rotate-left"></i> Mon historique
+            </h1>
+            <p class="text-sm text-muted-foreground">Les commandes que vous avez prises en charge.</p>
+          </div>
+          <button class="btn-outline" (click)="charger()">
+            <i class="fa-solid fa-rotate-right"></i> Actualiser
+          </button>
+        </div>
+
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+        <div *ngIf="!loading && loadError" class="card text-center py-8 text-muted-foreground">
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500 mb-2"></i>
+          <p>Impossible de charger l'historique.</p>
+        </div>
+
+        <div *ngIf="!loading && !loadError" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="py-3 px-2">N° Tracking</th>
+                <th class="py-3 px-2">Statut</th>
+                <th class="py-3 px-2">Client</th>
+                <th class="py-3 px-2">Adresse</th>
+                <th class="py-3 px-2 text-right">Montant COD</th>
+                <th class="py-3 px-2 text-right">Détail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of commandes" class="border-b border-border/50">
+                <td class="py-3 px-2 font-mono text-foreground">{{ c.numeroTracking }}</td>
+                <td class="py-3 px-2">
+                  <span class="badge" [ngClass]="badgeClass(c.statut)">{{ label(c.statut) }}</span>
+                </td>
+                <td class="py-3 px-2">
+                  <div class="text-foreground">{{ c.nomClient }}</div>
+                  <div class="text-xs text-muted-foreground">{{ c.telephoneClient }}</div>
+                </td>
+                <td class="py-3 px-2 text-muted-foreground">{{ c.adresse || '—' }}<span *ngIf="c.zone"> ({{ c.zone }})</span></td>
+                <td class="py-3 px-2 text-right">{{ c.montantCOD | fcfa }}</td>
+                <td class="py-3 px-2 text-right">
+                  <a [routerLink]="['/commande', c.id]" class="btn-outline btn-sm">
+                    <i class="fa-solid fa-eye"></i> Voir
+                  </a>
+                </td>
+              </tr>
+              <tr *ngIf="commandes.length === 0">
+                <td colspan="6" class="py-6 text-center text-muted-foreground">Aucune commande.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>

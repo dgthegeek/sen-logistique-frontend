@@ -1,0 +1,94 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-6xl mx-auto">
+
+        <div class="mb-6">
+          <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+            <i class="fa-solid fa-clock-rotate-left"></i> Historique des commandes
+          </h1>
+          <p class="text-sm text-muted-foreground">Toutes les commandes, filtrables par statut et date.</p>
+        </div>
+
+        <!-- Filtres -->
+        <div class="card mb-4 flex flex-col sm:flex-row gap-3 sm:items-end">
+          <div class="flex-1">
+            <label class="block text-sm text-muted-foreground mb-1">Statut</label>
+            <select class="form-input w-full" [(ngModel)]="selectedStatut" (change)="appliquerFiltres()">
+              <option *ngFor="let s of statuts" [value]="s.value">{{ s.label }}</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block text-sm text-muted-foreground mb-1">Date de création</label>
+            <input type="date" class="form-input w-full" [(ngModel)]="selectedDate" (change)="appliquerFiltres()">
+          </div>
+          <button class="btn-outline" (click)="reinitialiser()">
+            <i class="fa-solid fa-eraser"></i> Réinitialiser
+          </button>
+        </div>
+
+        <!-- Chargement -->
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+        <div *ngIf="!loading && loadError" class="card text-center py-8 text-muted-foreground">
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500 mb-2"></i>
+          <p>Impossible de charger l'historique.</p>
+        </div>
+
+        <!-- Table -->
+        <div *ngIf="!loading && !loadError" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="py-3 px-2">N° Tracking</th>
+                <th class="py-3 px-2">Statut</th>
+                <th class="py-3 px-2 text-right">Montant COD</th>
+                <th class="py-3 px-2 text-right">Frais</th>
+                <th class="py-3 px-2">Créée le</th>
+                <th class="py-3 px-2 text-right">Détail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of commandes" class="border-b border-border/50">
+                <td class="py-3 px-2 font-mono text-foreground">{{ c.numeroTracking }}</td>
+                <td class="py-3 px-2">
+                  <span class="badge" [ngClass]="badgeClass(c.statut)">{{ label(c.statut) }}</span>
+                </td>
+                <td class="py-3 px-2 text-right">{{ c.montantCOD | fcfa }}</td>
+                <td class="py-3 px-2 text-right text-muted-foreground">{{ c.fraisLivraison | fcfa }}</td>
+                <td class="py-3 px-2 whitespace-nowrap text-muted-foreground">{{ c.dateCreation | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td class="py-3 px-2 text-right">
+                  <a [routerLink]="['/commande', c.id]" class="btn-outline btn-sm">
+                    <i class="fa-solid fa-eye"></i> Voir
+                  </a>
+                </td>
+              </tr>
+              <tr *ngIf="commandes.length === 0">
+                <td colspan="6" class="py-6 text-center text-muted-foreground">Aucune commande.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="!loading && !loadError && totalPages > 1" class="flex items-center justify-between mt-4 text-sm">
+          <span class="text-muted-foreground">{{ totalElements }} commande(s) — page {{ currentPage + 1 }}/{{ totalPages }}</span>
+          <div class="flex gap-2">
+            <button class="btn-outline btn-sm" [disabled]="currentPage === 0" (click)="pagePrecedente()">
+              <i class="fa-solid fa-chevron-left"></i> Précédent
+            </button>
+            <button class="btn-outline btn-sm" [disabled]="currentPage >= totalPages - 1" (click)="pageSuivante()">
+              Suivant <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>

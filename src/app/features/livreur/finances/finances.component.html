@@ -1,0 +1,81 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-4xl mx-auto">
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+              <i class="fa-solid fa-wallet"></i> Mes finances
+            </h1>
+            <p class="text-sm text-muted-foreground">Cash encaissé et montant restant à reverser.</p>
+          </div>
+          <button class="btn-outline" (click)="charger()">
+            <i class="fa-solid fa-rotate-right"></i> Actualiser
+          </button>
+        </div>
+
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+        <div *ngIf="!loading && loadError" class="card text-center py-8 text-muted-foreground">
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500 mb-2"></i>
+          <p>Impossible de charger vos finances.</p>
+        </div>
+
+        <ng-container *ngIf="!loading && !loadError && finances">
+          <!-- Cartes récap -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div class="card">
+              <p class="text-sm text-muted-foreground">Chiffre d'affaires encaissé</p>
+              <p class="text-2xl font-bold text-foreground">{{ finances.totalCollecte | fcfa }}</p>
+              <p class="text-xs text-muted-foreground mt-1">{{ finances.nombreLivraisons }} livraison(s) réussie(s)</p>
+            </div>
+            <div class="card">
+              <p class="text-sm text-muted-foreground">Déjà reversé</p>
+              <p class="text-2xl font-bold text-emerald-600">{{ finances.totalVerse | fcfa }}</p>
+            </div>
+            <div class="card border-l-4 border-amber-500">
+              <p class="text-sm text-muted-foreground">Reste à reverser</p>
+              <p class="text-2xl font-bold text-amber-600">{{ finances.soldeARegler | fcfa }}</p>
+              <p class="text-xs text-muted-foreground mt-1">{{ finances.nombreLivraisonsNonReglees }} livraison(s) non réglée(s)</p>
+            </div>
+          </div>
+
+          <!-- Historique des versements -->
+          <h2 class="text-lg font-bold text-foreground mb-3">
+            <i class="fa-solid fa-clock-rotate-left"></i> Mes versements
+          </h2>
+          <div class="card overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-muted-foreground border-b border-border">
+                  <th class="py-3 px-2">Date</th>
+                  <th class="py-3 px-2 text-right">Montant</th>
+                  <th class="py-3 px-2 text-center">Livraisons</th>
+                  <th class="py-3 px-2">Reçu par</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let v of finances.versements" class="border-b border-border/50">
+                  <td class="py-3 px-2 whitespace-nowrap">{{ v.dateVersement | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td class="py-3 px-2 text-right font-semibold text-emerald-600">{{ v.montant | fcfa }}</td>
+                  <td class="py-3 px-2 text-center">{{ v.nombreLivraisons }}</td>
+                  <td class="py-3 px-2 text-muted-foreground">{{ v.effectuePar || '—' }}</td>
+                </tr>
+                <tr *ngIf="finances.versements.length === 0">
+                  <td colspan="4" class="py-6 text-center text-muted-foreground">Aucun versement pour le moment.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+
+      </div>
+    </main>
+  </div>
+</div>
