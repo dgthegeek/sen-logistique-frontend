@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { ZoneService } from '../../../core/services/zone.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
 import { StatutVendeur, VendeurDTO, VendeurFilters } from '../../../core/models/vendeur.model';
 import { CreateLivraisonRequest, CalculTarifRequest, Zone } from '../../../core/models/livraison.model';
@@ -65,7 +66,8 @@ export class CreerLivraisonVendeurComponent implements OnInit {
     private apiService: ApiService,
     private zoneService: ZoneService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.initForm();
   }
@@ -301,9 +303,14 @@ export class CreerLivraisonVendeurComponent implements OnInit {
     };
 
     this.loading = true;
-    
-    // Créer la livraison
-    this.apiService.creerLivraison(request).subscribe({
+
+    // Créer la livraison. Le coordinateur logistique (dispatcheur) passe par
+    // /dispatch/commandes ; l'admin par /vendeur/livraisons. Même service back,
+    // donc même comportement (produits, stock, file closeur).
+    const creation$ = this.authService.isDispatcheur()
+      ? this.apiService.coordinateurCreerCommande(request)
+      : this.apiService.creerLivraison(request);
+    creation$.subscribe({
       next: (response) => {
         this.createdLivraison = {
           ...response,
@@ -344,7 +351,7 @@ export class CreerLivraisonVendeurComponent implements OnInit {
   }
 
   closeSuccessModal() {
-    this.router.navigate(['/admin/livraisons']);
+    this.router.navigate([this.authService.isDispatcheur() ? '/dispatcheur/historique' : '/admin/livraisons']);
   }
 
   resetForm() {

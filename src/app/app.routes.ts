@@ -50,7 +50,6 @@ import { AProposComponent } from './pages/a-propos/a-propos.component';
 // Finances livreurs (partagé coordinateur / admin) + historiques par rôle
 import { FinancesLivreursComponent } from './features/finances-livreurs/finances-livreurs.component';
 import { CoordinateurHistoriqueComponent } from './features/dispatcheur/historique/historique.component';
-import { CoordinateurCreerCommandeComponent } from './features/dispatcheur/creer-commande/creer-commande.component';
 import { LivreurHistoriqueComponent } from './features/livreur/historique/historique.component';
 import { LivreurFinancesComponent } from './features/livreur/finances/finances.component';
 import { CloseurHistoriqueComponent } from './features/closeur/historique/historique.component';
@@ -166,7 +165,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dispatch', pathMatch: 'full' },
       { path: 'dispatch', component: AdminDispatchComponent },
       { path: 'historique', component: CoordinateurHistoriqueComponent },
-      { path: 'creer-commande', component: CoordinateurCreerCommandeComponent },
+      { path: 'creer-commande', component: CreerLivraisonVendeurComponent },
       { path: 'finances', component: FinancesLivreursComponent },
       { path: 'profil', component: ProfilComponent },
     ]
