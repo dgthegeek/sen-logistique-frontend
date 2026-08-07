@@ -40,20 +40,20 @@ import { RouterModule } from '@angular/router';
             <ul class="space-y-2 text-sm">
               <li>
                 <a href="#services" class="hover:text-white transition-colors flex items-center gap-2">
+                  <i class="fa-solid fa-plane-departure text-primary"></i>
+                  <span>Transit international</span>
+                </a>
+              </li>
+              <li>
+                <a href="#services" class="hover:text-white transition-colors flex items-center gap-2">
+                  <i class="fa-solid fa-warehouse text-primary"></i>
+                  <span>Réception &amp; stockage</span>
+                </a>
+              </li>
+              <li>
+                <a href="#services" class="hover:text-white transition-colors flex items-center gap-2">
                   <i class="fa-solid fa-truck-fast text-primary"></i>
-                  <span>Livraison rapide</span>
-                </a>
-              </li>
-              <li>
-                <a href="#services" class="hover:text-white transition-colors flex items-center gap-2">
-                  <i class="fa-solid fa-location-dot text-primary"></i>
-                  <span>Suivi en temps réel</span>
-                </a>
-              </li>
-              <li>
-                <a href="#services" class="hover:text-white transition-colors flex items-center gap-2">
-                  <i class="fa-solid fa-money-bill-wave text-primary"></i>
-                  <span>Paiement COD</span>
+                  <span>Livraison &amp; encaissement</span>
                 </a>
               </li>
               <li>
@@ -76,15 +76,15 @@ import { RouterModule } from '@angular/router';
                 </a>
               </li>
               <li>
-                <a href="#how-it-works" class="hover:text-white transition-colors flex items-center gap-2">
-                  <i class="fa-solid fa-circle-question text-primary"></i>
-                  <span>Comment ça marche</span>
+                <a href="#zones" class="hover:text-white transition-colors flex items-center gap-2">
+                  <i class="fa-solid fa-map-location-dot text-primary"></i>
+                  <span>Zones de couverture</span>
                 </a>
               </li>
               <li>
-                <a href="#testimonials" class="hover:text-white transition-colors flex items-center gap-2">
-                  <i class="fa-solid fa-comment text-primary"></i>
-                  <span>Témoignages</span>
+                <a href="#tarifs" class="hover:text-white transition-colors flex items-center gap-2">
+                  <i class="fa-solid fa-tag text-primary"></i>
+                  <span>Tarification</span>
                 </a>
               </li>
               <li>

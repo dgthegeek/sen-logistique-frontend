@@ -23,9 +23,9 @@ import { ThemeService } from '../../../core/services/theme.service';
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center gap-8">
             <a (click)="navigateToSection('services')" class="nav-link">Services</a>
+            <a (click)="navigateToSection('zones')" class="nav-link">Zones</a>
+            <a (click)="navigateToSection('tarifs')" class="nav-link">Tarifs</a>
             <a (click)="navigateToSection('why-dioks')" class="nav-link">Pourquoi Dioks ?</a>
-            <a (click)="navigateToSection('how-it-works')" class="nav-link">Comment ça marche</a>
-            <a (click)="navigateToSection('testimonials')" class="nav-link">Témoignages</a>
             <a routerLink="/a-propos" class="nav-link" routerLinkActive="text-primary">À propos</a>
             <a (click)="navigateToSection('contact')" class="nav-link">Contact</a>
           </div>
@@ -59,9 +59,9 @@ import { ThemeService } from '../../../core/services/theme.service';
         <!-- Mobile Navigation -->
         <div *ngIf="mobileMenuOpen" class="md:hidden py-4 space-y-3">
           <a (click)="navigateToSection('services')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Services</a>
+          <a (click)="navigateToSection('zones')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Zones</a>
+          <a (click)="navigateToSection('tarifs')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Tarifs</a>
           <a (click)="navigateToSection('why-dioks')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Pourquoi Dioks ?</a>
-          <a (click)="navigateToSection('how-it-works')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Comment ça marche</a>
-          <a (click)="navigateToSection('testimonials')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Témoignages</a>
           <a routerLink="/a-propos" (click)="mobileMenuOpen = false" class="block px-4 py-2 hover:bg-muted rounded">À propos</a>
           <a (click)="navigateToSection('contact')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Contact</a>
           <div class="border-t pt-3 space-y-2">
