@@ -15,9 +15,7 @@ import { ThemeService } from '../../../core/services/theme.service';
           <!-- Logo -->
           <div class="flex items-center">
             <a routerLink="/" class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span class="text-white font-bold text-xl">D</span>
-              </div>
+              <img src="assets/icons/icon-512.png" alt="Dioks" class="w-10 h-10 rounded-lg">
               <span class="text-2xl font-bold text-primary">Dioks</span>
             </a>
           </div>
