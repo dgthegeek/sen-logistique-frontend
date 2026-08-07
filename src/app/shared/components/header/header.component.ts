@@ -17,6 +17,20 @@ import { ThemeService } from '../../../core/services/theme.service';
 export class HeaderComponent implements OnInit {
   currentUser: User | null = null;
 
+  /** Libellés d'affichage des rôles (le Dispatcheur devient « Coordinateur Logistique »). */
+  private readonly roleLabels: Record<string, string> = {
+    VENDEUR: 'Vendeur',
+    ADMIN: 'Administrateur',
+    CLOSEUR: 'Closeur',
+    LIVREUR: 'Livreur',
+    DISPATCHEUR: 'Coordinateur Logistique'
+  };
+
+  get roleLabel(): string {
+    const role = this.currentUser?.role;
+    return role ? (this.roleLabels[role] ?? role) : '';
+  }
+
   constructor(
     private authService: AuthService,
     private confirmationService: ConfirmationService,

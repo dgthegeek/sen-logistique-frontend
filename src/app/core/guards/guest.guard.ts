@@ -10,16 +10,10 @@ export const guestGuard = () => {
 
   const user = authService.getCurrentUser();
 
-  // Si l'utilisateur est connecté, rediriger selon son rôle
+  // Si l'utilisateur est connecté, rediriger vers son accueil selon son rôle
   if (user) {
     console.log('⚠️ Guest Guard - Utilisateur déjà connecté');
-    
-    if (user.role === 'ADMIN') {
-      router.navigate(['/admin/dashboard']);
-    } else {
-      router.navigate(['/vendeur/dashboard']);
-    }
-    
+    router.navigateByUrl(authService.getHomeRoute());
     return false;
   }
 

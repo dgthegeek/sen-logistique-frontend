@@ -1,0 +1,72 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-5xl mx-auto">
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+              <i class="fa-solid fa-clock-rotate-left"></i> Historique
+            </h1>
+            <p class="text-sm text-muted-foreground">Toutes vos livraisons, quel que soit le statut.</p>
+          </div>
+          <div class="w-full sm:w-56">
+            <select class="form-input w-full" [(ngModel)]="selectedStatut" (change)="charger()">
+              <option *ngFor="let s of statuts" [value]="s.value">{{ s.label }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+        <div *ngIf="!loading && loadError" class="card text-center py-8 text-muted-foreground">
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500 mb-2"></i>
+          <p>Impossible de charger l'historique.</p>
+        </div>
+
+        <div *ngIf="!loading && !loadError" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="py-3 px-2">N° Tracking</th>
+                <th class="py-3 px-2">Statut</th>
+                <th class="py-3 px-2">Client</th>
+                <th class="py-3 px-2">Adresse</th>
+                <th class="py-3 px-2 text-right">Montant</th>
+                <th class="py-3 px-2 text-right">Détail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let l of livraisons" class="border-b border-border/50">
+                <td class="py-3 px-2 font-mono text-foreground">{{ l.numeroTracking }}</td>
+                <td class="py-3 px-2">
+                  <span class="badge" [ngClass]="badgeClass(l.statut)">{{ label(l.statut) }}</span>
+                </td>
+                <td class="py-3 px-2">
+                  <div class="text-foreground">{{ l.nomClient }}</div>
+                  <div class="text-xs text-muted-foreground">{{ l.telephoneClient }}</div>
+                </td>
+                <td class="py-3 px-2 text-muted-foreground">{{ l.adresse || '—' }}<span *ngIf="l.zone"> ({{ l.zone }})</span></td>
+                <td class="py-3 px-2 text-right">{{ l.montantAEncaisser | fcfa }}</td>
+                <td class="py-3 px-2 text-right">
+                  <a [routerLink]="['/commande', l.id]" class="btn-outline btn-sm">
+                    <i class="fa-solid fa-eye"></i> Voir
+                  </a>
+                </td>
+              </tr>
+              <tr *ngIf="livraisons.length === 0">
+                <td colspan="6" class="py-6 text-center text-muted-foreground">Aucune livraison.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>

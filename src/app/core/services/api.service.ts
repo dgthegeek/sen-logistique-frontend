@@ -27,6 +27,7 @@ import { BilanVendeur } from '../models/bilan-vendeur.model';
 import { ClassementResponse } from '../models/classement.model';
 import { PerformanceResponse } from '../models/performance.model';
 import { TelegramStatut } from '../models/telegram.model';
+import { LivreurSolde, VersementLivreur, PageVersement, LivreurFinances } from '../models/finance-livreur.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -519,6 +520,70 @@ export class ApiService {
 
   modifierMonProduit(id: number, data: UpdateProduitRequest): Observable<Produit> {
     return this.http.put<Produit>(`${this.baseUrl}/vendeur/produits/${id}`, data);
+  }
+
+  // ========== COORDINATEUR LOGISTIQUE (ex-Dispatcheur) ==========
+
+  /** Historique des commandes (filtrable statut/date), pour le coordinateur. */
+  getCoordinateurHistorique(statut?: string, date?: string, page: number = 0, size: number = 50): Observable<LivraisonsAdminResponse> {
+    let params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    if (statut) { params = params.set('statut', statut); }
+    if (date) { params = params.set('date', date); }
+    return this.http.get<LivraisonsAdminResponse>(`${this.baseUrl}/dispatch/commandes`, { params });
+  }
+
+  /** Créer une commande (coordinateur) pour le compte d'un vendeur. */
+  coordinateurCreerCommande(data: CreateLivraisonRequest): Observable<CreateLivraisonResponse> {
+    return this.http.post<CreateLivraisonResponse>(`${this.baseUrl}/dispatch/commandes`, data);
+  }
+
+  /** Soldes de cash à régler par livreur (coordinateur). */
+  getCoordinateurSoldesLivreurs(): Observable<LivreurSolde[]> {
+    return this.http.get<LivreurSolde[]>(`${this.baseUrl}/dispatch/finances/livreurs`);
+  }
+
+  /** Marquer le cash d'un livreur comme versé (coordinateur). */
+  coordinateurVerserLivreur(livreurId: number, commentaire?: string): Observable<VersementLivreur> {
+    return this.http.post<VersementLivreur>(`${this.baseUrl}/dispatch/finances/livreurs/${livreurId}/verser`, { commentaire });
+  }
+
+  /** Historique des versements (coordinateur). */
+  getCoordinateurVersements(page: number = 0, size: number = 50): Observable<PageVersement> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    return this.http.get<PageVersement>(`${this.baseUrl}/dispatch/finances/versements`, { params });
+  }
+
+  // ========== FINANCE LIVREURS (Admin) ==========
+
+  getAdminSoldesLivreurs(): Observable<LivreurSolde[]> {
+    return this.http.get<LivreurSolde[]>(`${this.baseUrl}/admin/finances/livreurs`);
+  }
+
+  adminVerserLivreur(livreurId: number, commentaire?: string): Observable<VersementLivreur> {
+    return this.http.post<VersementLivreur>(`${this.baseUrl}/admin/finances/livreurs/${livreurId}/verser`, { commentaire });
+  }
+
+  getAdminVersements(page: number = 0, size: number = 50): Observable<PageVersement> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    return this.http.get<PageVersement>(`${this.baseUrl}/admin/finances/versements`, { params });
+  }
+
+  // ========== LIVREUR : historique & finances ==========
+
+  getLivreurHistorique(statut?: StatutLivraison): Observable<CommandeLivreur[]> {
+    let params = new HttpParams();
+    if (statut) { params = params.set('statut', statut); }
+    return this.http.get<CommandeLivreur[]>(`${this.baseUrl}/livreur/historique`, { params });
+  }
+
+  getLivreurFinances(): Observable<LivreurFinances> {
+    return this.http.get<LivreurFinances>(`${this.baseUrl}/livreur/finances`);
+  }
+
+  // ========== CLOSEUR : historique ==========
+
+  getCloseurHistorique(): Observable<CommandeCloseur[]> {
+    return this.http.get<CommandeCloseur[]>(`${this.baseUrl}/closeur/historique`);
   }
 
 }

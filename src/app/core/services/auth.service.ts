@@ -98,4 +98,21 @@ export class AuthService {
   get currentUserValue(): User | null {
   return this.currentUserSubject.value;
 }
+
+  /**
+   * Route d'accueil de l'utilisateur selon son rôle.
+   * Source unique de vérité utilisée par le guestGuard et le lien "Dashboard"
+   * pour éviter d'envoyer un non-vendeur vers /vendeur/dashboard (boucle de redirection).
+   */
+  getHomeRoute(): string {
+    const role = this.currentUserSubject.value?.role;
+    switch (role) {
+      case 'ADMIN': return '/admin/stats';
+      case 'CLOSEUR': return '/closeur/commandes';
+      case 'LIVREUR': return '/livreur/mes-livraisons';
+      case 'DISPATCHEUR': return '/dispatcheur/dispatch';
+      case 'VENDEUR': return '/vendeur/dashboard';
+      default: return '/login';
+    }
+  }
 }

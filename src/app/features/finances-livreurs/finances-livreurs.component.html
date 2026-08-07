@@ -1,0 +1,152 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-6xl mx-auto">
+
+        <!-- Titre -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+              <i class="fa-solid fa-hand-holding-dollar"></i> Finances livreurs
+            </h1>
+            <p class="text-sm text-muted-foreground">
+              Cash encaissé par chaque livreur et qu'il doit reverser.
+            </p>
+          </div>
+          <button class="btn-outline" (click)="charger()">
+            <i class="fa-solid fa-rotate-right"></i> Actualiser
+          </button>
+        </div>
+
+        <!-- Total à régler -->
+        <div class="card mb-6 flex items-center justify-between">
+          <div>
+            <p class="text-sm text-muted-foreground">Total à recouvrer (tous livreurs)</p>
+            <p class="text-2xl font-bold text-foreground">{{ totalARegler | fcfa }}</p>
+          </div>
+          <i class="fa-solid fa-sack-dollar text-3xl text-emerald-500"></i>
+        </div>
+
+        <!-- Onglets -->
+        <div class="flex gap-2 mb-4">
+          <button class="btn" [class.btn-primary]="!ongletHistorique" [class.btn-outline]="ongletHistorique"
+                  (click)="basculerOnglet(false)">
+            <i class="fa-solid fa-users"></i> Par livreur
+          </button>
+          <button class="btn" [class.btn-primary]="ongletHistorique" [class.btn-outline]="!ongletHistorique"
+                  (click)="basculerOnglet(true)">
+            <i class="fa-solid fa-clock-rotate-left"></i> Historique des versements
+          </button>
+        </div>
+
+        <!-- Chargement -->
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+        <div *ngIf="!loading && loadError" class="card text-center py-8 text-muted-foreground">
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500 mb-2"></i>
+          <p>Impossible de charger les données.</p>
+        </div>
+
+        <!-- ONGLET : Par livreur -->
+        <div *ngIf="!loading && !loadError && !ongletHistorique" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="py-3 px-2">Livreur</th>
+                <th class="py-3 px-2 text-right">À verser</th>
+                <th class="py-3 px-2 text-center">Livraisons non réglées</th>
+                <th class="py-3 px-2 text-right">Total collecté</th>
+                <th class="py-3 px-2 text-right">Déjà versé</th>
+                <th class="py-3 px-2 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let l of soldes" class="border-b border-border/50">
+                <td class="py-3 px-2">
+                  <div class="font-medium text-foreground">{{ l.prenom }} {{ l.nom }}</div>
+                  <div class="text-xs text-muted-foreground">{{ l.telephone }}</div>
+                </td>
+                <td class="py-3 px-2 text-right font-semibold"
+                    [class.text-emerald-600]="l.soldeARegler > 0">
+                  {{ l.soldeARegler | fcfa }}
+                </td>
+                <td class="py-3 px-2 text-center">{{ l.nombreLivraisonsNonReglees }}</td>
+                <td class="py-3 px-2 text-right text-muted-foreground">{{ l.totalCollecte | fcfa }}</td>
+                <td class="py-3 px-2 text-right text-muted-foreground">{{ l.totalVerse | fcfa }}</td>
+                <td class="py-3 px-2 text-right">
+                  <button class="btn-primary btn-sm"
+                          [disabled]="l.soldeARegler <= 0 || versementEnCours === l.livreurId"
+                          (click)="ouvrirVerser(l)">
+                    <i class="fa-solid fa-check"></i>
+                    <span *ngIf="versementEnCours !== l.livreurId"> Marquer versé</span>
+                    <span *ngIf="versementEnCours === l.livreurId"> ...</span>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="soldes.length === 0">
+                <td colspan="6" class="py-6 text-center text-muted-foreground">Aucun livreur.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ONGLET : Historique des versements -->
+        <div *ngIf="!loading && !loadError && ongletHistorique" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="py-3 px-2">Date</th>
+                <th class="py-3 px-2">Livreur</th>
+                <th class="py-3 px-2 text-right">Montant</th>
+                <th class="py-3 px-2 text-center">Livraisons</th>
+                <th class="py-3 px-2">Validé par</th>
+                <th class="py-3 px-2">Commentaire</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of versements" class="border-b border-border/50">
+                <td class="py-3 px-2 whitespace-nowrap">{{ v.dateVersement | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td class="py-3 px-2 font-medium text-foreground">{{ v.livreurNom }}</td>
+                <td class="py-3 px-2 text-right font-semibold text-emerald-600">{{ v.montant | fcfa }}</td>
+                <td class="py-3 px-2 text-center">{{ v.nombreLivraisons }}</td>
+                <td class="py-3 px-2 text-muted-foreground">{{ v.effectuePar || '—' }}</td>
+                <td class="py-3 px-2 text-muted-foreground">{{ v.commentaire || '—' }}</td>
+              </tr>
+              <tr *ngIf="versements.length === 0">
+                <td colspan="6" class="py-6 text-center text-muted-foreground">Aucun versement enregistré.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal de versement -->
+  <div *ngIf="showVerserModal && cible" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="card max-w-md w-full">
+      <h2 class="text-lg font-bold text-foreground mb-2">
+        <i class="fa-solid fa-hand-holding-dollar"></i> Confirmer le versement
+      </h2>
+      <p class="text-sm text-muted-foreground mb-4">
+        Vous confirmez avoir reçu de <strong>{{ cible.prenom }} {{ cible.nom }}</strong> la somme de
+        <strong class="text-emerald-600">{{ cible.soldeARegler | fcfa }}</strong>
+        ({{ cible.nombreLivraisonsNonReglees }} livraison(s)). Son solde repassera à zéro.
+      </p>
+      <label class="block text-sm text-muted-foreground mb-1">Commentaire (optionnel)</label>
+      <textarea class="form-input w-full mb-4" rows="2" [(ngModel)]="commentaire"
+                placeholder="Ex : versement espèces du jour"></textarea>
+      <div class="flex justify-end gap-2">
+        <button class="btn-outline" (click)="fermerVerser()">Annuler</button>
+        <button class="btn-primary" [disabled]="versementEnCours === cible.livreurId" (click)="confirmerVerser()">
+          <i class="fa-solid fa-check"></i> Confirmer le versement
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

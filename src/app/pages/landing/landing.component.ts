@@ -37,103 +37,140 @@ export class LandingComponent {
     this.contact = { nom: '', email: '', sujet: '', message: '' };
   }
 
-  services = [
-    {
-      icon: 'fa-solid fa-truck-fast',
-      title: 'Livraison Rapide',
-      description: 'Livraison en 24-48h à Dakar. Service express disponible pour livraison le jour même.'
-    },
-    {
-      icon: 'fa-solid fa-mobile-screen-button',
-      title: 'Suivi en Temps Réel',
-      description: 'Suivez vos colis en temps réel avec notre système de tracking avancé.'
-    },
-    {
-      icon: 'fa-solid fa-money-bill-wave',
-      title: 'Paiement COD',
-      description: 'Collectez le paiement à la livraison. Recevez votre argent rapidement et en toute sécurité.'
-    },
-    {
-      icon: 'fa-solid fa-map-location-dot',
-      title: 'Zones Couvertes',
-      description: 'Nous couvrons toute la région de Dakar : Plateau, Mermoz, Pikine, Guédiawaye et plus.'
-    }
+  /** Étapes de la chaîne logistique (carte du hero). */
+  chaine = [
+    { icon: 'fa-solid fa-dolly', label: 'Approvisionnement', sub: 'Local ou import' },
+    { icon: 'fa-solid fa-warehouse', label: 'Réception & stockage', sub: 'Entrepôt sécurisé' },
+    { icon: 'fa-solid fa-headset', label: 'Confirmation', sub: 'Appel & validation client' },
+    { icon: 'fa-solid fa-truck-fast', label: 'Livraison', sub: 'Encaissement inclus' }
   ];
 
-  advantages = [
+  /** Section 2 : nos services (chaque service avec ses sous-points). */
+  services = [
     {
-      icon: 'fa-solid fa-shield',
-      title: 'Fiable',
-      description: 'Plus de 95% de livraisons réussies'
+      icon: 'fa-solid fa-plane-departure',
+      title: 'Transit & Import',
+      points: [
+        'Accompagnement de vos importations (Chine, Turquie, Dubaï…)',
+        'Collaboration avec nos partenaires transitaires',
+        'Suivi des expéditions jusqu\'au Sénégal'
+      ]
     },
     {
-      icon: 'fa-solid fa-bolt',
-      title: 'Rapide',
-      description: 'Livraison express a Dakar'
+      icon: 'fa-solid fa-warehouse',
+      title: 'Réception & Stockage',
+      points: [
+        'Réception des marchandises',
+        'Contrôle des quantités',
+        'Enregistrement du stock',
+        'Stockage sécurisé dans l\'entrepôt Dioks'
+      ]
     },
     {
-      icon: 'fa-solid fa-gem',
-      title: 'Transparent',
-      description: 'Tarifs clairs et sans frais cachés'
+      icon: 'fa-solid fa-boxes-stacked',
+      title: 'Gestion des Stocks',
+      points: [
+        'Suivi du stock en temps réel',
+        'Historique des mouvements',
+        'Alertes de stock faible'
+      ]
     },
     {
       icon: 'fa-solid fa-headset',
-      title: 'Support 24/7',
-      description: 'Équipe disponible pour vous aider'
-    }
-  ];
-
-  steps = [
-    {
-      number: '1',
-      title: 'Inscrivez-vous',
-      description: 'Créez votre compte vendeur gratuitement en quelques minutes.'
+      title: 'Confirmation des commandes',
+      points: [
+        'Appel des clients',
+        'Validation des commandes',
+        'Préparation avant expédition'
+      ]
     },
     {
-      number: '2',
-      title: 'Créez une livraison',
-      description: 'Ajoutez les informations de votre client et du colis à livrer.'
-    },
-    {
-      number: '3',
-      title: 'Ramassage',
-      description: 'Notre équipe récupère le colis directement chez vous.'
-    },
-    {
-      number: '4',
+      icon: 'fa-solid fa-truck-fast',
       title: 'Livraison',
-      description: 'Votre colis est livré et vous recevez votre paiement.'
+      points: [
+        'Dispatch automatique',
+        'Attribution des commandes aux livreurs',
+        'Suivi des livraisons',
+        'Encaissement des paiements'
+      ]
     }
   ];
 
-  testimonials = [
+  /** Section 3 : secteurs de couverture à Dakar. */
+  secteurs = [
     {
-      name: 'Fatou Diop',
-      role: 'Vendeuse de cosmétiques',
-      image: 'fa-solid fa-user-circle',
-      text: 'Dioks a transformé mon business ! Mes clients reçoivent leurs commandes rapidement et je peux me concentrer sur mes ventes.',
-      rating: 5
+      icon: 'fa-solid fa-city',
+      name: 'Dakar Centre',
+      zones: ['Plateau', 'Médina', 'Point E', 'Fann', 'Mermoz', 'Sacré-Cœur',
+        'Liberté', 'Grand-Dakar', 'Hann', 'Ouakam', 'Ngor', 'Yoff', 'Almadies']
     },
     {
-      name: 'Moussa Sall',
-      role: 'Vendeur de vêtements',
-      image: 'fa-solid fa-user-circle',
-      text: 'Service professionnel et fiable. Le suivi en temps réel me permet de rassurer mes clients. Je recommande à 100%!',
-      rating: 5
+      icon: 'fa-solid fa-motorcycle',
+      name: 'Guédiawaye – Pikine',
+      zones: ['Guédiawaye', 'Pikine', 'Parcelles Assainies', 'Cambérène', 'Yeumbeul', 'Malika']
     },
     {
-      name: 'Aminata Ba',
-      role: 'Vendeuse d\'accessoires',
-      image: 'fa-solid fa-user-circle',
-      text: 'Enfin une solution adaptée aux vendeurs sur les réseaux ! Les tarifs sont corrects et le service est excellent.',
-      rating: 5
+      icon: 'fa-solid fa-truck',
+      name: 'Est de Dakar',
+      zones: ['Thiaroye', 'Keur Massar', 'Diamaguène', 'Mbao', 'Fass Mbao', 'Rufisque']
     }
+  ];
+
+  /** Comment ça marche : le flux général, de l'arrivée des produits à l'encaissement. */
+  etapes = [
+    {
+      icon: 'fa-solid fa-dolly',
+      title: 'Vos produits arrivent',
+      description: 'Importés de l\'étranger ou déposés localement, ils rejoignent l\'entrepôt Dioks.'
+    },
+    {
+      icon: 'fa-solid fa-warehouse',
+      title: 'Réception & stockage',
+      description: 'Contrôle des quantités, enregistrement et stockage sécurisé.'
+    },
+    {
+      icon: 'fa-solid fa-headset',
+      title: 'Commande confirmée',
+      description: 'Nos assistants appellent le client et valident la commande avant expédition.'
+    },
+    {
+      icon: 'fa-solid fa-truck-fast',
+      title: 'Dispatch & livraison',
+      description: 'Attribution à un livreur et livraison suivie, à Dakar comme en régions.'
+    },
+    {
+      icon: 'fa-solid fa-hand-holding-dollar',
+      title: 'Encaissement & reversement',
+      description: 'Le paiement est collecté à la livraison puis reversé au partenaire.'
+    }
+  ];
+
+  /** Ce que comprend la commission logistique. */
+  commissionInclus = [
+    'Confirmation de la commande',
+    'Préparation du colis',
+    'Gestion logistique',
+    'Livraison',
+    'Encaissement',
+    'Mise à jour du statut de la commande'
+  ];
+
+  /** Section 5 : pourquoi choisir Dioks. */
+  advantages = [
+    { icon: 'fa-solid fa-link', title: 'Chaîne logistique complète', description: 'Un seul prestataire de l\'import à la livraison finale.' },
+    { icon: 'fa-solid fa-plane-departure', title: 'Import & approvisionnement', description: 'De l\'étranger ou en local, vos produits centralisés à l\'entrepôt.' },
+    { icon: 'fa-solid fa-warehouse', title: 'Entrepôt sécurisé', description: 'Vos marchandises réceptionnées et stockées en sécurité.' },
+    { icon: 'fa-solid fa-boxes-stacked', title: 'Stocks en temps réel', description: 'Suivi, historique des mouvements et alertes de stock faible.' },
+    { icon: 'fa-solid fa-headset', title: 'Confirmation avant livraison', description: 'Chaque commande est appelée et validée avant expédition.' },
+    { icon: 'fa-solid fa-users-gear', title: 'Équipe dédiée', description: 'Assistants, coordinateur logistique et livreurs.' },
+    { icon: 'fa-solid fa-chart-line', title: 'Plateforme de suivi', description: 'Suivez vos commandes et vos stocks en continu.' },
+    { icon: 'fa-solid fa-gem', title: 'Commission unique & transparente', description: 'Un tarif clair, sans frais cachés.' }
   ];
 
   stats = [
-    { value: '5000+', label: 'Livraisons effectuées' },
-    { value: '200+', label: 'Vendeurs actifs' },
-    { value: '95%', label: 'Taux de satisfaction' },
-    { value: '24h', label: 'Délai max' }
+    { value: '25+', label: 'Quartiers desservis' },
+    { value: '3', label: 'Secteurs à Dakar' },
+    { value: '14', label: 'Régions du Sénégal' },
+    { value: '0 F', label: 'Abonnement mensuel' }
   ];
 }

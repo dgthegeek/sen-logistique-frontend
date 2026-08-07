@@ -9,15 +9,13 @@ import { ThemeService } from '../../../core/services/theme.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <header class="bg-[#0a1024]/85 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <header class="bg-white/90 dark:bg-[#0a1024]/85 backdrop-blur-md border-b border-gray-200 dark:border-white/10 sticky top-0 z-50">
       <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <!-- Logo -->
           <div class="flex items-center">
             <a routerLink="/" class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span class="text-white font-bold text-xl">D</span>
-              </div>
+              <img src="assets/icons/icon-512.png" alt="Dioks" class="w-10 h-10 rounded-lg">
               <span class="text-2xl font-bold text-primary">Dioks</span>
             </a>
           </div>
@@ -25,9 +23,10 @@ import { ThemeService } from '../../../core/services/theme.service';
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center gap-8">
             <a (click)="navigateToSection('services')" class="nav-link">Services</a>
-            <a (click)="navigateToSection('why-dioks')" class="nav-link">Pourquoi Dioks ?</a>
             <a (click)="navigateToSection('how-it-works')" class="nav-link">Comment ça marche</a>
-            <a (click)="navigateToSection('testimonials')" class="nav-link">Témoignages</a>
+            <a (click)="navigateToSection('zones')" class="nav-link">Zones</a>
+            <a (click)="navigateToSection('tarifs')" class="nav-link">Tarifs</a>
+            <a (click)="navigateToSection('why-dioks')" class="nav-link">Pourquoi Dioks ?</a>
             <a routerLink="/a-propos" class="nav-link" routerLinkActive="text-primary">À propos</a>
             <a (click)="navigateToSection('contact')" class="nav-link">Contact</a>
           </div>
@@ -61,9 +60,10 @@ import { ThemeService } from '../../../core/services/theme.service';
         <!-- Mobile Navigation -->
         <div *ngIf="mobileMenuOpen" class="md:hidden py-4 space-y-3">
           <a (click)="navigateToSection('services')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Services</a>
-          <a (click)="navigateToSection('why-dioks')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Pourquoi Dioks ?</a>
           <a (click)="navigateToSection('how-it-works')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Comment ça marche</a>
-          <a (click)="navigateToSection('testimonials')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Témoignages</a>
+          <a (click)="navigateToSection('zones')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Zones</a>
+          <a (click)="navigateToSection('tarifs')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Tarifs</a>
+          <a (click)="navigateToSection('why-dioks')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Pourquoi Dioks ?</a>
           <a routerLink="/a-propos" (click)="mobileMenuOpen = false" class="block px-4 py-2 hover:bg-muted rounded">À propos</a>
           <a (click)="navigateToSection('contact')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Contact</a>
           <div class="border-t pt-3 space-y-2">
@@ -99,8 +99,7 @@ export class PublicHeaderComponent {
   }
 
   get dashboardLink(): string {
-    const user = this.authService.getCurrentUser();
-    return user?.role === 'ADMIN' ? '/admin/dashboard' : '/vendeur/dashboard';
+    return this.authService.getHomeRoute();
   }
 
   toggleMobileMenu() {
