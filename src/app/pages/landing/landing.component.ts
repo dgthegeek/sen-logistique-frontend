@@ -39,7 +39,7 @@ export class LandingComponent {
 
   /** Étapes de la chaîne logistique (carte du hero). */
   chaine = [
-    { icon: 'fa-solid fa-plane-departure', label: 'Import Chine', sub: 'Transit international' },
+    { icon: 'fa-solid fa-dolly', label: 'Approvisionnement', sub: 'Local ou import' },
     { icon: 'fa-solid fa-warehouse', label: 'Réception & stockage', sub: 'Entrepôt sécurisé' },
     { icon: 'fa-solid fa-headset', label: 'Confirmation', sub: 'Appel & validation client' },
     { icon: 'fa-solid fa-truck-fast', label: 'Livraison', sub: 'Encaissement inclus' }
@@ -49,11 +49,11 @@ export class LandingComponent {
   services = [
     {
       icon: 'fa-solid fa-plane-departure',
-      title: 'Transit International',
+      title: 'Transit & Import',
       points: [
-        'Accompagnement des importations Chine → Sénégal',
+        'Accompagnement de vos importations (Chine, Turquie, Dubaï…)',
         'Collaboration avec nos partenaires transitaires',
-        'Suivi des expéditions'
+        'Suivi des expéditions jusqu\'au Sénégal'
       ]
     },
     {
@@ -116,37 +116,33 @@ export class LandingComponent {
     }
   ];
 
-  /** Livraison régions : les deux modes de fonctionnement. */
-  modesRegion = [
+  /** Comment ça marche : le flux général, de l'arrivée des produits à l'encaissement. */
+  etapes = [
     {
-      icon: 'fa-solid fa-hand-holding-dollar',
-      title: 'Paiement à destination',
-      badge: 'Le plus courant',
-      points: [
-        'Dioks prépare et remet le colis au transporteur',
-        'Le client règle les frais de transport au retrait ou à la livraison'
-      ]
+      icon: 'fa-solid fa-dolly',
+      title: 'Vos produits arrivent',
+      description: 'Importés de l\'étranger ou déposés localement, ils rejoignent l\'entrepôt Dioks.'
     },
     {
-      icon: 'fa-solid fa-gift',
-      title: 'Transport prépayé',
-      badge: 'Offres & promos',
-      points: [
-        'Le partenaire prend en charge les frais de transport',
-        'Dioks organise l\'expédition jusqu\'au transporteur',
-        'Le client reçoit son colis sans frais de transport'
-      ]
+      icon: 'fa-solid fa-warehouse',
+      title: 'Réception & stockage',
+      description: 'Contrôle des quantités, enregistrement et stockage sécurisé.'
+    },
+    {
+      icon: 'fa-solid fa-headset',
+      title: 'Commande confirmée',
+      description: 'Nos assistants appellent le client et valident la commande avant expédition.'
+    },
+    {
+      icon: 'fa-solid fa-truck-fast',
+      title: 'Dispatch & livraison',
+      description: 'Attribution à un livreur et livraison suivie, à Dakar comme en régions.'
+    },
+    {
+      icon: 'fa-solid fa-hand-holding-dollar',
+      title: 'Encaissement & reversement',
+      description: 'Le paiement est collecté à la livraison puis reversé au partenaire.'
     }
-  ];
-
-  /** Services inclus pour l'expédition régions. */
-  regionInclus = [
-    'Réception de la commande',
-    'Confirmation du client',
-    'Préparation du colis',
-    'Dépôt auprès du transporteur partenaire',
-    'Suivi jusqu\'à la remise au transporteur',
-    'Information du partenaire sur l\'état de l\'envoi'
   ];
 
   /** Ce que comprend la commission logistique. */
@@ -162,7 +158,7 @@ export class LandingComponent {
   /** Section 5 : pourquoi choisir Dioks. */
   advantages = [
     { icon: 'fa-solid fa-link', title: 'Chaîne logistique complète', description: 'Un seul prestataire de l\'import à la livraison finale.' },
-    { icon: 'fa-solid fa-plane-departure', title: 'Importation Chine → Sénégal', description: 'Transit international avec nos partenaires transitaires.' },
+    { icon: 'fa-solid fa-plane-departure', title: 'Import & approvisionnement', description: 'De l\'étranger ou en local, vos produits centralisés à l\'entrepôt.' },
     { icon: 'fa-solid fa-warehouse', title: 'Entrepôt sécurisé', description: 'Vos marchandises réceptionnées et stockées en sécurité.' },
     { icon: 'fa-solid fa-boxes-stacked', title: 'Stocks en temps réel', description: 'Suivi, historique des mouvements et alertes de stock faible.' },
     { icon: 'fa-solid fa-headset', title: 'Confirmation avant livraison', description: 'Chaque commande est appelée et validée avant expédition.' },
@@ -174,7 +170,7 @@ export class LandingComponent {
   stats = [
     { value: '25+', label: 'Quartiers desservis' },
     { value: '3', label: 'Secteurs à Dakar' },
-    { value: '2 000 F', label: 'Commission / commande' },
-    { value: '14', label: 'Régions du Sénégal' }
+    { value: '14', label: 'Régions du Sénégal' },
+    { value: '0 F', label: 'Abonnement mensuel' }
   ];
 }

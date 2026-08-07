@@ -9,7 +9,7 @@ import { ThemeService } from '../../../core/services/theme.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <header class="bg-[#0a1024]/85 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <header class="bg-white/90 dark:bg-[#0a1024]/85 backdrop-blur-md border-b border-gray-200 dark:border-white/10 sticky top-0 z-50">
       <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <!-- Logo -->
@@ -23,6 +23,7 @@ import { ThemeService } from '../../../core/services/theme.service';
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center gap-8">
             <a (click)="navigateToSection('services')" class="nav-link">Services</a>
+            <a (click)="navigateToSection('how-it-works')" class="nav-link">Comment ça marche</a>
             <a (click)="navigateToSection('zones')" class="nav-link">Zones</a>
             <a (click)="navigateToSection('tarifs')" class="nav-link">Tarifs</a>
             <a (click)="navigateToSection('why-dioks')" class="nav-link">Pourquoi Dioks ?</a>
@@ -59,6 +60,7 @@ import { ThemeService } from '../../../core/services/theme.service';
         <!-- Mobile Navigation -->
         <div *ngIf="mobileMenuOpen" class="md:hidden py-4 space-y-3">
           <a (click)="navigateToSection('services')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Services</a>
+          <a (click)="navigateToSection('how-it-works')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Comment ça marche</a>
           <a (click)="navigateToSection('zones')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Zones</a>
           <a (click)="navigateToSection('tarifs')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Tarifs</a>
           <a (click)="navigateToSection('why-dioks')" class="block px-4 py-2 hover:bg-muted rounded cursor-pointer">Pourquoi Dioks ?</a>

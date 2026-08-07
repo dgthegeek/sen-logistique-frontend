@@ -20,9 +20,9 @@
                         <span class="text-gradient">votre partenaire logistique de confiance.</span>
                     </h1>
                     <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 max-w-xl">
-                        De l'approvisionnement en Chine jusqu'à la livraison chez votre client, Dioks
-                        prend en charge l'ensemble de votre chaîne logistique afin que vous puissiez
-                        vous concentrer sur le développement de votre activité.
+                        Que vos produits soient importés de l'étranger ou déjà au Sénégal, Dioks gère
+                        l'ensemble de votre chaîne logistique — réception, stockage, confirmation,
+                        livraison et encaissement — pour que vous vous concentriez sur vos ventes.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
                         <a routerLink="/register" class="btn-neon text-base px-7 py-3.5">
@@ -33,7 +33,7 @@
                         </a>
                     </div>
                     <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-500 dark:text-slate-400 mt-8">
-                        <span><i class="fa-solid fa-check text-cyan-400 mr-1"></i>Import Chine → Sénégal</span>
+                        <span><i class="fa-solid fa-check text-cyan-400 mr-1"></i>Approvisionnement local &amp; import</span>
                         <span><i class="fa-solid fa-check text-cyan-400 mr-1"></i>Entrepôt sécurisé</span>
                         <span><i class="fa-solid fa-check text-cyan-400 mr-1"></i>Livraison &amp; encaissement</span>
                     </div>
@@ -99,8 +99,32 @@
         </div>
     </section>
 
+    <!-- ============ COMMENT ÇA MARCHE ============ -->
+    <section id="how-it-works" class="py-20 bg-muted/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-3">Comment ça marche</h2>
+                <span class="accent-bar mb-4"></span>
+                <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Un flux simple et maîtrisé, de l'arrivée de vos produits jusqu'au paiement.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div *ngFor="let etape of etapes; let i = index" class="relative text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 flex items-center justify-center relative">
+                        <i [class]="etape.icon + ' text-2xl text-primary'"></i>
+                        <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center">{{ i + 1 }}</span>
+                    </div>
+                    <h3 class="font-bold text-foreground mb-2">{{ etape.title }}</h3>
+                    <p class="text-sm text-muted-foreground">{{ etape.description }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ============ SECTION 3 : ZONES DE COUVERTURE ============ -->
-    <section id="zones" class="py-20 bg-muted/30">
+    <section id="zones" class="py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-3">Zones de couverture</h2>
@@ -128,90 +152,45 @@
                 </div>
             </div>
 
-            <!-- Livraison régions -->
-            <div class="card mb-8">
-                <div class="flex items-center gap-3 mb-4">
+            <!-- Expédition régions (mention générale) -->
+            <div class="card flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                <div class="w-14 h-14 flex-shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center">
                     <i class="fa-solid fa-earth-africa text-2xl text-primary"></i>
-                    <h3 class="text-xl font-bold text-foreground">Livraison dans les régions</h3>
                 </div>
-                <p class="text-muted-foreground mb-6">
-                    Dioks assure l'expédition des colis vers les différentes régions du Sénégal grâce à
-                    son réseau de partenaires transporteurs. Le fonctionnement est adapté selon les
-                    besoins du partenaire et du client.
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div *ngFor="let mode of modesRegion" class="rounded-2xl border border-border p-5 bg-background">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-3">
-                                <i [class]="mode.icon + ' text-xl text-primary'"></i>
-                                <h4 class="font-bold text-foreground">{{ mode.title }}</h4>
-                            </div>
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">{{ mode.badge }}</span>
-                        </div>
-                        <ul class="space-y-2">
-                            <li *ngFor="let p of mode.points" class="flex items-start gap-2 text-sm text-muted-foreground">
-                                <i class="fa-solid fa-angle-right text-primary mt-1 flex-shrink-0"></i>
-                                <span>{{ p }}</span>
-                            </li>
-                        </ul>
-                    </div>
+                <div>
+                    <h3 class="text-lg font-bold text-foreground mb-1">Expédition dans tout le Sénégal</h3>
+                    <p class="text-muted-foreground text-sm">
+                        Au-delà de Dakar, Dioks expédie vos colis vers les régions grâce à son réseau
+                        de partenaires transporteurs. Les modalités sont convenues à l'avance avec vous.
+                    </p>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <p class="font-semibold text-foreground mb-2"><i class="fa-solid fa-list-check text-primary mr-2"></i>Services inclus</p>
-                        <ul class="space-y-1.5">
-                            <li *ngFor="let s of regionInclus" class="flex items-start gap-2 text-sm text-muted-foreground">
-                                <i class="fa-solid fa-check text-primary mt-1 flex-shrink-0"></i>
-                                <span>{{ s }}</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 p-5">
-                        <p class="font-semibold text-amber-800 dark:text-amber-300 mb-2">
-                            <i class="fa-solid fa-circle-info mr-2"></i>Frais de transport régions
-                        </p>
-                        <p class="text-sm text-amber-800/80 dark:text-amber-200/80 mb-2">Les frais varient selon :</p>
-                        <ul class="text-sm text-amber-800/80 dark:text-amber-200/80 space-y-1">
-                            <li>• la destination</li>
-                            <li>• le poids ou le volume du colis</li>
-                            <li>• le transporteur choisi</li>
-                        </ul>
-                        <p class="text-sm text-amber-800/80 dark:text-amber-200/80 mt-2">Le montant est communiqué avant l'expédition.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Zones non desservies -->
-            <div class="text-center text-sm text-muted-foreground">
-                <i class="fa-solid fa-ban text-destructive mr-1"></i>
-                Zones non desservies actuellement : <span class="font-medium text-foreground">Lac Rose</span>, <span class="font-medium text-foreground">Bargny</span>.
             </div>
         </div>
     </section>
 
-    <!-- ============ SECTION 4 : TARIFICATION ============ -->
-    <section id="tarifs" class="py-20">
+    <!-- ============ SECTION 4 : NOTRE MODÈLE ============ -->
+    <section id="tarifs" class="py-20 bg-muted/30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-3">Tarification</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-3">Un modèle simple et transparent</h2>
                 <span class="accent-bar mb-4"></span>
                 <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Une commission unique et transparente, sans frais cachés.
+                    Nous travaillons à la commission : vous ne payez que sur les commandes réellement livrées.
                 </p>
             </div>
 
             <div class="max-w-3xl mx-auto">
                 <div class="card border-2 border-primary/30 text-center">
-                    <p class="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2">Commission logistique</p>
-                    <div class="flex items-end justify-center gap-2 mb-1">
-                        <span class="text-5xl md:text-6xl font-extrabold text-primary">2 000</span>
-                        <span class="text-2xl font-bold text-primary mb-2">FCFA</span>
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <i class="fa-solid fa-handshake text-2xl text-primary"></i>
                     </div>
-                    <p class="text-muted-foreground mb-8">par commande livrée</p>
+                    <h3 class="text-2xl font-bold text-foreground mb-2">Une commission unique par commande</h3>
+                    <p class="text-muted-foreground mb-8 max-w-xl mx-auto">
+                        Pas d'abonnement, pas de frais cachés. Une seule commission, prélevée uniquement
+                        lorsque la commande est livrée — le tarif est convenu clairement avec chaque partenaire.
+                    </p>
 
-                    <p class="font-semibold text-foreground mb-4">Cette commission comprend :</p>
+                    <p class="font-semibold text-foreground mb-4">Ce que la commission comprend :</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left max-w-xl mx-auto">
                         <div *ngFor="let item of commissionInclus" class="flex items-center gap-2">
                             <i class="fa-solid fa-circle-check text-primary flex-shrink-0"></i>
@@ -221,11 +200,11 @@
 
                     <div class="mt-8">
                         <a routerLink="/register" class="btn-primary text-lg px-8 py-4">
-                            <i class="fa-solid fa-handshake"></i> Devenir partenaire
+                            <i class="fa-solid fa-handshake"></i> Discutons de votre projet
                         </a>
                     </div>
                     <p class="text-xs text-muted-foreground mt-4">
-                        Les frais de transport vers les régions sont facturés à part et communiqués avant l'expédition.
+                        Les éventuels frais de transport hors Dakar sont communiqués à l'avance.
                     </p>
                 </div>
             </div>
@@ -233,7 +212,7 @@
     </section>
 
     <!-- ============ SECTION 5 : POURQUOI DIOKS ============ -->
-    <section id="why-dioks" class="py-20 bg-muted/30">
+    <section id="why-dioks" class="py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-3">Pourquoi choisir Dioks ?</h2>
@@ -302,31 +281,70 @@
 
     <!-- ============ CONTACT ============ -->
     <section id="contact" class="py-20 bg-muted/30">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">Contactez-nous</h2>
-                <p class="text-lg text-muted-foreground">Une question ? Notre équipe est là pour vous aider</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-3">Devenez partenaire Dioks</h2>
+                <span class="accent-bar mb-4"></span>
+                <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Parlez-nous de votre activité — nous construisons ensemble la logistique qui vous convient.
+                </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="card text-center">
-                    <i class="fa-solid fa-location-dot text-4xl text-primary mb-4"></i>
-                    <h3 class="font-bold text-foreground mb-2">Adresse</h3>
-                    <p class="text-muted-foreground">Dakar, Sénégal</p>
-                </div>
-                <div class="card text-center">
-                    <i class="fa-solid fa-phone text-4xl text-primary mb-4"></i>
-                    <h3 class="font-bold text-foreground mb-2">Téléphone</h3>
-                    <a href="tel:+221781082373" class="text-primary hover:underline">+221 78 108 23 73</a>
-                </div>
-                <div class="card text-center">
-                    <i class="fa-solid fa-envelope text-4xl text-primary mb-4"></i>
-                    <h3 class="font-bold text-foreground mb-2">Email</h3>
-                    <a href="mailto:dioks&#64;gmail.com" class="text-primary hover:underline">dioks&#64;gmail.com</a>
-                </div>
-            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                <!-- Argumentaire + coordonnées -->
+                <div class="card flex flex-col">
+                    <h3 class="text-xl font-bold text-foreground mb-4">Ce que Dioks gère pour vous</h3>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <span class="text-muted-foreground">Import, réception et <span class="text-foreground font-medium">stockage sécurisé</span> de vos produits</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <span class="text-muted-foreground"><span class="text-foreground font-medium">Confirmation</span> des commandes par notre équipe avant expédition</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <span class="text-muted-foreground"><span class="text-foreground font-medium">Livraison</span> à Dakar et en régions, avec encaissement</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <span class="text-muted-foreground">Une <span class="text-foreground font-medium">plateforme de suivi</span> de vos commandes et de vos stocks</span>
+                        </li>
+                    </ul>
 
-            <div class="max-w-2xl mx-auto mt-12">
+                    <div class="mt-auto space-y-3 pt-6 border-t border-border">
+                        <a href="tel:+221781082373" class="flex items-center gap-3 group">
+                            <span class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-phone text-primary"></i>
+                            </span>
+                            <span>
+                                <span class="block text-xs text-muted-foreground">Téléphone</span>
+                                <span class="text-foreground font-medium group-hover:text-primary transition-colors">+221 78 108 23 73</span>
+                            </span>
+                        </a>
+                        <a href="mailto:dioks&#64;gmail.com" class="flex items-center gap-3 group">
+                            <span class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-envelope text-primary"></i>
+                            </span>
+                            <span>
+                                <span class="block text-xs text-muted-foreground">Email</span>
+                                <span class="text-foreground font-medium group-hover:text-primary transition-colors">dioks&#64;gmail.com</span>
+                            </span>
+                        </a>
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-location-dot text-primary"></i>
+                            </span>
+                            <span>
+                                <span class="block text-xs text-muted-foreground">Adresse</span>
+                                <span class="text-foreground font-medium">Dakar, Sénégal</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulaire -->
                 <div class="card">
                     <h3 class="text-xl font-bold text-foreground mb-1">Envoyez-nous un message</h3>
                     <p class="text-sm text-muted-foreground mb-6">
@@ -354,7 +372,7 @@
                             <label class="form-label">Message <span class="text-destructive">*</span></label>
                             <textarea name="message" rows="5" class="form-textarea" required
                                       [(ngModel)]="contact.message"
-                                      placeholder="Écrivez votre message..."></textarea>
+                                      placeholder="Parlez-nous de votre activité et de vos besoins..."></textarea>
                         </div>
                         <div class="text-right">
                             <button type="submit" class="btn-primary" [disabled]="!contactForm.form.valid">
