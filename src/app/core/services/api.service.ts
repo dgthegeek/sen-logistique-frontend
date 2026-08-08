@@ -28,6 +28,7 @@ import { ClassementResponse } from '../models/classement.model';
 import { PerformanceResponse } from '../models/performance.model';
 import { TelegramStatut } from '../models/telegram.model';
 import { LivreurSolde, VersementLivreur, PageVersement, LivreurFinances } from '../models/finance-livreur.model';
+import { MaintenanceResult, VendeurImpact, SuppressionVendeurResult } from '../models/maintenance.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -584,6 +585,28 @@ export class ApiService {
 
   getCloseurHistorique(): Observable<CommandeCloseur[]> {
     return this.http.get<CommandeCloseur[]>(`${this.baseUrl}/closeur/historique`);
+  }
+
+  // ========== MAINTENANCE (Admin) — suppression de données ==========
+
+  maintenanceSupprimerLivraison(id: number): Observable<MaintenanceResult> {
+    return this.http.delete<MaintenanceResult>(`${this.baseUrl}/admin/maintenance/livraisons/${id}`);
+  }
+
+  maintenanceSupprimerTransaction(id: number): Observable<MaintenanceResult> {
+    return this.http.delete<MaintenanceResult>(`${this.baseUrl}/admin/maintenance/transactions/${id}`);
+  }
+
+  maintenanceSupprimerMembre(userId: number): Observable<MaintenanceResult> {
+    return this.http.delete<MaintenanceResult>(`${this.baseUrl}/admin/maintenance/membres/${userId}`);
+  }
+
+  maintenanceImpactVendeur(id: number): Observable<VendeurImpact> {
+    return this.http.get<VendeurImpact>(`${this.baseUrl}/admin/maintenance/vendeurs/${id}/impact`);
+  }
+
+  maintenanceSupprimerVendeur(id: number): Observable<SuppressionVendeurResult> {
+    return this.http.delete<SuppressionVendeurResult>(`${this.baseUrl}/admin/maintenance/vendeurs/${id}`);
   }
 
 }
