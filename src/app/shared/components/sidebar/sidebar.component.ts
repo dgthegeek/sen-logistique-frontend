@@ -41,6 +41,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Stock & produits', route: '/admin/stock', icon: 'fa-solid fa-boxes-stacked' },
         { label: 'Gestion vendeurs', route: '/admin/vendeurs', icon: 'fa-solid fa-store' },
         { label: 'Zones de livraison', route: '/admin/zones', icon: 'fa-solid fa-map-location-dot' },
+        { label: 'Maintenance', route: '/admin/maintenance', icon: 'fa-solid fa-broom' },
         { label: 'Mon compte', route: '/admin/profil', icon: 'fa-solid fa-user-gear' }
         // QR retiré du front (les livreurs valident depuis leur portail) — code conservé
       ];

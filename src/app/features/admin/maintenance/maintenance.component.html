@@ -1,0 +1,178 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-6xl mx-auto">
+
+        <div class="mb-6">
+          <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+            <i class="fa-solid fa-broom"></i> Maintenance des données
+          </h1>
+          <p class="text-sm text-muted-foreground">
+            Supprimer des données (ex. tests créés par erreur). Chaque suppression est
+            <strong>définitive</strong> et demande une confirmation.
+          </p>
+        </div>
+
+        <!-- Avertissement -->
+        <div class="card mb-6 border-l-4 border-red-500 bg-red-50 dark:bg-red-500/10">
+          <p class="text-sm text-red-800 dark:text-red-300">
+            <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+            Zone sensible : les suppressions sont irréversibles. Les comptes administrateur ne sont pas supprimables.
+          </p>
+        </div>
+
+        <!-- Onglets -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button class="btn-sm" [ngClass]="tab === 'livraisons' ? 'btn-primary' : 'btn-outline'" (click)="switchTab('livraisons')">
+            <i class="fa-solid fa-truck"></i> Livraisons
+          </button>
+          <button class="btn-sm" [ngClass]="tab === 'transactions' ? 'btn-primary' : 'btn-outline'" (click)="switchTab('transactions')">
+            <i class="fa-solid fa-receipt"></i> Transactions
+          </button>
+          <button class="btn-sm" [ngClass]="tab === 'equipe' ? 'btn-primary' : 'btn-outline'" (click)="switchTab('equipe')">
+            <i class="fa-solid fa-users-gear"></i> Équipe
+          </button>
+          <button class="btn-sm" [ngClass]="tab === 'vendeurs' ? 'btn-primary' : 'btn-outline'" (click)="switchTab('vendeurs')">
+            <i class="fa-solid fa-store"></i> Vendeurs
+          </button>
+        </div>
+
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+
+        <!-- ONGLET LIVRAISONS -->
+        <div *ngIf="!loading && tab === 'livraisons'" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="py-3 px-2">N° Tracking</th>
+                <th class="py-3 px-2">Statut</th>
+                <th class="py-3 px-2 text-right">COD</th>
+                <th class="py-3 px-2">Créée le</th>
+                <th class="py-3 px-2 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let l of livraisons" class="border-b border-border/50">
+                <td class="py-3 px-2 font-mono text-foreground">{{ l.numeroTracking }}</td>
+                <td class="py-3 px-2">{{ label(l.statut) }}</td>
+                <td class="py-3 px-2 text-right">{{ l.montantCOD | fcfa }}</td>
+                <td class="py-3 px-2 whitespace-nowrap text-muted-foreground">{{ l.dateCreation | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td class="py-3 px-2 text-right">
+                  <button class="btn-danger btn-sm" [disabled]="deletingId === l.id" (click)="supprimerLivraison(l)">
+                    <i class="fa-solid fa-trash"></i> Supprimer
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="livraisons.length === 0"><td colspan="5" class="py-6 text-center text-muted-foreground">Aucune livraison.</td></tr>
+            </tbody>
+          </table>
+          <div *ngIf="livTotalPages > 1" class="flex items-center justify-between mt-4 text-sm">
+            <span class="text-muted-foreground">{{ livTotalElements }} livraison(s) — page {{ livPage + 1 }}/{{ livTotalPages }}</span>
+            <div class="flex gap-2">
+              <button class="btn-outline btn-sm" [disabled]="livPage === 0" (click)="pagePrecedente()"><i class="fa-solid fa-chevron-left"></i></button>
+              <button class="btn-outline btn-sm" [disabled]="livPage >= livTotalPages - 1" (click)="pageSuivante()"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ONGLET TRANSACTIONS -->
+        <div *ngIf="!loading && tab === 'transactions'" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="py-3 px-2">Référence</th>
+                <th class="py-3 px-2">Vendeur</th>
+                <th class="py-3 px-2">Type</th>
+                <th class="py-3 px-2 text-right">Montant</th>
+                <th class="py-3 px-2">Statut</th>
+                <th class="py-3 px-2 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of transactions" class="border-b border-border/50">
+                <td class="py-3 px-2 font-mono text-foreground">{{ t.reference }}</td>
+                <td class="py-3 px-2">{{ t.vendeur }}</td>
+                <td class="py-3 px-2 text-muted-foreground">{{ t.type }}</td>
+                <td class="py-3 px-2 text-right">{{ t.montant | fcfa }}</td>
+                <td class="py-3 px-2">{{ t.statut }}</td>
+                <td class="py-3 px-2 text-right">
+                  <button class="btn-danger btn-sm" [disabled]="deletingId === t.id" (click)="supprimerTransaction(t)">
+                    <i class="fa-solid fa-trash"></i> Supprimer
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="transactions.length === 0"><td colspan="6" class="py-6 text-center text-muted-foreground">Aucune transaction.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ONGLET ÉQUIPE -->
+        <div *ngIf="!loading && tab === 'equipe'" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="py-3 px-2">Nom</th>
+                <th class="py-3 px-2">Rôle</th>
+                <th class="py-3 px-2">Téléphone</th>
+                <th class="py-3 px-2 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let m of membres" class="border-b border-border/50">
+                <td class="py-3 px-2 text-foreground">{{ m.prenom }} {{ m.nom }}</td>
+                <td class="py-3 px-2"><span class="badge badge-pending">{{ roleLabel(m.role) }}</span></td>
+                <td class="py-3 px-2 text-muted-foreground">{{ m.telephone }}</td>
+                <td class="py-3 px-2 text-right">
+                  <button class="btn-danger btn-sm" [disabled]="deletingId === m.id" (click)="supprimerMembre(m)">
+                    <i class="fa-solid fa-trash"></i> Supprimer
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="membres.length === 0"><td colspan="4" class="py-6 text-center text-muted-foreground">Aucun membre.</td></tr>
+            </tbody>
+          </table>
+          <p class="text-xs text-muted-foreground mt-3">
+            <i class="fa-solid fa-circle-info"></i> Supprimer un membre ne supprime pas ses livraisons : elles sont conservées mais dissociées.
+          </p>
+        </div>
+
+        <!-- ONGLET VENDEURS -->
+        <div *ngIf="!loading && tab === 'vendeurs'" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-muted-foreground border-b border-border">
+                <th class="py-3 px-2">Nom</th>
+                <th class="py-3 px-2">Boutique</th>
+                <th class="py-3 px-2">Téléphone</th>
+                <th class="py-3 px-2 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of vendeurs" class="border-b border-border/50">
+                <td class="py-3 px-2 text-foreground">{{ v.prenom }} {{ v.nom }}</td>
+                <td class="py-3 px-2 text-muted-foreground">{{ v.nomBoutique || '—' }}</td>
+                <td class="py-3 px-2 text-muted-foreground">{{ v.telephone }}</td>
+                <td class="py-3 px-2 text-right">
+                  <button class="btn-danger btn-sm" [disabled]="deletingId === v.id" (click)="supprimerVendeur(v)">
+                    <i class="fa-solid fa-trash"></i> Supprimer + données
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="vendeurs.length === 0"><td colspan="4" class="py-6 text-center text-muted-foreground">Aucun vendeur.</td></tr>
+            </tbody>
+          </table>
+          <p class="text-xs text-red-600 dark:text-red-400 mt-3">
+            <i class="fa-solid fa-triangle-exclamation"></i> Supprimer un vendeur efface aussi <strong>toutes</strong> ses livraisons, transactions et produits.
+          </p>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>

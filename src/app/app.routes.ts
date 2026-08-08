@@ -50,6 +50,7 @@ import { AProposComponent } from './pages/a-propos/a-propos.component';
 // Finances livreurs (partagé coordinateur / admin) + historiques par rôle
 import { FinancesLivreursComponent } from './features/finances-livreurs/finances-livreurs.component';
 import { CoordinateurHistoriqueComponent } from './features/dispatcheur/historique/historique.component';
+import { AdminMaintenanceComponent } from './features/admin/maintenance/maintenance.component';
 import { LivreurHistoriqueComponent } from './features/livreur/historique/historique.component';
 import { LivreurFinancesComponent } from './features/livreur/finances/finances.component';
 import { CloseurHistoriqueComponent } from './features/closeur/historique/historique.component';
@@ -126,6 +127,7 @@ export const routes: Routes = [
       { path: 'equipe', component: AdminEquipeComponent },       // ← Gestion closeurs/livreurs
       { path: 'stats', component: AdminStatsComponent },         // ← Tableau de bord stats
       { path: 'stock', component: AdminStockComponent },         // ← Module Stock
+      { path: 'maintenance', component: AdminMaintenanceComponent }, // ← Suppression de données
     ]
   },
 
