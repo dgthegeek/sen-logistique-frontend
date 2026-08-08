@@ -39,7 +39,7 @@
         <div *ngIf="!loading && produits.length > 0" class="card overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
-              <tr class="text-left text-muted-foreground border-b border-border">
+              <tr class="text-left bg-primary/10 text-foreground font-semibold border-b-2 border-primary/30">
                 <th class="p-2">Code</th>
                 <th class="p-2">Produit</th>
                 <th class="p-2 text-center">Stock</th>
@@ -49,7 +49,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let p of produits" class="border-b border-border/50">
+              <tr *ngFor="let p of produits" class="border-b border-border/50 text-foreground">
                 <td class="p-2 font-mono">{{ p.code }}</td>
                 <td class="p-2 font-medium text-foreground">{{ p.nom }}</td>
                 <td class="p-2 text-center">
