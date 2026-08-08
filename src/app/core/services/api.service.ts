@@ -50,6 +50,11 @@ export class ApiService {
     return this.http.get<Quartier[]>(`${this.baseUrl}/quartiers/commune/${commune}`);
   }
 
+  /** Tous les quartiers actifs (zones de couverture affichées sur l'accueil). */
+  getQuartiersCouverts(): Observable<Quartier[]> {
+    return this.http.get<Quartier[]>(`${this.baseUrl}/quartiers`);
+  }
+
   // Tarifs
   calculerTarif(data: CalculTarifRequest): Observable<CalculTarifResponse> {
     return this.http.post<CalculTarifResponse>(`${this.baseUrl}/tarifs/calculer`, data);

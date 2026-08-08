@@ -14,6 +14,7 @@ export interface Quartier {
   id: number;
   nom: string;
   commune: string;
+  zone?: { id?: number; nom?: string };
 }
 
 export interface CalculTarifRequest {

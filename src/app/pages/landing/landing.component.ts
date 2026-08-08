@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PublicHeaderComponent } from '../../shared/components/public-header/public-header.component';
 import { PublicFooterComponent } from '../../shared/components/public-footer/public-footer.component';
 import { ToastService } from '../../core/services/toast.service';
+import { ApiService } from '../../core/services/api.service';
 
 @Component({
   selector: 'app-landing',
@@ -13,12 +14,35 @@ import { ToastService } from '../../core/services/toast.service';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css']
 })
-export class LandingComponent {
+export class LandingComponent implements OnInit {
   private readonly contactEmail = 'dioks@gmail.com';
 
   contact = { nom: '', email: '', sujet: '', message: '' };
 
-  constructor(private toast: ToastService) {}
+  constructor(private toast: ToastService, private api: ApiService) {}
+
+  ngOnInit(): void {
+    // Zones de couverture chargées dynamiquement depuis la base (gérées dans
+    // l'écran admin « Zones »). En cas d'échec, on garde la liste par défaut.
+    this.api.getQuartiersCouverts().subscribe({
+      next: (quartiers) => {
+        if (!quartiers || quartiers.length === 0) { return; }
+        const icones = ['fa-solid fa-city', 'fa-solid fa-motorcycle', 'fa-solid fa-truck',
+          'fa-solid fa-location-dot', 'fa-solid fa-map-pin', 'fa-solid fa-map-location-dot'];
+        const groupes = new Map<string, string[]>();
+        for (const q of quartiers) {
+          const cle = (q.zone && q.zone.nom) ? q.zone.nom : (q.commune || 'Autres');
+          if (!groupes.has(cle)) { groupes.set(cle, []); }
+          groupes.get(cle)!.push(q.nom);
+        }
+        let i = 0;
+        this.secteurs = Array.from(groupes.entries()).map(([name, zones]) => ({
+          icon: icones[i++ % icones.length], name, zones
+        }));
+      },
+      error: () => { /* on conserve les secteurs par défaut */ }
+    });
+  }
 
   /** Ouvre le client mail de l'utilisateur avec le message pré-rempli. */
   envoyerContact(): void {
