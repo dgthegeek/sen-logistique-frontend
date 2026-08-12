@@ -1,0 +1,86 @@
+<div class="min-h-screen bg-background">
+  <app-header></app-header>
+
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <main class="flex-1 min-w-0 p-4 sm:p-6">
+      <div class="max-w-5xl mx-auto">
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+              <i class="fa-solid fa-hand-holding-dollar"></i> Finance partenaires
+            </h1>
+            <p class="text-sm text-muted-foreground">
+              Ce que la plateforme doit encore verser à chaque vendeur.
+            </p>
+          </div>
+          <button class="btn-outline" (click)="charger()">
+            <i class="fa-solid fa-rotate-right"></i> Actualiser
+          </button>
+        </div>
+
+        <!-- Recherche + total -->
+        <div class="card mb-6 flex flex-col sm:flex-row sm:items-center gap-4">
+          <div class="flex-1 relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+            <input class="form-input w-full pl-9" [(ngModel)]="recherche"
+                   placeholder="Rechercher un vendeur par nom, boutique ou téléphone...">
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-muted-foreground">Total à verser (résultats affichés)</p>
+            <p class="text-xl font-bold text-foreground">{{ totalAPayer | fcfa }}</p>
+          </div>
+        </div>
+
+        <!-- Chargement -->
+        <div *ngIf="loading" class="card text-center py-10 text-muted-foreground">
+          <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+        </div>
+        <div *ngIf="!loading && loadError" class="card text-center py-8 text-muted-foreground">
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500 mb-2"></i>
+          <p>Impossible de charger les soldes partenaires.</p>
+        </div>
+
+        <!-- Table -->
+        <div *ngIf="!loading && !loadError" class="card overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left bg-primary/10 text-foreground font-semibold border-b-2 border-primary/30">
+                <th class="py-3 px-2">Vendeur</th>
+                <th class="py-3 px-2">Boutique</th>
+                <th class="py-3 px-2">Téléphone</th>
+                <th class="py-3 px-2 text-right">Chiffre d'affaires</th>
+                <th class="py-3 px-2 text-right">Déjà versé</th>
+                <th class="py-3 px-2 text-right">À verser</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of filtres" class="border-b border-border/50 text-foreground">
+                <td class="py-3 px-2 font-medium">{{ s.prenom }} {{ s.nom }}</td>
+                <td class="py-3 px-2 text-muted-foreground">{{ s.nomBoutique || '—' }}</td>
+                <td class="py-3 px-2 text-muted-foreground">{{ s.telephone }}</td>
+                <td class="py-3 px-2 text-right text-muted-foreground">{{ s.chiffreAffaires | fcfa }}</td>
+                <td class="py-3 px-2 text-right text-muted-foreground">{{ s.totalPaye | fcfa }}</td>
+                <td class="py-3 px-2 text-right font-semibold"
+                    [class.text-emerald-600]="s.soldeAPayer > 0">
+                  {{ s.soldeAPayer | fcfa }}
+                </td>
+              </tr>
+              <tr *ngIf="filtres.length === 0">
+                <td colspan="6" class="py-6 text-center text-muted-foreground">Aucun vendeur trouvé.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="text-xs text-muted-foreground mt-3">
+          <i class="fa-solid fa-circle-info"></i>
+          Pour effectuer un paiement, rendez-vous dans <strong>Finances &gt; Demandes de paiement</strong>.
+        </p>
+
+      </div>
+    </main>
+  </div>
+</div>

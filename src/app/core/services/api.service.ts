@@ -29,6 +29,7 @@ import { PerformanceResponse } from '../models/performance.model';
 import { TelegramStatut } from '../models/telegram.model';
 import { LivreurSolde, VersementLivreur, PageVersement, LivreurFinances } from '../models/finance-livreur.model';
 import { MaintenanceResult, VendeurImpact, SuppressionVendeurResult } from '../models/maintenance.model';
+import { PartenaireSolde } from '../models/finance-partenaire.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -612,6 +613,13 @@ export class ApiService {
 
   maintenanceSupprimerVendeur(id: number): Observable<SuppressionVendeurResult> {
     return this.http.delete<SuppressionVendeurResult>(`${this.baseUrl}/admin/maintenance/vendeurs/${id}`);
+  }
+
+  // ========== FINANCE PARTENAIRES (Admin) ==========
+
+  /** Soldes à verser à chaque vendeur (partenaire). */
+  getSoldesPartenaires(): Observable<PartenaireSolde[]> {
+    return this.http.get<PartenaireSolde[]>(`${this.baseUrl}/admin/finances/partenaires`);
   }
 
 }
