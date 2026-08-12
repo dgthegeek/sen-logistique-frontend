@@ -36,6 +36,7 @@ export class SidebarComponent implements OnInit {
         { label: 'Performances équipe', route: '/admin/performance', icon: 'fa-solid fa-gauge-high' },
         { label: 'Finances', route: '/admin/finances', icon: 'fa-solid fa-money-bill-trend-up' },
         { label: 'Finances livreurs', route: '/admin/finances-livreurs', icon: 'fa-solid fa-hand-holding-dollar' },
+        { label: 'Finance partenaires', route: '/admin/finance-partenaires', icon: 'fa-solid fa-people-arrows' },
         { label: 'Bilan partenaires', route: '/admin/bilan', icon: 'fa-solid fa-file-invoice' },
         { label: 'Dioks League', route: '/admin/classement', icon: 'fa-solid fa-trophy' },
         { label: 'Stock & produits', route: '/admin/stock', icon: 'fa-solid fa-boxes-stacked' },

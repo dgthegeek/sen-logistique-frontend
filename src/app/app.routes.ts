@@ -51,6 +51,7 @@ import { AProposComponent } from './pages/a-propos/a-propos.component';
 import { FinancesLivreursComponent } from './features/finances-livreurs/finances-livreurs.component';
 import { CoordinateurHistoriqueComponent } from './features/dispatcheur/historique/historique.component';
 import { AdminMaintenanceComponent } from './features/admin/maintenance/maintenance.component';
+import { AdminFinancePartenairesComponent } from './features/admin/finance-partenaires/finance-partenaires.component';
 import { LivreurHistoriqueComponent } from './features/livreur/historique/historique.component';
 import { LivreurFinancesComponent } from './features/livreur/finances/finances.component';
 import { CloseurHistoriqueComponent } from './features/closeur/historique/historique.component';
@@ -114,6 +115,7 @@ export const routes: Routes = [
       { path: 'livraisons', component: AdminLivraisonsComponent },
       { path: 'finances', component: AdminFinancesComponent },
       { path: 'finances-livreurs', component: FinancesLivreursComponent },
+      { path: 'finance-partenaires', component: AdminFinancePartenairesComponent },
       { path: 'vendeurs', component: GestionVendeursComponent },
       { path: 'bilan', component: BilanComponent },
       { path: 'classement', component: ClassementComponent },
