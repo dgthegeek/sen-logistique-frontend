@@ -9,8 +9,11 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ApiService } from '../../../core/services/api.service';
 import { ProfilResponse } from '../../../core/models/profile.model';
 import { TelegramStatut } from '../../../core/models/telegram.model';
+import { ApiKeyResponse } from '../../../core/models/api-key.model';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-profil',
@@ -33,12 +36,20 @@ export class ProfilComponent implements OnInit {
   telegram: TelegramStatut | null = null;
   telegramLoading = false;
 
+  // Clé API partenaire (intégrations externes)
+  apiKey: string | null = null;
+  apiKeyLoading = false;
+  apiKeyVisible = false;
+  readonly partnerCommandesUrl = this.buildAbsoluteApiUrl('/partner/commandes');
+  readonly partnerShopifyUrl = this.buildAbsoluteApiUrl('/partner/shopify/commandes');
+
   constructor(
     private profilService: ProfilService,
     private fb: FormBuilder,
     private toastService: ToastService,
     private authService: AuthService,
-    private api: ApiService
+    private api: ApiService,
+    private confirmationService: ConfirmationService
   ) {
     this.initForms();
   }
@@ -48,6 +59,62 @@ export class ProfilComponent implements OnInit {
     this.loadProfil();
     // Telegram disponible pour tous les rôles (chacun lie son propre compte)
     this.loadTelegram();
+    if (this.isVendeur) {
+      this.loadApiKey();
+    }
+  }
+
+  private buildAbsoluteApiUrl(path: string): string {
+    const base = environment.apiUrl.startsWith('http')
+      ? environment.apiUrl
+      : window.location.origin + environment.apiUrl;
+    return base + path;
+  }
+
+  loadApiKey() {
+    this.apiKeyLoading = true;
+    this.api.getApiKey().subscribe({
+      next: (r) => { this.apiKey = r.apiKey; this.apiKeyLoading = false; },
+      error: () => { this.apiKeyLoading = false; }
+    });
+  }
+
+  toggleApiKeyVisible() {
+    this.apiKeyVisible = !this.apiKeyVisible;
+  }
+
+  copierApiKey() {
+    if (!this.apiKey) return;
+    navigator.clipboard.writeText(this.apiKey).then(
+      () => this.toastService.success('Clé API copiée'),
+      () => this.toastService.error('Copie impossible')
+    );
+  }
+
+  regenererApiKey() {
+    const dejaConfiguree = !!this.apiKey;
+    this.confirmationService.confirm({
+      title: dejaConfiguree ? 'Régénérer la clé API' : 'Générer une clé API',
+      message: dejaConfiguree
+        ? 'Une nouvelle clé va être créée et l\'ancienne cessera immédiatement de fonctionner. Toute intégration existante (Shopify, script...) devra être mise à jour avec la nouvelle clé. Continuer ?'
+        : 'Cette clé permettra à un système externe (boutique Shopify, script...) de créer des commandes en votre nom. Continuer ?',
+      type: 'warning',
+      onConfirm: () => {
+        this.apiKeyLoading = true;
+        this.api.regenererApiKey().subscribe({
+          next: (r) => {
+            this.apiKey = r.apiKey;
+            this.apiKeyVisible = true;
+            this.apiKeyLoading = false;
+            this.toastService.success('Nouvelle clé API générée');
+          },
+          error: () => {
+            this.apiKeyLoading = false;
+            this.toastService.error('Action impossible');
+          }
+        });
+      }
+    });
   }
 
   loadTelegram() {

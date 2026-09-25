@@ -27,6 +27,7 @@ import { BilanVendeur } from '../models/bilan-vendeur.model';
 import { ClassementResponse } from '../models/classement.model';
 import { PerformanceResponse } from '../models/performance.model';
 import { TelegramStatut } from '../models/telegram.model';
+import { ApiKeyResponse } from '../models/api-key.model';
 import { LivreurSolde, VersementLivreur, PageVersement, LivreurFinances } from '../models/finance-livreur.model';
 import { MaintenanceResult, VendeurImpact, SuppressionVendeurResult } from '../models/maintenance.model';
 import { PartenaireSolde } from '../models/finance-partenaire.model';
@@ -168,6 +169,16 @@ export class ApiService {
 
   delierTelegram(): Observable<TelegramStatut> {
     return this.http.post<TelegramStatut>(`${this.baseUrl}/profil/telegram/delier`, {});
+  }
+
+  // ===== Clé API partenaire (intégrations externes : Shopify, scripts...) =====
+
+  getApiKey(): Observable<ApiKeyResponse> {
+    return this.http.get<ApiKeyResponse>(`${this.baseUrl}/vendeur/api-key`);
+  }
+
+  regenererApiKey(): Observable<ApiKeyResponse> {
+    return this.http.post<ApiKeyResponse>(`${this.baseUrl}/vendeur/api-key/regenerer`, {});
   }
 
   // ========== ADMIN ==========
