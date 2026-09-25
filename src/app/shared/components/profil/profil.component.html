@@ -138,8 +138,16 @@
                   Générez votre clé API ci-dessus.
                 </li>
                 <li>
+                  <strong class="text-foreground">Étape obligatoire</strong> — pour chaque produit que vous
+                  vendez sur Shopify : ouvrez ce même produit dans <strong>Mon stock</strong> ici sur Dioks,
+                  notez son <strong>code</strong> (ex. <code class="bg-muted/50 px-1 rounded">DKS-00042</code>),
+                  puis collez-le dans le champ <strong>SKU</strong> de la fiche produit correspondante sur Shopify.
+                  Sans ce code, la commande Shopify sera automatiquement refusée par Dioks.
+                </li>
+                <li>
                   Dans Shopify : <strong>Réglages &gt; Notifications &gt; Webhooks</strong>, créez un webhook
-                  sur l'événement <strong>"Order creation"</strong> avec cette URL (votre clé y est incluse) :
+                  sur l'événement <strong>"Order creation"</strong>, format <strong>JSON</strong>, avec cette
+                  URL (votre clé y est incluse) :
                   <div class="form-input font-mono break-all mt-1 select-all">{{ partnerShopifyUrl }}?key={{ apiKey || 'VOTRE_CLE' }}</div>
                 </li>
                 <li>
@@ -148,6 +156,12 @@
                   avec l'en-tête <code class="bg-muted/50 px-1 rounded">X-Api-Key: {{ apiKey || 'VOTRE_CLE' }}</code>.
                 </li>
               </ol>
+              <p class="mt-3 text-amber-600">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Si un produit de la commande n'a pas de SKU reconnu, la commande entière est refusée
+                (aucune création partielle) — vérifiez que tous les SKU Shopify correspondent bien à un
+                code produit Dioks avant d'activer le webhook.
+              </p>
             </details>
           </div>
 
