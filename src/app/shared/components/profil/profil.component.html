@@ -90,6 +90,67 @@
             </p>
           </div>
 
+          <!-- Intégrations externes : clé API (Shopify, scripts...) -->
+          <div *ngIf="isVendeur" class="card mb-4 sm:mb-6">
+            <h3 class="text-lg font-semibold flex items-center gap-2 mb-2">
+              <i class="fa-solid fa-plug text-primary"></i>Intégrations (Shopify, autres boutiques)
+            </h3>
+            <p class="text-sm text-muted-foreground mb-4">
+              Laissez votre boutique en ligne créer automatiquement une commande Dioks dès
+              qu'une commande y est validée, sans passer par votre espace.
+            </p>
+
+            <!-- Clé existante -->
+            <div *ngIf="apiKey" class="mb-4">
+              <label class="text-xs text-muted-foreground mb-1 block">Votre clé API</label>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <div class="form-input flex-1 font-mono text-sm break-all bg-muted/30 select-all">
+                  {{ apiKeyVisible ? apiKey : '••••••••••••••••••••••••••••••••' }}
+                </div>
+                <div class="flex gap-2">
+                  <button class="btn-outline text-sm" type="button" (click)="toggleApiKeyVisible()">
+                    <i class="fa-solid" [class.fa-eye]="!apiKeyVisible" [class.fa-eye-slash]="apiKeyVisible"></i>
+                  </button>
+                  <button class="btn-outline text-sm" type="button" (click)="copierApiKey()">
+                    <i class="fa-solid fa-copy"></i>
+                  </button>
+                </div>
+              </div>
+              <p class="text-xs text-amber-600 mt-1">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Ne partagez cette clé qu'avec des systèmes de confiance : elle permet de créer des commandes en votre nom.
+              </p>
+            </div>
+            <p *ngIf="!apiKey && !apiKeyLoading" class="text-sm text-muted-foreground mb-4">
+              Aucune clé générée pour le moment.
+            </p>
+
+            <button class="btn-primary text-sm mb-4" [disabled]="apiKeyLoading" (click)="regenererApiKey()">
+              <i class="fa-solid fa-key mr-2"></i>{{ apiKey ? 'Régénérer la clé' : 'Générer une clé API' }}
+            </button>
+
+            <details class="text-xs text-muted-foreground">
+              <summary class="cursor-pointer font-medium text-foreground mb-2">
+                Comment connecter Shopify ?
+              </summary>
+              <ol class="list-decimal list-inside space-y-2 mt-2">
+                <li>
+                  Générez votre clé API ci-dessus.
+                </li>
+                <li>
+                  Dans Shopify : <strong>Réglages &gt; Notifications &gt; Webhooks</strong>, créez un webhook
+                  sur l'événement <strong>"Order creation"</strong> avec cette URL (votre clé y est incluse) :
+                  <div class="form-input font-mono break-all mt-1 select-all">{{ partnerShopifyUrl }}?key={{ apiKey || 'VOTRE_CLE' }}</div>
+                </li>
+                <li>
+                  Pour une intégration personnalisée (script, Zapier...), appelez plutôt :
+                  <div class="form-input font-mono break-all mt-1 select-all">{{ partnerCommandesUrl }}</div>
+                  avec l'en-tête <code class="bg-muted/50 px-1 rounded">X-Api-Key: {{ apiKey || 'VOTRE_CLE' }}</code>.
+                </li>
+              </ol>
+            </details>
+          </div>
+
           <!-- Profile Form -->
           <div class="card mb-4 sm:mb-6">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
