@@ -24,6 +24,13 @@ export interface PerfLivreur {
   nombreEchecs: number;
   tauxReussite: number;
   tempsMoyenLivraisonMin: number;
+  echecsParMotif?: EchecParMotif[];
+}
+
+export interface EchecParMotif {
+  motif: string;
+  nombre: number;
+  pourcentage: number;
 }
 
 export interface PerformanceResponse {
@@ -33,6 +40,7 @@ export interface PerformanceResponse {
   tempsMoyenLivraisonMin: number;
   totalLivrees: number;
   totalEchecs: number;
+  echecsParMotif?: EchecParMotif[];
   closeurs: PerfCloseur[];
   dispatcheurs: PerfDispatcheur[];
   livreurs: PerfLivreur[];
