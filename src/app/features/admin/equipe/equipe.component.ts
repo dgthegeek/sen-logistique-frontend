@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import {
   CreateMembreRequest, UpdateMembreRequest, LivreurResponse, MembreResponse
 } from '../../../core/models/closing-dispatch.model';
+import { StatutVendeur, VendeurDTO } from '../../../core/models/vendeur.model';
 
 type Onglet = 'closeurs' | 'livreurs' | 'dispatcheurs';
 
@@ -20,6 +21,9 @@ interface MembreForm {
   email: string;
   password: string;
   zonePreferee: string;
+  /** true = pas de restriction (tous les vendeurs), false = restreint à vendeurIds */
+  tousLesVendeurs: boolean;
+  vendeurIds: number[];
 }
 
 @Component({
@@ -34,6 +38,7 @@ export class AdminEquipeComponent implements OnInit {
   closeurs: MembreResponse[] = [];
   livreurs: LivreurResponse[] = [];
   dispatcheurs: MembreResponse[] = [];
+  vendeurs: VendeurDTO[] = [];
   loading = true;
   loadError = false;
 
@@ -41,6 +46,7 @@ export class AdminEquipeComponent implements OnInit {
   saving = false;
   editId: number | null = null;   // null = création, sinon édition
   form: MembreForm = this.formVide();
+  filtreVendeur = '';
 
   constructor(
     private api: ApiService,
@@ -66,6 +72,42 @@ export class AdminEquipeComponent implements OnInit {
       next: (d) => { this.dispatcheurs = d; },
       error: () => { this.loadError = true; }
     });
+    this.api.getVendeurs({ statut: StatutVendeur.ACTIF }, 0, 500).subscribe({
+      next: (p) => { this.vendeurs = p.content; },
+      error: () => { /* la liste des vendeurs n'est pas critique pour le reste de l'écran */ }
+    });
+  }
+
+  /** Libellé du vendeur pour l'affichage (boutique si connue, sinon nom du vendeur). */
+  libelleVendeur(id: number): string {
+    const v = this.vendeurs.find(x => x.id === id);
+    if (!v) return `Vendeur #${id}`;
+    return v.nomBoutique || `${v.prenom} ${v.nom}`;
+  }
+
+  /** Résumé affiché dans la liste des closeurs. */
+  resumeVendeurs(membre: MembreResponse): string {
+    if (!membre.vendeurIds || membre.vendeurIds.length === 0) return 'Tous les vendeurs';
+    return membre.vendeurIds.map(id => this.libelleVendeur(id)).join(', ');
+  }
+
+  get vendeursFiltres(): VendeurDTO[] {
+    const q = this.filtreVendeur.trim().toLowerCase();
+    if (!q) return this.vendeurs;
+    return this.vendeurs.filter(v =>
+      (v.nomBoutique || '').toLowerCase().includes(q) ||
+      `${v.prenom} ${v.nom}`.toLowerCase().includes(q)
+    );
+  }
+
+  estVendeurSelectionne(id: number): boolean {
+    return this.form.vendeurIds.includes(id);
+  }
+
+  toggleVendeur(id: number): void {
+    this.form.vendeurIds = this.estVendeurSelectionne(id)
+      ? this.form.vendeurIds.filter(v => v !== id)
+      : [...this.form.vendeurIds, id];
   }
 
   changerOnglet(o: Onglet): void {
@@ -85,19 +127,24 @@ export class AdminEquipeComponent implements OnInit {
   ouvrirCreate(): void {
     this.editId = null;
     this.form = this.formVide();
+    this.filtreVendeur = '';
     this.showModal = true;
   }
 
   ouvrirEdit(membre: MembreResponse | LivreurResponse): void {
     this.editId = membre.id;
+    const vendeurIds = (membre as MembreResponse).vendeurIds || [];
     this.form = {
       nom: membre.nom,
       prenom: membre.prenom,
       telephone: membre.telephone,
       email: membre.email || '',
       password: '',
-      zonePreferee: (membre as LivreurResponse).zonePreferee || ''
+      zonePreferee: (membre as LivreurResponse).zonePreferee || '',
+      tousLesVendeurs: vendeurIds.length === 0,
+      vendeurIds
     };
+    this.filtreVendeur = '';
     this.showModal = true;
   }
 
@@ -113,6 +160,10 @@ export class AdminEquipeComponent implements OnInit {
     }
     if (!this.isEdition && !this.form.password) {
       this.toast.warning('Le mot de passe est obligatoire à la création');
+      return;
+    }
+    if (this.onglet === 'closeurs' && !this.form.tousLesVendeurs && this.form.vendeurIds.length === 0) {
+      this.toast.warning('Sélectionnez au moins un vendeur, ou cochez "Tous les vendeurs"');
       return;
     }
     this.saving = true;
@@ -154,7 +205,8 @@ export class AdminEquipeComponent implements OnInit {
       telephone: this.form.telephone,
       email: this.form.email || undefined,
       password: this.form.password,
-      zonePreferee: this.form.zonePreferee || undefined
+      zonePreferee: this.form.zonePreferee || undefined,
+      vendeurIds: this.onglet === 'closeurs' ? (this.form.tousLesVendeurs ? [] : this.form.vendeurIds) : undefined
     };
     return this.onglet === 'closeurs' ? this.api.createCloseur(data)
       : this.onglet === 'dispatcheurs' ? this.api.createDispatcheur(data)
@@ -168,7 +220,8 @@ export class AdminEquipeComponent implements OnInit {
       telephone: this.form.telephone,
       email: this.form.email || undefined,
       zonePreferee: this.form.zonePreferee || undefined,
-      password: this.form.password || undefined
+      password: this.form.password || undefined,
+      vendeurIds: this.onglet === 'closeurs' ? (this.form.tousLesVendeurs ? [] : this.form.vendeurIds) : undefined
     };
     return this.onglet === 'closeurs' ? this.api.updateCloseur(this.editId!, data)
       : this.onglet === 'dispatcheurs' ? this.api.updateDispatcheur(this.editId!, data)
@@ -176,6 +229,9 @@ export class AdminEquipeComponent implements OnInit {
   }
 
   private formVide(): MembreForm {
-    return { nom: '', prenom: '', telephone: '', email: '', password: '', zonePreferee: '' };
+    return {
+      nom: '', prenom: '', telephone: '', email: '', password: '', zonePreferee: '',
+      tousLesVendeurs: true, vendeurIds: []
+    };
   }
 }

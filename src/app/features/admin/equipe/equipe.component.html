@@ -54,18 +54,24 @@
                 <th class="p-2">Nom</th>
                 <th class="p-2">Téléphone</th>
                 <th class="p-2">Email</th>
+                <th class="p-2">Vendeurs</th>
                 <th class="p-2">Statut</th>
                 <th class="p-2 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngIf="closeurs.length === 0">
-                <td colspan="5" class="p-4 text-center text-muted-foreground">Aucun closeur.</td>
+                <td colspan="6" class="p-4 text-center text-muted-foreground">Aucun closeur.</td>
               </tr>
               <tr *ngFor="let c of closeurs" class="border-b border-border/50">
                 <td class="p-2 font-medium text-foreground">{{ c.prenom }} {{ c.nom }}</td>
                 <td class="p-2">{{ c.telephone }}</td>
                 <td class="p-2">{{ c.email || '—' }}</td>
+                <td class="p-2 max-w-xs truncate" [title]="resumeVendeurs(c)">
+                  <span class="badge" [ngClass]="!c.vendeurIds?.length ? 'badge-picked' : 'badge-transit'">
+                    {{ !c.vendeurIds?.length ? 'Tous' : (c.vendeurIds!.length + ' vendeur(s)') }}
+                  </span>
+                </td>
                 <td class="p-2">
                   <span class="badge" [ngClass]="c.actif ? 'badge-delivered' : 'badge-canceled'">
                     {{ c.actif ? 'Actif' : 'Inactif' }}
@@ -206,6 +212,32 @@
       <label class="form-label">Zone préférée (optionnel)</label>
       <input type="text" class="form-input" [(ngModel)]="form.zonePreferee" placeholder="Ex: Pikine" />
     </div>
+
+    <!-- Vendeurs assignés (closeurs uniquement) -->
+    <div class="mb-4" *ngIf="onglet === 'closeurs'">
+      <label class="form-label">Vendeurs</label>
+      <label class="flex items-center gap-2 text-sm mb-2 cursor-pointer">
+        <input type="checkbox" [(ngModel)]="form.tousLesVendeurs" />
+        Tous les vendeurs (aucune restriction)
+      </label>
+
+      <div *ngIf="!form.tousLesVendeurs">
+        <input type="text" class="form-input mb-2" [(ngModel)]="filtreVendeur"
+               placeholder="Rechercher un vendeur ou une boutique..." />
+        <div class="border border-border rounded-lg max-h-48 overflow-y-auto p-2 space-y-1">
+          <p *ngIf="vendeursFiltres.length === 0" class="text-sm text-muted-foreground p-2">Aucun vendeur.</p>
+          <label *ngFor="let v of vendeursFiltres"
+                 class="flex items-center gap-2 text-sm p-1.5 rounded hover:bg-muted cursor-pointer">
+            <input type="checkbox" [checked]="estVendeurSelectionne(v.id)" (change)="toggleVendeur(v.id)" />
+            <span class="truncate">{{ v.nomBoutique || (v.prenom + ' ' + v.nom) }}</span>
+          </label>
+        </div>
+        <p class="text-xs text-muted-foreground mt-1">
+          {{ form.vendeurIds.length }} vendeur(s) sélectionné(s)
+        </p>
+      </div>
+    </div>
+
     <div class="flex justify-end gap-2">
       <button class="btn-ghost" (click)="fermerModal()">Annuler</button>
       <button class="btn-primary" [disabled]="saving" (click)="enregistrer()">
