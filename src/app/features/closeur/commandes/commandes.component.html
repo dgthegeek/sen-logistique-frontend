@@ -59,7 +59,26 @@
             <!-- En-tête -->
             <div class="flex items-center justify-between gap-2 mb-3">
               <span class="font-mono text-xs text-muted-foreground">{{ c.numeroTracking }}</span>
-              <span class="badge" [ngClass]="badgeClass(c.statut)">{{ statutLabels[c.statut] }}</span>
+              <div class="flex items-center gap-2">
+                <button *ngIf="c.nomVendeur" class="btn-ghost !p-1.5" title="Voir le vendeur"
+                        (click)="toggleVendeur(c.id)">
+                  <i class="fa-solid fa-store"></i>
+                </button>
+                <span class="badge" [ngClass]="badgeClass(c.statut)">{{ statutLabels[c.statut] }}</span>
+              </div>
+            </div>
+
+            <!-- Infos vendeur (à la demande) -->
+            <div *ngIf="vendeurVisible(c.id) && c.nomVendeur"
+                 class="text-sm bg-muted/50 rounded-lg p-2.5 mb-3">
+              <p class="font-medium text-foreground">
+                <i class="fa-solid fa-store text-muted-foreground"></i>
+                {{ c.boutiqueVendeur || c.nomVendeur }}
+              </p>
+              <p class="text-muted-foreground" *ngIf="c.boutiqueVendeur">{{ c.nomVendeur }}</p>
+              <p class="text-muted-foreground" *ngIf="c.telephoneVendeur">
+                <i class="fa-solid fa-phone"></i> {{ c.telephoneVendeur }}
+              </p>
             </div>
 
             <!-- Client + appel -->

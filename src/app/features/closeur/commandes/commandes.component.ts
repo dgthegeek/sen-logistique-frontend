@@ -26,6 +26,7 @@ export class CloseurCommandesComponent implements OnInit {
   loadError = false;
   actionEnCours: number | null = null;
   activeFiltre: FiltreCloseur = 'TOUTES';
+  vendeurAffiche = new Set<number>();
 
   readonly statutLabels = STATUT_LABELS;
 
@@ -58,6 +59,19 @@ export class CloseurCommandesComponent implements OnInit {
   changerFiltre(filtre: FiltreCloseur): void {
     this.activeFiltre = filtre;
     this.charger();
+  }
+
+  /** Affichage optionnel des infos vendeur (masquées par défaut). */
+  toggleVendeur(id: number): void {
+    if (this.vendeurAffiche.has(id)) {
+      this.vendeurAffiche.delete(id);
+    } else {
+      this.vendeurAffiche.add(id);
+    }
+  }
+
+  vendeurVisible(id: number): boolean {
+    return this.vendeurAffiche.has(id);
   }
 
   appeler(c: CommandeCloseur): void {

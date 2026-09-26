@@ -40,6 +40,10 @@ export interface CommandeCloseur {
   produit?: string;
   montantCOD: number;
   dateCreation?: string;
+  vendeurId?: number;
+  nomVendeur?: string;
+  boutiqueVendeur?: string;
+  telephoneVendeur?: string;
 }
 
 /** Commande prête à livrer, vue par l'admin pour assignation. */
@@ -77,6 +81,8 @@ export interface MembreResponse {
   email?: string;
   role: UserRole;
   actif: boolean;
+  /** Uniquement pour les closeurs - vendeurs auxquels il est restreint. Vide = tous les vendeurs. */
+  vendeurIds?: number[];
 }
 
 export interface LivreurResponse {
@@ -97,6 +103,8 @@ export interface CreateMembreRequest {
   email?: string;
   password: string;
   zonePreferee?: string;
+  /** Uniquement pour les closeurs. Absent ou vide = tous les vendeurs. */
+  vendeurIds?: number[];
 }
 
 export interface UpdateMembreRequest {
@@ -107,6 +115,8 @@ export interface UpdateMembreRequest {
   actif?: boolean;
   zonePreferee?: string;
   password?: string;
+  /** Uniquement pour les closeurs. Tableau vide = lever toute restriction (tous les vendeurs). */
+  vendeurIds?: number[];
 }
 
 export interface AssignerLivreurRequest {
