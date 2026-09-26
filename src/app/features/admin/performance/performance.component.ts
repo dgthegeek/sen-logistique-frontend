@@ -6,6 +6,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { PerformanceResponse } from '../../../core/models/performance.model';
+import { MOTIF_ECHEC_LABELS } from '../../../core/models/motif-echec-labels';
 
 /**
  * Contrôle qualité : performances de l'équipe (closeurs, dispatcheurs, livreurs).
@@ -32,6 +33,9 @@ export class AdminPerformanceComponent implements OnInit {
   // Plage de dates personnalisée (comme le bilan)
   debut = '';
   fin = '';
+
+  readonly motifLabels = MOTIF_ECHEC_LABELS;
+  livreursDetailEchecs = new Set<number>();
 
   constructor(private api: ApiService) {}
 
@@ -65,6 +69,14 @@ export class AdminPerformanceComponent implements OnInit {
       next: (d) => { this.data = d; this.loading = false; },
       error: (err) => { this.errorMessage = err?.error?.message || 'Impossible de charger les performances'; this.loading = false; }
     });
+  }
+
+  toggleDetailEchecs(id: number): void {
+    if (this.livreursDetailEchecs.has(id)) {
+      this.livreursDetailEchecs.delete(id);
+    } else {
+      this.livreursDetailEchecs.add(id);
+    }
   }
 
   formatDuree(min?: number | null): string {

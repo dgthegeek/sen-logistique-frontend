@@ -142,17 +142,35 @@
               </tr></thead>
               <tbody>
                 <tr *ngIf="data.livreurs.length === 0"><td colspan="5" class="p-4 text-center text-muted-foreground">Aucune activité.</td></tr>
-                <tr *ngFor="let v of data.livreurs" class="border-b border-border/50">
-                  <td class="p-2 font-medium text-foreground">{{ v.prenom }} {{ v.nom }}</td>
-                  <td class="p-2 text-center font-semibold text-green-600">{{ v.nombreLivrees }}</td>
-                  <td class="p-2 text-center text-red-600">{{ v.nombreEchecs }}</td>
-                  <td class="p-2 text-center">
-                    <span class="badge" [ngClass]="v.tauxReussite >= 80 ? 'badge-delivered' : v.tauxReussite >= 50 ? 'badge-pending' : 'badge-canceled'">
-                      {{ v.tauxReussite }}%
-                    </span>
-                  </td>
-                  <td class="p-2 text-center">{{ formatDuree(v.tempsMoyenLivraisonMin) }}</td>
-                </tr>
+                <ng-container *ngFor="let v of data.livreurs">
+                  <tr class="border-b border-border/50">
+                    <td class="p-2 font-medium text-foreground">{{ v.prenom }} {{ v.nom }}</td>
+                    <td class="p-2 text-center font-semibold text-green-600">{{ v.nombreLivrees }}</td>
+                    <td class="p-2 text-center text-red-600">
+                      <button *ngIf="v.echecsParMotif?.length" class="hover:underline" title="Voir la répartition par motif"
+                              (click)="toggleDetailEchecs(v.id)">
+                        {{ v.nombreEchecs }} <i class="fa-solid" [ngClass]="livreursDetailEchecs.has(v.id) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                      </button>
+                      <span *ngIf="!v.echecsParMotif?.length">{{ v.nombreEchecs }}</span>
+                    </td>
+                    <td class="p-2 text-center">
+                      <span class="badge" [ngClass]="v.tauxReussite >= 80 ? 'badge-delivered' : v.tauxReussite >= 50 ? 'badge-pending' : 'badge-canceled'">
+                        {{ v.tauxReussite }}%
+                      </span>
+                    </td>
+                    <td class="p-2 text-center">{{ formatDuree(v.tempsMoyenLivraisonMin) }}</td>
+                  </tr>
+                  <tr *ngIf="livreursDetailEchecs.has(v.id) && v.echecsParMotif?.length" class="border-b border-border/50 bg-muted/30">
+                    <td colspan="5" class="p-3">
+                      <p class="text-xs text-muted-foreground mb-2">Répartition des échecs par motif :</p>
+                      <div class="flex flex-wrap gap-2">
+                        <span *ngFor="let e of v.echecsParMotif" class="badge badge-canceled">
+                          {{ motifLabels[e.motif] || e.motif }} — {{ e.nombre }} ({{ e.pourcentage }}%)
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
               </tbody>
             </table>
           </div>
