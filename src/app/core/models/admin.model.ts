@@ -49,6 +49,8 @@ export interface LivraisonAdmin {
   montantARecevoir: number;
   dateCreation: string;
   message: string;
+  origine?: string;
+  origineRef?: string;
 }
 
 export interface LivraisonsAdminResponse {

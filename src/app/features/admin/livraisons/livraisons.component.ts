@@ -38,6 +38,7 @@ export class AdminLivraisonsComponent implements OnInit {
 
   selectedStatut = '';
   searchQuery = '';
+  filtreReference = '';
 
   showScannerModal = false;
   showConfirmModal = false;
@@ -78,7 +79,8 @@ export class AdminLivraisonsComponent implements OnInit {
     this.apiService.getLivraisonsAdmin(
       this.currentPage,
       this.pageSize,
-      this.selectedStatut || undefined
+      this.selectedStatut || undefined,
+      this.filtreReference.trim() || undefined
     ).subscribe({
       next: (response) => {
         this.livraisons = response.content;

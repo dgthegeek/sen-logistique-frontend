@@ -227,13 +227,16 @@ export class ApiService {
   }
 
   // Livraisons Admin
-  getLivraisonsAdmin(page: number = 0, size: number = 20, statut?: string): Observable<LivraisonsAdminResponse> {
+  getLivraisonsAdmin(page: number = 0, size: number = 20, statut?: string, reference?: string): Observable<LivraisonsAdminResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
     if (statut) {
       params = params.set('statut', statut);
+    }
+    if (reference) {
+      params = params.set('reference', reference);
     }
 
     return this.http.get<LivraisonsAdminResponse>(`${this.baseUrl}/admin/livraisons`, { params });

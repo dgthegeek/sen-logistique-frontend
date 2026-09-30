@@ -22,7 +22,7 @@
 
         <!-- Filtres -->
         <div class="card mb-4 sm:mb-6">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label class="form-label text-xs sm:text-sm flex items-center gap-1">
                 <i class="fa-solid fa-filter text-muted-foreground"></i>
@@ -33,9 +33,22 @@
               </select>
             </div>
 
+            <div>
+              <label class="form-label text-xs sm:text-sm flex items-center gap-1">
+                <i class="fa-solid fa-magnifying-glass text-muted-foreground"></i>
+                <span>Référence externe</span>
+              </label>
+              <input type="text" class="form-input text-sm" [(ngModel)]="filtreReference"
+                     (keyup.enter)="onFilterChange()"
+                     placeholder="Ex : numéro de commande Shopify" />
+            </div>
+
             <!-- Bouton Export Excel -->
-            <div class="flex items-end">
-              <button (click)="exporterExcel()" class="btn-primary w-full sm:w-auto text-sm py-2 px-4"
+            <div class="flex items-end gap-2">
+              <button (click)="onFilterChange()" class="btn-outline text-sm py-2 px-4" title="Rechercher">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+              <button (click)="exporterExcel()" class="btn-primary flex-1 sm:flex-initial text-sm py-2 px-4"
                 [disabled]="loading || livraisons.length === 0" title="Exporter en Excel">
                 <i class="fa-solid fa-file-excel mr-2"></i>
                 <span>Exporter Excel</span>
@@ -67,6 +80,7 @@
               <thead class="table-header">
                 <tr>
                   <th class="table-header-cell">Tracking</th>
+                  <th class="table-header-cell">Référence</th>
                   <th class="table-header-cell">Statut</th>
                   <th class="table-header-cell">COD</th>
                   <th class="table-header-cell">Frais</th>
@@ -85,6 +99,13 @@
                     <div class="text-xs text-muted-foreground">
                       ID: {{ livraison.id }}
                     </div>
+                  </td>
+                  <td class="table-cell">
+                    <ng-container *ngIf="livraison.origineRef; else pasDeReference">
+                      <span class="badge badge-transit text-xs">{{ livraison.origine }}</span>
+                      <div class="text-xs text-muted-foreground mt-0.5">{{ livraison.origineRef }}</div>
+                    </ng-container>
+                    <ng-template #pasDeReference>—</ng-template>
                   </td>
                   <td class="table-cell">
                     <span [class]="getStatusBadgeClass(livraison.statut)">
