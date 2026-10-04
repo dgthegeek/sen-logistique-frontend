@@ -20,14 +20,21 @@
         <div class="card mb-4 flex flex-col sm:flex-row sm:items-end gap-3">
           <div class="flex-1">
             <label class="form-label">Livreur</label>
-            <select class="form-select" [(ngModel)]="livreurId">
-              <option [ngValue]="null" disabled>— Choisir un livreur —</option>
-              <option *ngFor="let l of livreurs" [ngValue]="l.id">
-                {{ l.prenom }} {{ l.nom }}
-                <ng-container *ngIf="l.zonePreferee"> ({{ l.zonePreferee }})</ng-container>
-                — {{ l.nombreLivraisonsEnCours || 0 }} en cours
-              </option>
-            </select>
+            <div class="flex gap-2">
+              <select class="form-select flex-1" [(ngModel)]="livreurId">
+                <option [ngValue]="null" disabled>— Choisir un livreur —</option>
+                <option *ngFor="let l of livreurs" [ngValue]="l.id">
+                  {{ l.prenom }} {{ l.nom }}
+                  <ng-container *ngIf="l.zonePreferee"> ({{ l.zonePreferee }})</ng-container>
+                  — {{ l.nombreLivraisonsEnCours || 0 }} en cours
+                </option>
+              </select>
+              <button type="button" class="btn-outline" [disabled]="!livreurId"
+                      title="Voir les livraisons en cours de ce livreur"
+                      (click)="voirCommandesLivreurSelectionne()">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
           </div>
           <button class="btn-primary" [disabled]="assigning || selection.size === 0 || !livreurId"
                   (click)="assigner()">
@@ -103,5 +110,44 @@
         </div>
       </div>
     </main>
+  </div>
+</div>
+
+<!-- Popup : livraisons en cours d'un livreur -->
+<div *ngIf="showLivreurModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+  <div class="card max-w-2xl w-full max-h-[85vh] overflow-y-auto overscroll-contain">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-bold text-foreground">
+        Livraisons en cours — {{ livreurModalNom }}
+      </h2>
+      <button class="btn-ghost" (click)="fermerLivreurModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div *ngIf="chargementCommandesLivreur" class="text-center py-8 text-muted-foreground">
+      <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+    </div>
+
+    <div *ngIf="!chargementCommandesLivreur && commandesLivreur.length === 0" class="text-center py-8 text-muted-foreground">
+      <i class="fa-solid fa-circle-check text-2xl mb-2"></i>
+      <p>Aucune livraison en cours pour ce livreur.</p>
+    </div>
+
+    <div *ngIf="!chargementCommandesLivreur && commandesLivreur.length > 0" class="space-y-2">
+      <div *ngFor="let c of commandesLivreur" class="border border-border rounded-lg p-3">
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <span class="font-mono text-xs text-muted-foreground">{{ c.numeroTracking }}</span>
+          <span class="badge">{{ statutLabels[c.statut] }}</span>
+        </div>
+        <p class="font-medium text-foreground">{{ c.nomClient }} — {{ c.telephoneClient }}</p>
+        <p class="text-sm text-muted-foreground">
+          <i class="fa-solid fa-location-dot"></i> {{ c.adresse }}<span *ngIf="c.zone"> — {{ c.zone }}</span>
+        </p>
+        <p class="text-sm text-muted-foreground">
+          <i class="fa-solid fa-box"></i> {{ c.produit }} · <strong>{{ c.montantAEncaisser | fcfa }}</strong>
+        </p>
+      </div>
+    </div>
   </div>
 </div>

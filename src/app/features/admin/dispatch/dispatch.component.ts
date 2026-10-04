@@ -7,7 +7,8 @@ import { ToastService } from '../../../core/services/toast.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { FcfaPipe } from '../../../shared/pipes/fcfa.pipe';
-import { CommandeDispatch, LivreurResponse } from '../../../core/models/closing-dispatch.model';
+import { CommandeDispatch, CommandeLivreur, LivreurResponse } from '../../../core/models/closing-dispatch.model';
+import { STATUT_LABELS } from '../../../core/models/statut-labels';
 
 @Component({
   selector: 'app-admin-dispatch',
@@ -24,6 +25,12 @@ export class AdminDispatchComponent implements OnInit {
   loading = true;
   loadError = false;
   assigning = false;
+
+  readonly statutLabels = STATUT_LABELS;
+  showLivreurModal = false;
+  livreurModalNom = '';
+  commandesLivreur: CommandeLivreur[] = [];
+  chargementCommandesLivreur = false;
 
   constructor(
     private api: ApiService,
@@ -71,6 +78,33 @@ export class AdminDispatchComponent implements OnInit {
 
   estSelectionnee(id: number): boolean {
     return this.selection.has(id);
+  }
+
+  voirCommandesLivreurSelectionne(): void {
+    const livreur = this.livreurs.find(l => l.id === this.livreurId);
+    if (livreur) { this.voirCommandesLivreur(livreur); }
+  }
+
+  /** Détail des livraisons en cours d'un livreur, dans une popup. */
+  voirCommandesLivreur(livreur: LivreurResponse): void {
+    this.livreurModalNom = `${livreur.prenom} ${livreur.nom}`;
+    this.showLivreurModal = true;
+    this.chargementCommandesLivreur = true;
+    this.commandesLivreur = [];
+    this.api.getDispatchLivreurCommandes(livreur.id).subscribe({
+      next: (data) => {
+        this.commandesLivreur = data;
+        this.chargementCommandesLivreur = false;
+      },
+      error: () => {
+        this.toast.error('Impossible de charger les livraisons de ce livreur');
+        this.chargementCommandesLivreur = false;
+      }
+    });
+  }
+
+  fermerLivreurModal(): void {
+    this.showLivreurModal = false;
   }
 
   assigner(): void {
