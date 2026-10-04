@@ -56,6 +56,10 @@ export interface CommandeDispatch {
   zone?: string;
   produit?: string;
   montantCOD: number;
+  vendeurId?: number;
+  nomVendeur?: string;
+  boutiqueVendeur?: string;
+  telephoneVendeur?: string;
 }
 
 /** Livraison vue par le livreur (Mes livraisons). */

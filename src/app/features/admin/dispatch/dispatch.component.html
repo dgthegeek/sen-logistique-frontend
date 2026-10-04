@@ -64,6 +64,7 @@
                          [checked]="selection.size === commandes.length && commandes.length > 0" />
                 </th>
                 <th class="p-2">N° commande</th>
+                <th class="p-2">Vendeur</th>
                 <th class="p-2">Client</th>
                 <th class="p-2">Téléphone</th>
                 <th class="p-2">Adresse</th>
@@ -80,6 +81,11 @@
                   <input type="checkbox" [checked]="estSelectionnee(c.id)" (change)="toggle(c.id)" />
                 </td>
                 <td class="p-2 font-mono">{{ c.numeroTracking }}</td>
+                <td class="p-2">
+                  <div class="font-medium text-foreground">{{ c.boutiqueVendeur || c.nomVendeur || '—' }}</div>
+                  <div class="text-xs text-muted-foreground" *ngIf="c.boutiqueVendeur && c.nomVendeur">{{ c.nomVendeur }}</div>
+                  <div class="text-xs text-muted-foreground" *ngIf="c.telephoneVendeur">{{ c.telephoneVendeur }}</div>
+                </td>
                 <td class="p-2 font-medium text-foreground">{{ c.nomClient }}</td>
                 <td class="p-2">{{ c.telephoneClient }}</td>
                 <td class="p-2">{{ c.adresse }}</td>
