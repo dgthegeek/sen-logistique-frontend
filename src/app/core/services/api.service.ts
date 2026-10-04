@@ -414,6 +414,11 @@ export class ApiService {
     return this.http.get<LivreurResponse[]>(`${this.baseUrl}/dispatch/livreurs`);
   }
 
+  /** Détail des livraisons en cours (Assignée / En livraison) d'un livreur. */
+  getDispatchLivreurCommandes(livreurId: number): Observable<CommandeLivreur[]> {
+    return this.http.get<CommandeLivreur[]>(`${this.baseUrl}/dispatch/livreurs/${livreurId}/commandes`);
+  }
+
   assignerLivreur(data: AssignerLivreurRequest): Observable<AssignerLivreurResponse> {
     return this.http.post<AssignerLivreurResponse>(`${this.baseUrl}/dispatch/assigner`, data);
   }
